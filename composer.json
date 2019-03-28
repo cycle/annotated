@@ -1,5 +1,5 @@
 {
-  "name": "cycle/annotated-entities",
+  "name": "cycle/annotated",
   "type": "library",
   "description": "Cycle ORM Annotated Entities generator",
   "require": {
