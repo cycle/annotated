@@ -20,13 +20,13 @@ class Complete
     protected $id;
 
     /**
-     * @belongsTo(target=Simple,inverse=@inverse(type=hasOne,as="child"))
+     * @belongsTo(target=Simple,fkAction="NO ACTION",inverse=@inverse(type=hasOne,as="child"))
      * @var Simple
      */
     protected $parent;
 
     /**
-     * @belongsTo(target=Simple,innerKey=uncle_id,inverse=@inverse(type=hasMany,as="stepKids"))
+     * @belongsTo(target=Simple,fkAction="NO ACTION",innerKey=uncle_id,inverse=@inverse(type=hasMany,as="stepKids"))
      * @var Simple
      */
     protected $uncles;

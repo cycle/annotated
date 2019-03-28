@@ -20,7 +20,7 @@ class User
     protected $id;
 
     /**
-     * @hasOne(target=Simple, inverse=(type=belongsTo, as="user"))
+     * @hasOne(target=Simple, inverse=(as="user", type=belongsTo))
      * @var Simple
      */
     protected $simple;
