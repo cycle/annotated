@@ -86,10 +86,7 @@ final class Entities implements GeneratorInterface
         }
 
         foreach ($children as $e) {
-            $registry->registerChild(
-                $registry->getEntity($this->findParent($registry, $e->getClass())),
-                $e
-            );
+            $registry->registerChild($registry->getEntity($this->findParent($registry, $e->getClass())), $e);
         }
 
         return $registry;
