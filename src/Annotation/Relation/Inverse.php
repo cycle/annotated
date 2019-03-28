@@ -13,10 +13,11 @@ use Spiral\Annotations\Parser;
 
 final class Inverse extends AbstractAnnotation
 {
-    protected const INVERSED = 'inverse';
-    protected const SCHEMA   = [
+    protected const NAME   = 'inverse';
+    protected const SCHEMA = [
         'type' => Parser::STRING,
-        'name' => Parser::STRING
+        'name' => Parser::STRING,
+        'as'   => Parser::STRING, // alias to name
     ];
 
     /** @var string|null */
@@ -26,11 +27,23 @@ final class Inverse extends AbstractAnnotation
     protected $name;
 
     /**
+     * @inheritdoc
+     */
+    public function setAttribute(string $name, $value)
+    {
+        if ($name == "as") {
+            $name = "name";
+        }
+
+        parent::setAttribute($name, $value);
+    }
+
+    /**
      * @return bool
      */
     public function isValid(): bool
     {
-        return $this->type !== null && $this->name !== null;
+        return $this->getType() !== null && $this->getRelation() !== null;
     }
 
     /**
@@ -46,6 +59,6 @@ final class Inverse extends AbstractAnnotation
      */
     public function getRelation(): ?string
     {
-        return $this->name;
+        return $this->name ?? $this->as;
     }
 }

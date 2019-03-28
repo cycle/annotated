@@ -39,10 +39,7 @@ class Complete implements LabelledInterface
     protected $ignored;
 
     /**
-     * @belongsTo(
-     *     target=Simple,
-     *     inverse=(type=hasOne, as=c)
-     *     )
+     * @belongsTo(target=Simple)
      * @var Simple
      */
     protected $parent;

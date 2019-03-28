@@ -45,7 +45,7 @@ abstract class BelongsToTest extends BaseTest
             new Entities($this->locator, $p),
             new CleanTables(),
             new Columns($p),
-            new GenerateRelations(['belongsTo' => new BelongsToRelation()]),
+            new GenerateRelations(['belongsTo' => new BelongsToRelation(),]),
             new RenderTables(),
             new RenderRelations(),
             new Indexes($p),

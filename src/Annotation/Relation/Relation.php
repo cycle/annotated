@@ -36,7 +36,7 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     protected $target;
 
     /** @var Inverse|null */
-    protected $inversed;
+    protected $inverse;
 
     /** @var array */
     protected $options = [];
@@ -58,10 +58,18 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      */
     public function getSchema(): array
     {
-        return static::OPTIONS + [
+        $schema = static::OPTIONS + [
                 'target'  => Parser::STRING,
                 'inverse' => Inverse::class
             ];
+
+        array_walk_recursive($schema, function (&$v) {
+            if (is_string($v) && class_exists($v)) {
+                $v = new $v;
+            }
+        });
+
+        return $schema;
     }
 
     /**
@@ -72,7 +80,7 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      */
     public function setAttribute(string $name, $value)
     {
-        if (in_array($name, ['target', 'inversed'])) {
+        if (in_array($name, ['target', 'inverse'])) {
             $this->{$name} = $value;
             return;
         }
@@ -101,7 +109,7 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      */
     public function isInversed(): bool
     {
-        return $this->inversed !== null && $this->inversed->isValid();
+        return $this->inverse !== null && $this->inverse->isValid();
     }
 
     /**
@@ -109,7 +117,7 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      */
     public function getInverseType(): string
     {
-        return $this->inversed->getType();
+        return $this->inverse->getType();
 
     }
 
@@ -118,6 +126,6 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      */
     public function getInverseName(): string
     {
-        return $this->inversed->getRelation();
+        return $this->inverse->getRelation();
     }
 }
