@@ -60,7 +60,7 @@ abstract class BaseTest extends TestCase
     {
         parent::setUp();
 
-        $this->dbal = new DatabaseManager(new DatabaseConfig());
+        $this->dbal = new DatabaseManager(new DatabaseConfig(['default' => 'default']));
         $this->dbal->addDatabase(new Database(
             'default',
             '',
