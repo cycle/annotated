@@ -11,7 +11,7 @@ namespace Cycle\Annotated\Annotation;
 use Spiral\Annotations\AbstractAnnotation;
 use Spiral\Annotations\Parser;
 
-class Entity extends AbstractAnnotation
+final class Entity extends AbstractAnnotation
 {
     public const NAME   = 'entity';
     public const SCHEMA = [

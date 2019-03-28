@@ -12,7 +12,7 @@ namespace Cycle\Annotated\Annotation;
 use Spiral\Annotations\AbstractAnnotation;
 use Spiral\Annotations\Parser;
 
-class Column extends AbstractAnnotation
+final class Column extends AbstractAnnotation
 {
     public const NAME   = 'column';
     public const SCHEMA = [

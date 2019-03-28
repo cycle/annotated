@@ -10,13 +10,13 @@ namespace Cycle\Annotated\Tests\Fixtures;
 
 /**
  * @entity(
- *    role       = eComplete,
- *    mapper     = CompleteMapper,
- *    repository = "Repository/CompleteRepository",
- *    source     = Source\TestSource,
- *    constrain  = Constrain\SomeConstrain,
- *    database   = "secondary",
- *    table      = "complete_data"
+ *      role       = eComplete,
+ *      mapper     = CompleteMapper,
+ *      repository = "Repository/CompleteRepository",
+ *      source     = Source\TestSource,
+ *      constrain  = Constrain\SomeConstrain,
+ *      database   = "secondary",
+ *      table      = "complete_data"
  * )
  */
 class Complete

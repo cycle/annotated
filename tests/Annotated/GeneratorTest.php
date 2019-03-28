@@ -10,13 +10,14 @@ namespace Cycle\Annotated\Tests;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\GenerateEntities;
+use Cycle\Annotated\Entities;
 use Cycle\Annotated\Tests\Fixtures\Complete;
 use Cycle\Annotated\Tests\Fixtures\CompleteMapper;
 use Cycle\Annotated\Tests\Fixtures\Constrain\SomeConstrain;
 use Cycle\Annotated\Tests\Fixtures\Repository\CompleteRepository;
 use Cycle\Annotated\Tests\Fixtures\Simple;
 use Cycle\Annotated\Tests\Fixtures\Source\TestSource;
+use Cycle\Annotated\Tests\Fixtures\WithTable;
 use Cycle\ORM\Mapper\Mapper;
 use Cycle\ORM\Select\Repository;
 use Cycle\Schema\Registry;
@@ -24,6 +25,20 @@ use Spiral\Annotations\Parser;
 
 abstract class GeneratorTest extends BaseTest
 {
+    public function testLocateAll()
+    {
+        $p = new Parser();
+        $p->register(new Entity());
+        $p->register(new Column());
+
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $p))->run($r);
+
+        $this->assertTrue($r->hasEntity(Simple::class));
+        $this->assertTrue($r->hasEntity(WithTable::class));
+        $this->assertTrue($r->hasEntity(Complete::class));
+    }
+
     public function testSimpleSchema()
     {
         $p = new Parser();
@@ -31,12 +46,10 @@ abstract class GeneratorTest extends BaseTest
         $p->register(new Column());
 
         $r = new Registry($this->dbal);
-        $g = new GenerateEntities($this->locator, $p);
-        $g->run($r);
+        (new Entities($this->locator, $p))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));
-
 
         $this->assertSame(Mapper::class, $r->getEntity('simple')->getMapper());
         $this->assertSame(Repository::class, $r->getEntity('simple')->getRepository());
@@ -56,8 +69,7 @@ abstract class GeneratorTest extends BaseTest
         $p->register(new Column());
 
         $r = new Registry($this->dbal);
-        $g = new GenerateEntities($this->locator, $p);
-        $g->run($r);
+        (new Entities($this->locator, $p))->run($r);
 
         $this->assertTrue($r->hasEntity(Complete::class));
         $this->assertTrue($r->hasEntity('eComplete'));
