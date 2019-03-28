@@ -38,13 +38,16 @@ final class Indexes implements GeneratorInterface
                 continue;
             }
 
-            $this->render(
-                $registry->getTableSchema($e),
-                new \ReflectionClass($e->getClass())
-            );
+            $this->render($registry->getTableSchema($e), $e->getClass());
+
+            // copy table declarations from related classes
+            $this->render($registry->getTableSchema($e), $e->getMapper());
+            $this->render($registry->getTableSchema($e), $e->getRepository());
+            $this->render($registry->getTableSchema($e), $e->getSource());
+            $this->render($registry->getTableSchema($e), $e->getConstrain());
 
             foreach ($registry->getChildren($e) as $child) {
-                $this->render($registry->getTableSchema($e), new \ReflectionClass($child->getClass()));
+                $this->render($registry->getTableSchema($e), $child->getClass());
             }
         }
 
@@ -52,11 +55,21 @@ final class Indexes implements GeneratorInterface
     }
 
     /**
-     * @param AbstractTable    $table
-     * @param \ReflectionClass $class
+     * @param AbstractTable $table
+     * @param string|null   $class
      */
-    protected function render(AbstractTable $table, \ReflectionClass $class)
+    protected function render(AbstractTable $table, ?string $class)
     {
+        if ($class === null) {
+            return;
+        }
+
+        try {
+            $class = new \ReflectionClass($class);
+        } catch (\ReflectionException $e) {
+            return;
+        }
+
         if ($class->getDocComment() === false) {
             return;
         }

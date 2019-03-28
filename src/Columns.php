@@ -42,10 +42,16 @@ final class Columns implements GeneratorInterface
                 continue;
             }
 
-            $this->render($e, new \ReflectionClass($e->getClass()));
+            $this->copy($e, $e->getClass());
+
+            // copy from related classes
+            $this->copy($e, $e->getMapper());
+            $this->copy($e, $e->getRepository());
+            $this->copy($e, $e->getSource());
+            $this->copy($e, $e->getConstrain());
 
             foreach ($registry->getChildren($e) as $child) {
-                $this->render($e, new \ReflectionClass($child->getClass()));
+                $this->copy($e, $child->getClass());
             }
         }
 
@@ -53,11 +59,21 @@ final class Columns implements GeneratorInterface
     }
 
     /**
-     * @param EntitySchema     $e
-     * @param \ReflectionClass $class
+     * @param EntitySchema $e
+     * @param string|null  $class
      */
-    protected function render(EntitySchema $e, \ReflectionClass $class)
+    protected function copy(EntitySchema $e, ?string $class)
     {
+        if ($class === null) {
+            return;
+        }
+
+        try {
+            $class = new \ReflectionClass($class);
+        } catch (\ReflectionException $e) {
+            return;
+        }
+
         if ($class->getDocComment() === false) {
             return;
         }
