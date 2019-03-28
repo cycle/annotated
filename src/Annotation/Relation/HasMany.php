@@ -10,9 +10,9 @@ namespace Cycle\Annotated\Annotation\Relation;
 
 use Spiral\Annotations\Parser;
 
-final class HasOne extends Relation
+final class HasMany extends Relation
 {
-    protected const NAME    = 'hasOne';
+    protected const NAME    = 'hasMany';
     protected const OPTIONS = [
         'cascade'     => Parser::BOOL,
         'nullable'    => Parser::BOOL,

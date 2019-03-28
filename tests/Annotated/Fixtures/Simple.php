@@ -8,6 +8,8 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * @entity
  */
@@ -18,4 +20,26 @@ class Simple
      * @var int
      */
     protected $id;
+
+    /**
+     * @hasOne(target=Complete)
+     * @var Complete
+     */
+    protected $one;
+
+    /**
+     * @hasMany(target=WithTable)
+     * @var WithTable[]|Collection
+     */
+    protected $many;
+
+    /**
+     * @refersTo(target=Simple, fkAction="NO ACTION")
+     */
+    protected $parent;
+
+    /**
+     * @morphedHasMany(target=Label,outerKey=owner_id,morphKey=owner_role)
+     */
+    protected $labels;
 }

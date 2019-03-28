@@ -73,7 +73,14 @@ final class Generator
                 continue;
             }
 
-            $entity->getFields()->set($property->getName(), $this->initField($property->getName(), $ann[Column::NAME]));
+            $entity->getFields()->set(
+                $property->getName(),
+                $this->initField(
+                    $property->getName(),
+                    $ann[Column::NAME],
+                    $class
+                )
+            );
         }
     }
 
@@ -95,12 +102,6 @@ final class Generator
                     continue;
                 }
 
-                if ($ra->getType() === null) {
-                    throw new AnnotationException(
-                        "Relation type definition is required on `{$entity->getClass()}`"
-                    );
-                }
-
                 if ($ra->getTarget() === null) {
                     throw new AnnotationException(
                         "Relation target definition is required on `{$entity->getClass()}`"
@@ -109,13 +110,17 @@ final class Generator
 
                 $relation = new Relation();
                 $relation->setTarget($this->resolveName($ra->getTarget(), $class));
-                $relation->setType($ra->getType());
+                $relation->setType($ra->getName());
 
                 if ($ra->isInversed()) {
                     $relation->setInverse($ra->getInverseName(), $ra->getInverseType());
                 }
 
                 foreach ($ra->getOptions() as $option => $value) {
+                    if ($option === "though") {
+                        $value = $this->resolveName($value, $class);
+                    }
+
                     $relation->getOptions()->set($option, $value);
                 }
 
@@ -126,10 +131,11 @@ final class Generator
     }
 
     /**
-     * @param EntitySchema $entity
-     * @param Column[]     $columns
+     * @param EntitySchema     $entity
+     * @param Column[]         $columns
+     * @param \ReflectionClass $class
      */
-    public function initColumns(EntitySchema $entity, array $columns)
+    public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class)
     {
         foreach ($columns as $name => $column) {
             if ($column->getColumn() === null && is_numeric($name)) {
@@ -146,21 +152,22 @@ final class Generator
 
             $entity->getFields()->set(
                 $name ?? $column->getColumn(),
-                $this->initField($column->getColumn() ?? $name, $column)
+                $this->initField($column->getColumn() ?? $name, $column, $class)
             );
         }
     }
 
     /**
-     * @param string $name
-     * @param Column $column
+     * @param string           $name
+     * @param Column           $column
+     * @param \ReflectionClass $class
      * @return Field
      */
-    public function initField(string $name, Column $column): Field
+    public function initField(string $name, Column $column, \ReflectionClass $class): Field
     {
         if ($column->getType() === null) {
             throw new AnnotationException(
-                "Column type definition is required on `{$name}`"
+                "Column type definition is required on `{$class->getName()}`.`{$name}`"
             );
         }
 
@@ -195,7 +202,7 @@ final class Generator
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
     {
-        if (is_null($name) || class_exists($name, true)) {
+        if (is_null($name) || class_exists($name, true) || interface_exists($name, true)) {
             return $name;
         }
 
@@ -205,7 +212,7 @@ final class Generator
             ltrim(str_replace('/', '\\', $name), '\\')
         );
 
-        if (class_exists($resolved, true)) {
+        if (class_exists($resolved, true) || interface_exists($resolved, true)) {
             return $resolved;
         }
 

@@ -19,7 +19,7 @@ namespace Cycle\Annotated\Tests\Fixtures;
  *      table      = "complete_data"
  * )
  */
-class Complete
+class Complete implements LabelledInterface
 {
     /**
      * @column(type=primary)
@@ -37,4 +37,10 @@ class Complete
      * @var string
      */
     protected $ignored;
+
+    /**
+     * @belongsTo(target=Simple)
+     * @var Simple
+     */
+    protected $parent;
 }

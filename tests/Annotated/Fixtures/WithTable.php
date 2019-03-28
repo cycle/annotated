@@ -8,6 +8,8 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\ORM\Relation\Pivoted\PivotedCollectionInterface;
+
 /**
  * @entity
  * @table(
@@ -15,11 +17,22 @@ namespace Cycle\Annotated\Tests\Fixtures;
  *      indexes={@index(columns={status}), (columns={name}, unique=true, name=name_index)}
  * )
  */
-class WithTable
+class WithTable implements LabelledInterface
 {
     /**
      * @column(type=primary)
      * @var int
      */
     protected $id;
+
+    /**
+     * @manyToMany(target=Tag, though="Tag/Context")
+     * @var PivotedCollectionInterface|Tag[]
+     */
+    protected $tags;
+
+    /**
+     * @morphedHasMany(target=Label,outerKey=owner_id,morphKey=owner_role)
+     */
+    protected $labels;
 }

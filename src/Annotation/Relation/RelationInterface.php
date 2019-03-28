@@ -11,9 +11,9 @@ namespace Cycle\Annotated\Annotation\Relation;
 interface RelationInterface
 {
     /**
-     * @return string|null
+     * @return string
      */
-    public function getType(): ?string;
+    public function getName(): string;
 
     /**
      * @return string|null

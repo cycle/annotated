@@ -87,6 +87,6 @@ final class Columns implements GeneratorInterface
         $ta = $ann[Table::NAME];
 
         // additional columns (mapped to local fields automatically)
-        $this->generator->initColumns($e, $ta->getColumns());
+        $this->generator->initColumns($e, $ta->getColumns(), $class);
     }
 }

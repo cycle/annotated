@@ -10,6 +10,8 @@ namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Schema\Definition\Entity as EntitySchema;
+use Cycle\Schema\Exception\RegistryException;
+use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Inflector\Inflector;
@@ -89,7 +91,63 @@ final class Entities implements GeneratorInterface
             $registry->registerChild($registry->getEntity($this->findParent($registry, $e->getClass())), $e);
         }
 
+        return $this->normalizeNames($registry);
+    }
+
+    /**
+     * @param Registry $registry
+     * @return Registry
+     */
+    protected function normalizeNames(Registry $registry): Registry
+    {
+        // resolve all the relation target names into roles
+        foreach ($this->locator->getClasses() as $class) {
+            if (!$registry->hasEntity($class->getName())) {
+                continue;
+            }
+
+            $e = $registry->getEntity($class->getName());
+
+            // relations
+            foreach ($e->getRelations() as $name => $r) {
+                try {
+                    $r->setTarget($this->resolveTarget($registry, $r->getTarget()));
+
+                    if ($r->getOptions()->has('though')) {
+                        $r->getOptions()->set(
+                            'though',
+                            $this->resolveTarget($registry, $r->getOptions()->get('though'))
+                        );
+                    }
+                } catch (RegistryException $ex) {
+                    throw new RelationException(
+                        sprintf("Unable to resolve `%s`.`%s` relation target (not found or invalid)",
+                            $e->getRole(),
+                            $name
+                        ),
+                        $ex->getCode(),
+                        $ex
+                    );
+                }
+            }
+        }
+
         return $registry;
+    }
+
+    /**
+     * @param Registry $registry
+     * @param string   $name
+     * @return string|null
+     */
+    protected function resolveTarget(Registry $registry, string $name): ?string
+    {
+        if (is_null($name) || interface_exists($name, true)) {
+            // do not resolve interfaces
+            return $name;
+        }
+
+        return $registry->getEntity($name)->getRole();
     }
 
     /**
