@@ -21,6 +21,9 @@ use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Driver\Driver;
 use Spiral\Database\Driver\Handler;
+use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
 
 abstract class BaseTest extends TestCase
 {
@@ -46,6 +49,9 @@ abstract class BaseTest extends TestCase
 
     /** @var TestLogger */
     protected $logger;
+
+    /** @var ClassesInterface */
+    protected $locator;
 
     /**
      * Init all we need.
@@ -85,6 +91,13 @@ abstract class BaseTest extends TestCase
             $this->dbal,
             RelationConfig::getDefault()
         ));
+
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures'],
+            'exclude'     => [],
+        ]));
+
+        $this->locator = $tokenizer->classLocator();
     }
 
     /**

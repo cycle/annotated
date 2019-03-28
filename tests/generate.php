@@ -40,10 +40,10 @@ $databases = [
 
 echo "Generating test classes for all database types...\n";
 
-$classes = $tokenizer->classLocator()->getClasses(\Cycle\Schema\Tests\BaseTest::class);
+$classes = $tokenizer->classLocator()->getClasses(\Cycle\Annotated\Tests\BaseTest::class);
 
 foreach ($classes as $class) {
-    if (!$class->isAbstract() || $class->getName() == \Cycle\Schema\Tests\BaseTest::class) {
+    if (!$class->isAbstract() || $class->getName() == \Cycle\Annotated\Tests\BaseTest::class) {
         continue;
     }
 
