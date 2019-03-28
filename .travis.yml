@@ -1,0 +1,190 @@
+language: php
+
+sudo: required
+
+services:
+  - docker
+
+php:
+  - 7.1
+  - 7.2
+
+env:
+  - "DB=ALL COVERAGE=ALL"
+
+before_install:
+  - cd tests
+  - docker-compose up -d
+  - cd ..
+  - bash ./tests/install-sqlsrv.sh
+
+install:
+  - composer install --no-interaction --prefer-source
+
+script:
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -f coverage.xml
+
+jobs:
+  include:
+    # PHP 7.3 builds does not support SQLServer yet
+    - stage: Test
+      php: 7.3
+      env:
+        - "DB=postgres,mysql,sqlite"
+      before_install:
+        - cd tests
+        - docker-compose up -d
+        - cd ..
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/SQLite
+        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    # Testing various PostgresSQL version
+    - stage: Test
+      php: 7.1
+      addons:
+        postgresql: "9.2"
+      env:
+        - "DB=postgres POSTGRES=9.2 PHP=7.1"
+      before_install:
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    # Testing various PostgresSQL version
+    - stage: Test
+      php: 7.2
+      addons:
+        postgresql: "9.2"
+      env:
+        - "DB=postgres POSTGRES=9.2"
+      before_install:
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    - stage: Test
+      php: 7.2
+      addons:
+        postgresql: "9.3"
+      env:
+        - "DB=postgres POSTGRES=9.3"
+      before_install:
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    - stage: Test
+      php: 7.2
+      addons:
+        postgresql: "9.4"
+      env:
+        - "DB=postgres POSTGRES=9.4"
+      before_install:
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    - stage: Test
+      php: 7.2
+      addons:
+        postgresql: "9.5"
+      env:
+        - "DB=postgres POSTGRES=9.5"
+      before_install:
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    - stage: Test
+      php: 7.2
+      addons:
+        postgresql: "9.6"
+      env:
+        - "DB=postgres POSTGRES=9.6"
+      before_install:
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    - stage: Test
+      php: 7.2
+      addons:
+        postgresql: "10.0"
+      env:
+        - "DB=postgres POSTGRES=10.0"
+      before_install:
+        - bash ./tests/install-pgsql-10.sh
+        - psql -c 'create database spiral;' -U postgres
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
+
+    # MariaDB
+    - stage: Test
+      php: 7.1
+      addons:
+        mariadb: "10.0"
+      env:
+        - "DB=mariadb MARIADB=10.0 PHP=7.1"
+      before_install:
+        - sudo bash ./tests/fix-binlog.sh
+        - mysql -e 'CREATE DATABASE spiral;'
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
+    - stage: Test
+      php: 7.2
+      addons:
+        mariadb: "10.0"
+      env:
+        - "DB=mariadb MARIADB=10.0"
+      before_install:
+        - sudo bash ./tests/fix-binlog.sh
+        - mysql -e 'CREATE DATABASE spiral;'
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
+
+    - stage: Test
+      php: 7.2
+      addons:
+        mariadb: "10.1"
+      env:
+        - "DB=mariadb MARIADB=10.1"
+      before_install:
+        - mysql -e 'CREATE DATABASE spiral;'
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
+
+    - stage: Test
+      php: 7.2
+      addons:
+        mariadb: "10.2"
+      env:
+        - "DB=mariadb MARIADB=10.2"
+      before_install:
+        - mysql -e 'CREATE DATABASE spiral;'
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
+
+    # MySQL 5.7
+    - stage: Test
+      php: 7.2
+      addons:
+        apt:
+          sources:
+            - mysql-5.7-trusty
+          packages:
+            - mysql-server
+            - mysql-client
+      env:
+        - "DB=mysql MYSQL=5.7"
+      before_install:
+        - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+        - sudo mysql_upgrade -u root -proot
+        - sudo service mysql restart
+        - mysql -u root -proot -e 'CREATE DATABASE spiral;'
+      script:
+        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
