@@ -14,7 +14,7 @@ namespace Cycle\Annotated\Tests\Fixtures;
 class Simple
 {
     /**
-     * @column
+     * @column(type=primary)
      * @var int
      */
     protected $id;

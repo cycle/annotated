@@ -8,8 +8,11 @@
 
 namespace Cycle\Annotated;
 
+use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
+use Cycle\Schema\Definition\Field;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Inflector\Inflector;
@@ -43,25 +46,30 @@ class GenerateEntities implements GeneratorInterface
      */
     public function run(Registry $registry): Registry
     {
-        foreach ($this->locator->getClasses() as $reflection) {
-            if ($reflection->getDocComment() === false) {
+        foreach ($this->locator->getClasses() as $class) {
+            if ($class->getDocComment() === false) {
                 continue;
             }
 
-            $head = $this->parser->parse($reflection->getDocComment());
-            if (!isset($head[Entity::NAME])) {
+            $ann = $this->parser->parse($class->getDocComment());
+            if (!isset($ann[Entity::NAME])) {
                 continue;
             }
 
-            /** @var Entity $ann */
-            $ann = $head[Entity::NAME];
+            /** @var Entity $ea */
+            $ea = $ann[Entity::NAME];
 
-            $e = $this->initEntity($reflection, $ann);
+            $e = $this->initEntity($class, $ea);
+
+            // columns
+            $this->initFields($class, $e);
+
+            // relations
 
             // register entity
             $registry->register($e);
 
-            $registry->linkTable($e, $ann->getDatabase(), $this->resolveTable($e->getRole(), $ann));
+            $registry->linkTable($e, $ea->getDatabase(), $this->resolveTable($e->getRole(), $ea));
         }
 
         return $registry;
@@ -86,6 +94,61 @@ class GenerateEntities implements GeneratorInterface
         $e->setConstrain($this->resolveName($class, $ann->getConstrain()));
 
         return $e;
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     * @param EntitySchema     $entity
+     */
+    protected function initFields(\ReflectionClass $class, EntitySchema $entity)
+    {
+        foreach ($class->getProperties() as $property) {
+            if ($property->getDocComment() === false) {
+                continue;
+            }
+
+            $ann = $this->parser->parse($property->getDocComment());
+            if (!isset($ann[Column::NAME])) {
+                continue;
+            }
+
+            $entity->getFields()->set($property->getName(), $this->defineField($property, $ann[Column::NAME]));
+        }
+    }
+
+    /**
+     * @param \ReflectionProperty $property
+     * @param Column              $column
+     * @return Field
+     */
+    protected function defineField(\ReflectionProperty $property, Column $column): Field
+    {
+        if ($column->getType() === null) {
+            throw new AnnotationException(
+                "Column type definition is required on `{$property->getName()}`"
+            );
+        }
+
+        $field = new Field();
+
+        $field->setType($column->getType());
+        $field->setColumn($column->getColumn() ?? Inflector::tableize($property->getName()));
+        $field->setPrimary($column->isPrimary());
+        $field->setTypecast($column->getTypecast());
+
+        if ($column->isNullable()) {
+            $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_NULLABLE, true);
+        }
+
+        if ($column->hasDefault()) {
+            $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, $column->getDefault());
+        }
+
+        if ($column->isCastedDefault()) {
+            $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_CAST_DEFAULT, true);
+        }
+
+        return $field;
     }
 
     /**

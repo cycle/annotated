@@ -8,6 +8,7 @@
 
 namespace Cycle\Annotated\Tests;
 
+use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\GenerateEntities;
 use Cycle\Annotated\Tests\Fixtures\Complete;
@@ -27,6 +28,7 @@ abstract class GeneratorTest extends BaseTest
     {
         $p = new Parser();
         $p->register(new Entity());
+        $p->register(new Column());
 
         $r = new Registry($this->dbal);
         $g = new GenerateEntities($this->locator, $p);
@@ -42,12 +44,16 @@ abstract class GeneratorTest extends BaseTest
         $this->assertTrue($r->hasTable($r->getEntity('simple')));
         $this->assertSame('default', $r->getDatabase($r->getEntity('simple')));
         $this->assertSame('simple', $r->getTable($r->getEntity('simple')));
+
+        $this->assertTrue($r->getEntity('simple')->getFields()->has('id'));
+        $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());
     }
 
     public function testCompleteSchema()
     {
         $p = new Parser();
         $p->register(new Entity());
+        $p->register(new Column());
 
         $r = new Registry($this->dbal);
         $g = new GenerateEntities($this->locator, $p);
@@ -64,5 +70,15 @@ abstract class GeneratorTest extends BaseTest
         $this->assertTrue($r->hasTable($r->getEntity('eComplete')));
         $this->assertSame('secondary', $r->getDatabase($r->getEntity('eComplete')));
         $this->assertSame('complete_data', $r->getTable($r->getEntity('eComplete')));
+
+        $this->assertTrue($r->getEntity('eComplete')->getFields()->has('id'));
+        $this->assertTrue($r->getEntity('eComplete')->getFields()->has('name'));
+
+        $this->assertSame(
+            'username',
+            $r->getEntity('eComplete')->getFields()->get('name')->getColumn()
+        );
+
+        $this->assertFalse($r->getEntity('eComplete')->getFields()->has('ignored'));
     }
 }
