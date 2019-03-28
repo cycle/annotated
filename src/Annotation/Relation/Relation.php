@@ -35,7 +35,7 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     /** @var string|null */
     protected $target;
 
-    /** @var Inversed|null */
+    /** @var Inverse|null */
     protected $inversed;
 
     /** @var array */
@@ -59,8 +59,8 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     public function getSchema(): array
     {
         return static::OPTIONS + [
-                'target'   => Parser::STRING,
-                'inversed' => Inversed::class
+                'target'  => Parser::STRING,
+                'inverse' => Inverse::class
             ];
     }
 

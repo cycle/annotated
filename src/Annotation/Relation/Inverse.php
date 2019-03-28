@@ -11,9 +11,9 @@ namespace Cycle\Annotated\Annotation\Relation;
 use Spiral\Annotations\AbstractAnnotation;
 use Spiral\Annotations\Parser;
 
-final class Inversed extends AbstractAnnotation
+final class Inverse extends AbstractAnnotation
 {
-    protected const INVERSED = 'inversed';
+    protected const INVERSED = 'inverse';
     protected const SCHEMA   = [
         'type' => Parser::STRING,
         'name' => Parser::STRING

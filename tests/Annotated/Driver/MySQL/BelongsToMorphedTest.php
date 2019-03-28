@@ -8,7 +8,7 @@
  
 namespace Cycle\Schema\Tests\Driver\MySQL; 
 
-class BelongsToMorphedTest extends \Cycle\Annotated\Tests\Relation\Morphed\BelongsToMorphedTest
+class BelongsToMorphedTest extends \Cycle\Annotated\Tests\Relation\Morphed\BelongsToMorphedTest 
 { 
     const DRIVER = "mysql"; 
 }
