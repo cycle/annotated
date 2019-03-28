@@ -13,7 +13,7 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
-use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\SyncTables;
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Annotations\Parser;
 
@@ -49,7 +49,7 @@ final class Generator
         $e->setConstrain($this->resolveName($ann->getConstrain(), $class));
 
         if ($ann->isReadonlySchema()) {
-            $e->getOptions()->set(RenderTables::READONLY, true);
+            $e->getOptions()->set(SyncTables::READONLY_SCHEMA, true);
         }
 
         return $e;
