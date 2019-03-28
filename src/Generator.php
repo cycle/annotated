@@ -10,9 +10,11 @@ namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\RelationInterface;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
+use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Annotations\Parser;
@@ -81,7 +83,46 @@ final class Generator
      */
     public function initRelations(EntitySchema $entity, \ReflectionClass $class)
     {
+        foreach ($class->getProperties() as $property) {
+            if ($property->getDocComment() === false) {
+                continue;
+            }
 
+            $ann = $this->parser->parse($property->getDocComment());
+
+            foreach ($ann as $ra) {
+                if (!$ra instanceof RelationInterface) {
+                    continue;
+                }
+
+                if ($ra->getType() === null) {
+                    throw new AnnotationException(
+                        "Relation type definition is required on `{$entity->getClass()}`"
+                    );
+                }
+
+                if ($ra->getTarget() === null) {
+                    throw new AnnotationException(
+                        "Relation target definition is required on `{$entity->getClass()}`"
+                    );
+                }
+
+                $relation = new Relation();
+                $relation->setTarget($this->resolveName($ra->getTarget(), $class));
+                $relation->setType($ra->getType());
+
+                if ($ra->isInversed()) {
+                    $relation->setInverse($ra->getInverseName(), $ra->getInverseType());
+                }
+
+                foreach ($ra->getOptions() as $option => $value) {
+                    $relation->getOptions()->set($option, $value);
+                }
+
+                // need relation definition
+                $entity->getRelations()->set($property->getName(), $relation);
+            }
+        }
     }
 
     /**
