@@ -43,7 +43,7 @@ abstract class GeneratorTest extends BaseTest
 
         $this->assertTrue($r->hasTable($r->getEntity('simple')));
         $this->assertSame('default', $r->getDatabase($r->getEntity('simple')));
-        $this->assertSame('simple', $r->getTable($r->getEntity('simple')));
+        $this->assertSame('simples', $r->getTable($r->getEntity('simple')));
 
         $this->assertTrue($r->getEntity('simple')->getFields()->has('id'));
         $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());

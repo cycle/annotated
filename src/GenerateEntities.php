@@ -162,7 +162,7 @@ class GenerateEntities implements GeneratorInterface
             return $ann->getTable();
         }
 
-        return $role;
+        return Inflector::pluralize(Inflector::tableize($role));
     }
 
     /**
