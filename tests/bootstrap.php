@@ -65,7 +65,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 if (!empty(getenv('DB'))) {
     switch (getenv('DB')) {
         case 'postgres':
-            \Cycle\Schema\Tests\BaseTest::$config = [
+            \Cycle\Annotated\Tests\BaseTest::$config = [
                 'debug'    => false,
                 'postgres' => [
                     'driver' => \Spiral\Database\Driver\Postgres\PostgresDriver::class,
@@ -80,7 +80,7 @@ if (!empty(getenv('DB'))) {
             break;
 
         case 'mysql':
-            \Cycle\Schema\Tests\BaseTest::$config = [
+            \Cycle\Annotated\Tests\BaseTest::$config = [
                 'debug' => false,
                 'mysql' => [
                     'driver' => \Spiral\Database\Driver\MySQL\MySQLDriver::class,
@@ -95,7 +95,7 @@ if (!empty(getenv('DB'))) {
             break;
 
         case 'mariadb':
-            \Cycle\Schema\Tests\BaseTest::$config = [
+            \Cycle\Annotated\Tests\BaseTest::$config = [
                 'debug' => false,
                 'mysql' => [
                     'driver' => \Spiral\Database\Driver\MySQL\MySQLDriver::class,
