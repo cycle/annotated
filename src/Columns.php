@@ -23,12 +23,12 @@ final class Columns implements GeneratorInterface
     private $generator;
 
     /**
-     * @param Parser $parser
+     * @param Parser|null $parser
      */
-    public function __construct(Parser $parser)
+    public function __construct(Parser $parser = null)
     {
-        $this->parser = $parser;
-        $this->generator = new Generator($parser);
+        $this->parser = $parser ?? Generator::defaultParser();;
+        $this->generator = new Generator($this->parser);
     }
 
     /**

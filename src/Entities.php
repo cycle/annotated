@@ -34,13 +34,13 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param ClassesInterface $locator
-     * @param Parser           $parser
+     * @param Parser|null      $parser
      */
-    public function __construct(ClassesInterface $locator, Parser $parser)
+    public function __construct(ClassesInterface $locator, Parser $parser = null)
     {
         $this->locator = $locator;
-        $this->parser = $parser;
-        $this->generator = new Generator($parser);
+        $this->parser = $parser ?? Generator::defaultParser();
+        $this->generator = new Generator($this->parser);
     }
 
     /**

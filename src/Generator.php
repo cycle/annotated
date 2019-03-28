@@ -10,7 +10,8 @@ namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\RelationInterface;
+use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
+use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
@@ -98,7 +99,7 @@ final class Generator
             $ann = $this->parser->parse($property->getDocComment());
 
             foreach ($ann as $ra) {
-                if (!$ra instanceof RelationInterface) {
+                if (!$ra instanceof RelationAnnotation\RelationInterface) {
                     continue;
                 }
 
@@ -217,5 +218,29 @@ final class Generator
         }
 
         return $name;
+    }
+
+    /**
+     * @return Parser
+     */
+    public static function defaultParser(): Parser
+    {
+        $p = new Parser();
+        $p->register(new Entity());
+        $p->register(new Column());
+        $p->register(new Table());
+        $p->register(new Table\Index());
+
+        // embedded relations
+        $p->register(new RelationAnnotation\BelongsTo());
+        $p->register(new RelationAnnotation\HasOne());
+        $p->register(new RelationAnnotation\HasMany());
+        $p->register(new RelationAnnotation\RefersTo());
+        $p->register(new RelationAnnotation\ManyToMany());
+        $p->register(new RelationAnnotation\Morphed\BelongsToMorphed());
+        $p->register(new RelationAnnotation\Morphed\MorphedHasOne());
+        $p->register(new RelationAnnotation\Morphed\MorphedHasMany());
+
+        return $p;
     }
 }

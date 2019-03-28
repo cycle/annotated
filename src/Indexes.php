@@ -20,11 +20,11 @@ final class Indexes implements GeneratorInterface
     private $parser;
 
     /**
-     * @param Parser $parser
+     * @param Parser|null $parser
      */
-    public function __construct(Parser $parser)
+    public function __construct(Parser $parser = null)
     {
-        $this->parser = $parser;
+        $this->parser = $parser ?? Generator::defaultParser();;
     }
 
     /**
