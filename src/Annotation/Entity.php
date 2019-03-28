@@ -15,13 +15,14 @@ final class Entity extends AbstractAnnotation
 {
     public const NAME   = 'entity';
     public const SCHEMA = [
-        'role'       => Parser::STRING,
-        'mapper'     => Parser::STRING,
-        'repository' => Parser::STRING,
-        'table'      => Parser::STRING,
-        'database'   => Parser::STRING,
-        'source'     => Parser::STRING,
-        'constrain'  => Parser::STRING
+        'role'           => Parser::STRING,
+        'mapper'         => Parser::STRING,
+        'repository'     => Parser::STRING,
+        'table'          => Parser::STRING,
+        'database'       => Parser::STRING,
+        'readonlySchema' => Parser::BOOL,
+        'source'         => Parser::STRING,
+        'constrain'      => Parser::STRING
     ];
 
     /** @var string|null */
@@ -35,6 +36,9 @@ final class Entity extends AbstractAnnotation
 
     /** @var string|null */
     protected $table;
+
+    /** @var bool */
+    protected $readonlySchema = false;
 
     /** @var string|null */
     protected $database;
@@ -75,6 +79,14 @@ final class Entity extends AbstractAnnotation
     public function getTable(): ?string
     {
         return $this->table;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReadonlySchema(): bool
+    {
+        return $this->readonlySchema;
     }
 
     /**
