@@ -15,6 +15,7 @@ use Cycle\Annotated\Columns;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Indexes;
 use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Annotations\Parser;
 
@@ -54,10 +55,12 @@ abstract class TableTest extends BaseTest
         $p->register(new Column());
 
         $r = new Registry($this->dbal);
+
         (new Entities($this->locator, $p))->run($r);
         (new Columns($p))->run($r);
         (new RenderTables())->run($r);
         (new Indexes($p))->run($r);
+        (new SyncTables())->run($r);
 
         $this->assertTrue($r->hasTable($r->getEntity('withTable')));
 
