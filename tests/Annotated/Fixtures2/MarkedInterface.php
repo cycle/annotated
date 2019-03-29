@@ -8,14 +8,7 @@
 
 namespace Cycle\Annotated\Tests\Fixtures2;
 
-/**
- * @entity
- */
-class Simple implements MarkedInterface
+interface MarkedInterface
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
-    protected $id;
+
 }

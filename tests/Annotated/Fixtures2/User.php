@@ -11,7 +11,7 @@ namespace Cycle\Annotated\Tests\Fixtures2;
 /**
  * @entity
  */
-class User
+class User implements MarkedInterface
 {
     /**
      * @column(type=primary)

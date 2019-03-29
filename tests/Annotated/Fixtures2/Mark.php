@@ -11,11 +11,17 @@ namespace Cycle\Annotated\Tests\Fixtures2;
 /**
  * @entity
  */
-class Simple implements MarkedInterface
+class Mark
 {
     /**
      * @column(type=primary)
      * @var int
      */
     protected $id;
+
+    /**
+     * @belongsToMorphed(target=MarkedInterface, inverse=@inverse(as="mark",type=morphedHasOne))
+     * @var MarkedInterface
+     */
+    protected $owner;
 }

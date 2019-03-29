@@ -13,6 +13,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\Generator;
 use Cycle\Annotated\Indexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Annotated\Tests\Fixtures2\MarkedInterface;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -129,5 +130,44 @@ abstract class InverseTest extends BaseTest
         $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
         $this->assertSame("user", $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+    }
+
+    public function testBelongsTo()
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/../Fixtures2'],
+            'exclude'     => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $p = Generator::defaultParser();
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $p),
+            new CleanTables(),
+            new Columns($p),
+            GenerateRelations::defaultGenerator(),
+            new ValidateEntities(),
+            new RenderTables(),
+            new RenderRelations(),
+            new Indexes($p),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertArrayHasKey('owner', $schema['mark'][Schema::RELATIONS]);
+        $this->assertSame(Relation::BELONGS_TO_MORPHED, $schema['mark'][Schema::RELATIONS]['owner'][Relation::TYPE]);
+        $this->assertSame(MarkedInterface::class, $schema['mark'][Schema::RELATIONS]['owner'][Relation::TARGET]);
+
+
+        $this->assertArrayHasKey('mark', $schema['user'][Schema::RELATIONS]);
+        $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['user'][Schema::RELATIONS]['mark'][Relation::TYPE]);
+        $this->assertSame('mark', $schema['user'][Schema::RELATIONS]['mark'][Relation::TARGET]);
+
+        $this->assertArrayHasKey('mark', $schema['simple'][Schema::RELATIONS]);
+        $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['simple'][Schema::RELATIONS]['mark'][Relation::TYPE]);
+        $this->assertSame('mark', $schema['simple'][Schema::RELATIONS]['mark'][Relation::TARGET]);
     }
 }
