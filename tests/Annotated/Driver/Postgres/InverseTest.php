@@ -8,7 +8,7 @@
  
 namespace Cycle\Schema\Tests\Driver\Postgres; 
 
-class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest
+class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest 
 { 
     const DRIVER = "postgres"; 
 }
