@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\Postgres; 
+namespace Cycle\Annotated\Tests\Driver\Postgres; 
 
 class HasOneTest extends \Cycle\Annotated\Tests\Relation\HasOneTest 
 { 

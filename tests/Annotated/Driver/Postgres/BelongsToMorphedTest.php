@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\Postgres; 
+namespace Cycle\Annotated\Tests\Driver\Postgres; 
 
 class BelongsToMorphedTest extends \Cycle\Annotated\Tests\Relation\Morphed\BelongsToMorphedTest 
 { 

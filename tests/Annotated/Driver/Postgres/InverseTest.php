@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\Postgres; 
+namespace Cycle\Annotated\Tests\Driver\Postgres; 
 
 class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest 
 { 

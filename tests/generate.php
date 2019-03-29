@@ -21,19 +21,19 @@ $tokenizer = new Tokenizer\Tokenizer(new Tokenizer\Config\TokenizerConfig([
 
 $databases = [
     'sqlite'    => [
-        'namespace' => 'Cycle\Schema\Tests\Driver\SQLite',
+        'namespace' => 'Cycle\Annotated\Tests\Driver\SQLite',
         'directory' => __DIR__ . '/Annotated/Driver/SQLite/'
     ],
     'mysql'     => [
-        'namespace' => 'Cycle\Schema\Tests\Driver\MySQL',
+        'namespace' => 'Cycle\Annotated\Tests\Driver\MySQL',
         'directory' => __DIR__ . '/Annotated/Driver/MySQL/'
     ],
     'postgres'  => [
-        'namespace' => 'Cycle\Schema\Tests\Driver\Postgres',
+        'namespace' => 'Cycle\Annotated\Tests\Driver\Postgres',
         'directory' => __DIR__ . '/Annotated/Driver/Postgres/'
     ],
     'sqlserver' => [
-        'namespace' => 'Cycle\Schema\Tests\Driver\SQLServer',
+        'namespace' => 'Cycle\Annotated\Tests\Driver\SQLServer',
         'directory' => __DIR__ . '/Annotated/Driver/SQLServer/'
     ]
 ];

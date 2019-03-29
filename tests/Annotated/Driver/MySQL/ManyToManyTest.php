@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\MySQL; 
+namespace Cycle\Annotated\Tests\Driver\MySQL; 
 
 class ManyToManyTest extends \Cycle\Annotated\Tests\Relation\ManyToManyTest 
 { 

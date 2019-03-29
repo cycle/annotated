@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\SQLite; 
+namespace Cycle\Annotated\Tests\Driver\SQLite; 
 
 class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest 
 { 

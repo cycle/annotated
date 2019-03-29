@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\SQLServer; 
+namespace Cycle\Annotated\Tests\Driver\SQLServer; 
 
 class TableTest extends \Cycle\Annotated\Tests\TableTest 
 { 

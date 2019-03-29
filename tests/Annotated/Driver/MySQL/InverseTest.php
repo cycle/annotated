@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Schema\Tests\Driver\MySQL; 
+namespace Cycle\Annotated\Tests\Driver\MySQL; 
 
 class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest 
 { 
