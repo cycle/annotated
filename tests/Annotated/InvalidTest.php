@@ -29,10 +29,39 @@ abstract class InvalidTest extends BaseTest
     /**
      * @expectedException \Cycle\Schema\Exception\RelationException
      */
-    public function testBelongsTo()
+    public function testInvalidRelation()
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures3'],
+            'exclude'     => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $p = Generator::defaultParser();
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $p),
+            new CleanTables(),
+            new Columns($p),
+            GenerateRelations::defaultGenerator(),
+            new ValidateEntities(),
+            new RenderTables(),
+            new RenderRelations(),
+            new Indexes($p),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+    }
+
+    /**
+     * @expectedException \Cycle\Annotated\Exception\AnnotationException
+     */
+    public function testInvalidColumn()
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures4'],
             'exclude'     => [],
         ]));
 
