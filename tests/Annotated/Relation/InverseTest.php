@@ -161,7 +161,6 @@ abstract class InverseTest extends BaseTest
         $this->assertSame(Relation::BELONGS_TO_MORPHED, $schema['mark'][Schema::RELATIONS]['owner'][Relation::TYPE]);
         $this->assertSame(MarkedInterface::class, $schema['mark'][Schema::RELATIONS]['owner'][Relation::TARGET]);
 
-
         $this->assertArrayHasKey('mark', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['user'][Schema::RELATIONS]['mark'][Relation::TYPE]);
         $this->assertSame('mark', $schema['user'][Schema::RELATIONS]['mark'][Relation::TARGET]);
