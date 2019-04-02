@@ -34,5 +34,7 @@ class User
      * @manyToMany(target=Tag, though=TagMap)
      */
     protected $tags;
+    
+    ...
 }
 ```
