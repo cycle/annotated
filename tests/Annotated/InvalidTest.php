@@ -45,7 +45,7 @@ abstract class InvalidTest extends BaseTest
             new Entities($locator, $p),
             new ResetTables(),
             new Columns($p),
-            GenerateRelations::defaultGenerator(),
+            new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
@@ -72,9 +72,9 @@ abstract class InvalidTest extends BaseTest
 
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
-            new CleanTables(),
+            new ResetTables(),
             new Columns($p),
-            GenerateRelations::defaultGenerator(),
+            new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
