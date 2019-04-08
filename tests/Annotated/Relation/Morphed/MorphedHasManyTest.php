@@ -19,11 +19,11 @@ use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
-use Cycle\Schema\Generator\CleanTables;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
 use Cycle\Schema\Generator\RenderRelations;
 use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Cycle\Schema\Relation\Morphed\MorphedHasMany as MorphedHasManyRelation;
@@ -43,7 +43,7 @@ abstract class MorphedHasManyTest extends BaseTest
 
         $schema = (new Compiler())->compile($r, [
             new Entities($this->locator, $p),
-            new CleanTables(),
+            new ResetTables(),
             new Columns($p),
             new GenerateRelations(['morphedHasMany' => new MorphedHasManyRelation()]),
             new RenderTables(),
@@ -67,23 +67,23 @@ abstract class MorphedHasManyTest extends BaseTest
 
         $this->assertTrue(
             $this->dbal->database('default')
-                       ->getDriver()
-                       ->getSchema('labels')
-                       ->hasColumn('owner_id')
+                ->getDriver()
+                ->getSchema('labels')
+                ->hasColumn('owner_id')
         );
 
         $this->assertTrue(
             $this->dbal->database('default')
-                       ->getDriver()
-                       ->getSchema('labels')
-                       ->hasColumn('owner_role')
+                ->getDriver()
+                ->getSchema('labels')
+                ->hasColumn('owner_role')
         );
 
         $this->assertTrue(
             $this->dbal->database('default')
-                       ->getDriver()
-                       ->getSchema('labels')
-                       ->hasIndex(['owner_id', 'owner_role'])
+                ->getDriver()
+                ->getSchema('labels')
+                ->hasIndex(['owner_id', 'owner_role'])
         );
     }
 }

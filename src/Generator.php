@@ -223,7 +223,7 @@ final class Generator
     /**
      * @return Parser
      */
-    public static function defaultParser(): Parser
+    public static function getDefaultParser(): Parser
     {
         $p = new Parser();
         $p->register(new Entity());

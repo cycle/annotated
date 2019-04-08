@@ -13,11 +13,11 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\Generator;
 use Cycle\Annotated\Indexes;
 use Cycle\Schema\Compiler;
-use Cycle\Schema\Generator\CleanTables;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
 use Cycle\Schema\Generator\RenderRelations;
 use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
@@ -38,12 +38,12 @@ abstract class InvalidTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::defaultParser();
+        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
-            new CleanTables(),
+            new ResetTables(),
             new Columns($p),
             GenerateRelations::defaultGenerator(),
             new ValidateEntities(),
@@ -67,7 +67,7 @@ abstract class InvalidTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::defaultParser();
+        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [

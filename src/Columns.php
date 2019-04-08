@@ -27,7 +27,7 @@ final class Columns implements GeneratorInterface
      */
     public function __construct(Parser $parser = null)
     {
-        $this->parser = $parser ?? Generator::defaultParser();;
+        $this->parser = $parser ?? Generator::getDefaultParser();;
         $this->generator = new Generator($this->parser);
     }
 
