@@ -18,7 +18,6 @@ final class HasOne extends Relation
         'nullable'    => Parser::BOOL,
         'innerKey'    => Parser::STRING,
         'outerKey'    => Parser::STRING,
-        'where'       => [Parser::MIXED],
         'fkCreate'    => Parser::BOOL,
         'fkAction'    => Parser::STRING,
         'indexCreate' => Parser::BOOL,
