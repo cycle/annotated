@@ -21,7 +21,6 @@ final class ManyToMany extends Relation
         'though'          => Parser::STRING,
         'thoughInnerKey'  => Parser::STRING,
         'thoughOuterKey'  => Parser::STRING,
-        'thoughConstrain' => Parser::STRING,
         'thoughWhere'     => [Parser::MIXED],
         'where'           => [Parser::MIXED],
         'fkCreate'        => Parser::BOOL,
