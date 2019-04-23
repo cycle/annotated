@@ -21,7 +21,6 @@ final class MorphedHasOne extends Relation
         'outerKey'       => Parser::STRING,
         'morphKey'       => Parser::STRING,
         'morphKeyLength' => Parser::INTEGER,
-        'where'          => [Parser::MIXED],
         'indexCreate'    => Parser::BOOL,
     ];
 }
