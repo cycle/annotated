@@ -19,19 +19,19 @@ class User
     protected $id;
     
     /**
-     * @hasOne(target=Profile)
+     * @hasOne(target=Profile, load=eager)
      * @var Profile
      */
     protected $profile;
     
     /**
-     * @hasMany(target=Post)
+     * @hasMany(target=Post, load=lazy)
      * @var Post[]|Collection
      */
     protected $posts;
    
     /**
-     * @manyToMany(target=Tag, though=TagMap)
+     * @manyToMany(target=Tag, though=TagMap, load=lazy)
      */
     protected $tags;
     
