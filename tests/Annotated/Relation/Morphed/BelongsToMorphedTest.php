@@ -12,9 +12,9 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
 use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\Columns;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\Annotated\Tests\Fixtures\LabelledInterface;
 use Cycle\ORM\Relation;
@@ -45,11 +45,11 @@ abstract class BelongsToMorphedTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($this->locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(['belongsToMorphed' => new BelongsToMorphedRelation()]),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

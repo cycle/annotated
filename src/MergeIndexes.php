@@ -14,7 +14,7 @@ use Cycle\Schema\Registry;
 use Spiral\Annotations\Parser;
 use Spiral\Database\Schema\AbstractTable;
 
-final class Indexes implements GeneratorInterface
+final class MergeIndexes implements GeneratorInterface
 {
     /** @var Parser */
     private $parser;
@@ -24,7 +24,7 @@ final class Indexes implements GeneratorInterface
      */
     public function __construct(Parser $parser = null)
     {
-        $this->parser = $parser ?? Generator::getDefaultParser();;
+        $this->parser = $parser ?? Generator::getDefaultParser();
     }
 
     /**

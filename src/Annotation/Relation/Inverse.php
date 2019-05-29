@@ -8,6 +8,7 @@
 
 namespace Cycle\Annotated\Annotation\Relation;
 
+use Cycle\ORM\Relation;
 use Spiral\Annotations\AbstractAnnotation;
 use Spiral\Annotations\Parser;
 
@@ -15,9 +16,11 @@ final class Inverse extends AbstractAnnotation
 {
     protected const NAME   = 'inverse';
     protected const SCHEMA = [
-        'type' => Parser::STRING,
-        'name' => Parser::STRING,
-        'as'   => Parser::STRING, // alias to name
+        'type'  => Parser::STRING,
+        'name'  => Parser::STRING,
+        'as'    => Parser::STRING, // alias to name
+        'load'  => Parser::STRING,
+        'fetch' => Parser::STRING, // alias to load
     ];
 
     /** @var string|null */
@@ -26,6 +29,9 @@ final class Inverse extends AbstractAnnotation
     /** @var string|null */
     protected $name;
 
+    /** @var string|null */
+    protected $load;
+
     /**
      * @inheritdoc
      */
@@ -33,6 +39,10 @@ final class Inverse extends AbstractAnnotation
     {
         if ($name == "as") {
             $name = "name";
+        }
+
+        if ($name == "fetch") {
+            $name = "load";
         }
 
         parent::setAttribute($name, $value);
@@ -59,6 +69,24 @@ final class Inverse extends AbstractAnnotation
      */
     public function getRelation(): ?string
     {
-        return $this->name ?? $this->as;
+        return $this->name;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLoadMethod(): ?int
+    {
+        switch ($this->load) {
+            case 'eager':
+            case Relation::LOAD_EAGER:
+                return Relation::LOAD_EAGER;
+            case 'promise':
+            case 'lazy':
+            case Relation::LOAD_PROMISE:
+                return Relation::LOAD_PROMISE;
+            default:
+                return null;
+        }
     }
 }

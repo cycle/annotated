@@ -8,10 +8,10 @@
 
 namespace Cycle\Annotated\Tests;
 
-use Cycle\Annotated\Columns;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Generator;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -44,12 +44,12 @@ abstract class InvalidTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -73,12 +73,12 @@ abstract class InvalidTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

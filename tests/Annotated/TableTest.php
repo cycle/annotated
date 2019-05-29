@@ -11,9 +11,9 @@ namespace Cycle\Annotated\Tests;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\Columns;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
@@ -30,7 +30,7 @@ abstract class TableTest extends BaseTest
 
         $r = new Registry($this->dbal);
         (new Entities($this->locator, $p))->run($r);
-        (new Columns($p))->run($r);
+        (new MergeColumns($p))->run($r);
         (new RenderTables())->run($r);
 
         $this->assertTrue($r->hasTable($r->getEntity('withTable')));
@@ -57,9 +57,9 @@ abstract class TableTest extends BaseTest
         $r = new Registry($this->dbal);
 
         (new Entities($this->locator, $p))->run($r);
-        (new Columns($p))->run($r);
+        (new MergeColumns($p))->run($r);
         (new RenderTables())->run($r);
-        (new Indexes($p))->run($r);
+        (new MergeIndexes($p))->run($r);
         (new SyncTables())->run($r);
 
         $this->assertTrue($r->hasTable($r->getEntity('withTable')));

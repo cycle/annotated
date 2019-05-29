@@ -12,9 +12,9 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\Columns;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
@@ -44,11 +44,11 @@ abstract class HasManyTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($this->locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(['hasMany' => new HasManyRelation()]),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

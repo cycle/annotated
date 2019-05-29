@@ -14,7 +14,7 @@ use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Spiral\Annotations\Parser;
 
-final class Columns implements GeneratorInterface
+final class MergeColumns implements GeneratorInterface
 {
     /** @var Parser */
     private $parser;

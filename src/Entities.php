@@ -72,6 +72,9 @@ final class Entities implements GeneratorInterface
             // relations
             $this->generator->initRelations($e, $class);
 
+            // additional columns (mapped to local fields automatically)
+            $this->generator->initColumns($e, $ea->getColumns(), $class);
+
             if ($this->hasParent($registry, $e->getClass())) {
                 $children[] = $e;
                 continue;

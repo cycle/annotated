@@ -114,7 +114,11 @@ final class Generator
                 $relation->setType($ra->getName());
 
                 if ($ra->isInversed()) {
-                    $relation->setInverse($ra->getInverseName(), $ra->getInverseType());
+                    $relation->setInverse(
+                        $ra->getInverseName(),
+                        $ra->getInverseType(),
+                        $ra->getInverseLoadMethod()
+                    );
                 }
 
                 foreach ($ra->getOptions() as $option => $value) {

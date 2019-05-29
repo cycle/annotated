@@ -60,7 +60,9 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     {
         $schema = static::OPTIONS + [
                 'target'  => Parser::STRING,
-                'inverse' => Inverse::class
+                'inverse' => Inverse::class,
+                'load'    => Parser::STRING,
+                'fetch'   => Parser::STRING // alias to `load`
             ];
 
         array_walk_recursive($schema, function (&$v) {
@@ -85,6 +87,10 @@ abstract class Relation implements RelationInterface, AnnotationInterface
             return;
         }
 
+        if (in_array($name, ['load', 'fetch'])) {
+            $name = 'load';
+        }
+
         $this->options[$name] = $value;
     }
 
@@ -105,6 +111,14 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getLoadMethod(): ?string
+    {
+        return $this->options['load'] ?? null;
+    }
+
+    /**
      * @return bool
      */
     public function isInversed(): bool
@@ -118,7 +132,6 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     public function getInverseType(): string
     {
         return $this->inverse->getType();
-
     }
 
     /**
@@ -128,4 +141,13 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     {
         return $this->inverse->getRelation();
     }
+
+    /**
+     * @return int|null
+     */
+    public function getInverseLoadMethod(): ?int
+    {
+        return $this->inverse->getLoadMethod();
+    }
+
 }

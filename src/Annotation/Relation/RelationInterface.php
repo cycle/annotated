@@ -39,4 +39,9 @@ interface RelationInterface
      * @return string
      */
     public function getInverseName(): string;
+
+    /**
+     * @return int|null
+     */
+    public function getInverseLoadMethod(): ?int;
 }

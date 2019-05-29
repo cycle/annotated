@@ -22,7 +22,8 @@ final class Entity extends AbstractAnnotation
         'database'       => Parser::STRING,
         'readonlySchema' => Parser::BOOL,
         'source'         => Parser::STRING,
-        'constrain'      => Parser::STRING
+        'constrain'      => Parser::STRING,
+        'columns'        => [Column::class],
     ];
 
     /** @var string|null */
@@ -48,6 +49,9 @@ final class Entity extends AbstractAnnotation
 
     /** @var string|null */
     protected $constrain;
+
+    /** @var array */
+    protected $columns = [];
 
     /**
      * @return string|null
@@ -111,5 +115,13 @@ final class Entity extends AbstractAnnotation
     public function getConstrain(): ?string
     {
         return $this->constrain;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getColumns(): array
+    {
+        return $this->columns;
     }
 }

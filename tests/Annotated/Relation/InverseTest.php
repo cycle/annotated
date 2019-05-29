@@ -8,10 +8,10 @@
 
 namespace Cycle\Annotated\Tests\Relation;
 
-use Cycle\Annotated\Columns;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Generator;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\Annotated\Tests\Fixtures2\MarkedInterface;
 use Cycle\ORM\Relation;
@@ -45,12 +45,12 @@ abstract class InverseTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -79,12 +79,12 @@ abstract class InverseTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -113,12 +113,12 @@ abstract class InverseTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -130,6 +130,44 @@ abstract class InverseTest extends BaseTest
         $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
         $this->assertSame("user", $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+    }
+
+    public function testHasOneInverseLoad()
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/../Fixtures5'],
+            'exclude'     => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $p = Generator::getDefaultParser();
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $p),
+            new ResetTables(),
+            new MergeColumns($p),
+            new GenerateRelations(),
+            new ValidateEntities(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($p),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertArrayHasKey('simple', $schema['user'][Schema::RELATIONS]);
+        $this->assertSame(Relation::HAS_ONE, $schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE]);
+        $this->assertSame("simple", $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
+
+        $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['simple'][Relation::LOAD]);
+
+        $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
+        $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
+        $this->assertSame("user", $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+
+        $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['user'][Relation::LOAD]);
     }
 
     public function testBelongsTo()
@@ -147,12 +185,12 @@ abstract class InverseTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
             new ResetTables(),
-            new Columns($p),
+            new MergeColumns($p),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
