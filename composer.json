@@ -1,6 +1,7 @@
 {
   "name": "cycle/annotated",
   "type": "library",
+  "license": "MIT",
   "description": "Cycle ORM Annotated Entities generator",
   "require": {
     "php": "^7.1|^8.0",
