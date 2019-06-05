@@ -178,7 +178,7 @@ final class Generator
 
             $entity->getFields()->set(
                 $name ?? $column->getColumn(),
-                $this->initField($column->getColumn() ?? $name, $column, $class)
+                $this->initField($column->getColumn() ?? $name, $column, $class, '')
             );
         }
     }

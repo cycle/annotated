@@ -38,7 +38,6 @@ abstract class EmbeddedTest extends BaseTest
 {
     public function testRelation()
     {
-        $this->enableProfiling();
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures6'],
             'exclude'     => [],
@@ -77,7 +76,6 @@ abstract class EmbeddedTest extends BaseTest
 
     public function testRelationLazyLoad()
     {
-        $this->enableProfiling();
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures7'],
             'exclude'     => [],
