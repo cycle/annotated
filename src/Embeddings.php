@@ -9,6 +9,9 @@
 namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Embeddable;
+use Cycle\Annotated\Annotation\Relation\RelationInterface;
+use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Spiral\Annotations\Parser;
@@ -60,6 +63,8 @@ final class Embeddings implements GeneratorInterface
 
             $e = $this->generator->initEmbedding($em, $class);
 
+            $this->verifyNoRelations($e, $class);
+
             // columns
             $this->generator->initFields($e, $class, $em->getColumnPrefix());
 
@@ -69,4 +74,28 @@ final class Embeddings implements GeneratorInterface
 
         return $registry;
     }
+
+    /**
+     * @param EntitySchema     $entity
+     * @param \ReflectionClass $class
+     */
+    public function verifyNoRelations(EntitySchema $entity, \ReflectionClass $class)
+    {
+        foreach ($class->getProperties() as $property) {
+            if ($property->getDocComment() === false) {
+                continue;
+            }
+
+            $ann = $this->parser->parse($property->getDocComment());
+
+            foreach ($ann as $ra) {
+                if ($ra instanceof RelationInterface) {
+                    throw new AnnotationException(
+                        "Relations are not allowed within embeddable entities in `{$entity->getClass()}`"
+                    );
+                }
+            }
+        }
+    }
 }
+
