@@ -9,6 +9,7 @@
 namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Annotation\Table;
@@ -59,10 +60,29 @@ final class Generator
     }
 
     /**
+     * @param Embeddable       $emb
+     * @param \ReflectionClass $class
+     * @return EntitySchema
+     */
+    public function initEmbedding(Embeddable $emb, \ReflectionClass $class): EntitySchema
+    {
+        $e = new EntitySchema();
+        $e->setClass($class->getName());
+
+        $e->setRole($emb->getRole() ?? Inflector::camelize($class->getShortName()));
+
+        // representing classes
+        $e->setMapper($this->resolveName($emb->getMapper(), $class));
+
+        return $e;
+    }
+
+    /**
      * @param EntitySchema     $entity
      * @param \ReflectionClass $class
+     * @param string           $columnPrefix
      */
-    public function initFields(EntitySchema $entity, \ReflectionClass $class)
+    public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = '')
     {
         foreach ($class->getProperties() as $property) {
             if ($property->getDocComment() === false) {
@@ -79,7 +99,8 @@ final class Generator
                 $this->initField(
                     $property->getName(),
                     $ann[Column::NAME],
-                    $class
+                    $class,
+                    $columnPrefix
                 )
             );
         }
@@ -166,9 +187,10 @@ final class Generator
      * @param string           $name
      * @param Column           $column
      * @param \ReflectionClass $class
+     * @param string           $columnPrefix
      * @return Field
      */
-    public function initField(string $name, Column $column, \ReflectionClass $class): Field
+    public function initField(string $name, Column $column, \ReflectionClass $class, string $columnPrefix): Field
     {
         if ($column->getType() === null) {
             throw new AnnotationException(
@@ -179,7 +201,7 @@ final class Generator
         $field = new Field();
 
         $field->setType($column->getType());
-        $field->setColumn($column->getColumn() ?? Inflector::tableize($name));
+        $field->setColumn($columnPrefix . ($column->getColumn() ?? Inflector::tableize($name)));
         $field->setPrimary($column->isPrimary());
         $field->setTypecast($column->getTypecast());
 
@@ -231,11 +253,13 @@ final class Generator
     {
         $p = new Parser();
         $p->register(new Entity());
+        $p->register(new Embeddable());
         $p->register(new Column());
         $p->register(new Table());
         $p->register(new Table\Index());
 
         // embedded relations
+        $p->register(new RelationAnnotation\Embedded());
         $p->register(new RelationAnnotation\BelongsTo());
         $p->register(new RelationAnnotation\HasOne());
         $p->register(new RelationAnnotation\HasMany());

@@ -38,7 +38,7 @@ final class MergeColumns implements GeneratorInterface
     public function run(Registry $registry): Registry
     {
         foreach ($registry as $e) {
-            if ($e->getClass() === null) {
+            if ($e->getClass() === null || !$registry->hasTable($e)) {
                 continue;
             }
 

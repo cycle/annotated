@@ -12,8 +12,8 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
@@ -56,6 +56,6 @@ abstract class HasOneTest extends BaseTest
         $this->assertArrayHasKey('one', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_ONE, $schema['simple'][Schema::RELATIONS]['one'][Relation::TYPE]);
         $this->assertSame("eComplete", $schema['simple'][Schema::RELATIONS]['one'][Relation::TARGET]);
-        $this->assertSame(null, $schema['simple'][Schema::RELATIONS]['one'][Relation::LOAD]);
+        $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['one'][Relation::LOAD]);
     }
 }
