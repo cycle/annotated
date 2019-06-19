@@ -203,7 +203,8 @@ final class Generator
         $field->setType($column->getType());
         $field->setColumn($columnPrefix . ($column->getColumn() ?? Inflector::tableize($name)));
         $field->setPrimary($column->isPrimary());
-        $field->setTypecast($column->getTypecast());
+
+        $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));
 
         if ($column->isNullable()) {
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_NULLABLE, true);
@@ -244,6 +245,31 @@ final class Generator
         }
 
         return $name;
+    }
+
+    /**
+     * @param mixed            $typecast
+     * @param \ReflectionClass $class
+     * @return mixed
+     */
+    protected function resolveTypecast($typecast, \ReflectionClass $class)
+    {
+        if (is_string($typecast) && strpos($typecast, '::') !== false) {
+            // short definition
+            $typecast = explode('::', $typecast);
+
+            // rsolve class name
+            $typecast[0] = $this->resolveName($typecast[0], $class);
+        }
+
+        if (is_string($typecast)) {
+            $typecast = $this->resolveName($typecast, $class);
+            if (class_exists($typecast)) {
+                $typecast = [$typecast, 'typecast'];
+            }
+        }
+
+        return $typecast;
     }
 
     /**
