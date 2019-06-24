@@ -8,31 +8,20 @@ Example:
 --------
 ```php
 /**
- * @entity(repository = "Repository/UserRepository")
+ * @Entity(repository = "Repository/UserRepository")
  */
 class User
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type=primary) */
     protected $id;
     
-    /**
-     * @hasOne(target=Profile, load=eager)
-     * @var Profile
-     */
+    /** @HasOne(target=Profile, load=eager) */
     protected $profile;
     
-    /**
-     * @hasMany(target=Post, load=lazy)
-     * @var Post[]|Collection
-     */
+    /** @HasMany(target=Post, load=lazy) */
     protected $posts;
    
-    /**
-     * @manyToMany(target=Tag, though=TagMap, load=lazy)
-     */
+    /** @ManyToMany(target=Tag, though=TagMap, load=lazy) */
     protected $tags;
     
     ...
