@@ -62,7 +62,7 @@ abstract class RefersToTest extends BaseTest
             $this->dbal->database('default')
                        ->getDriver()
                        ->getSchema('simples')
-                       ->foreignKey('parent_id')
+                       ->foreignKey(['parent_id'])
                        ->getDeleteRule()
         );
     }
