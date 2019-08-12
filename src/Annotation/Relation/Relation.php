@@ -1,17 +1,17 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
-use Spiral\Annotations\AnnotationInterface;
 use Spiral\Annotations\Parser;
 
-abstract class Relation implements RelationInterface, AnnotationInterface
+abstract class Relation implements RelationInterface
 {
     protected const NAME    = '';
     protected const OPTIONS = [
@@ -42,36 +42,13 @@ abstract class Relation implements RelationInterface, AnnotationInterface
     protected $options = [];
 
     /**
-     * Public and unique node name.
-     *
-     * @return string
+     * @param array $values
      */
-    public function getName(): string
+    public function __construct(array $values)
     {
-        return static::NAME;
-    }
-
-    /**
-     * Return Node schema in a form of [name => Node|SCALAR|[Node]].
-     *
-     * @return array
-     */
-    public function getSchema(): array
-    {
-        $schema = static::OPTIONS + [
-                'target'  => Parser::STRING,
-                'inverse' => Inverse::class,
-                'load'    => Parser::STRING,
-                'fetch'   => Parser::STRING // alias to `load`
-            ];
-
-        array_walk_recursive($schema, function (&$v) {
-            if (is_string($v) && class_exists($v)) {
-                $v = new $v;
-            }
-        });
-
-        return $schema;
+        foreach ($values as $key => $value) {
+            $this->setValue($key, $value);
+        }
     }
 
     /**
@@ -80,7 +57,7 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      * @param string $name
      * @param mixed  $value
      */
-    public function setAttribute(string $name, $value)
+    protected function setValue(string $name, $value)
     {
         if (in_array($name, ['target', 'inverse'])) {
             $this->{$name} = $value;

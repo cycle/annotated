@@ -1,56 +1,47 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-final class Entity extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target("CLASS")
+ */
+final class Entity
 {
-    public const NAME   = 'entity';
-    public const SCHEMA = [
-        'role'           => Parser::STRING,
-        'mapper'         => Parser::STRING,
-        'repository'     => Parser::STRING,
-        'table'          => Parser::STRING,
-        'database'       => Parser::STRING,
-        'readonlySchema' => Parser::BOOL,
-        'source'         => Parser::STRING,
-        'constrain'      => Parser::STRING,
-        'columns'        => [Column::class],
-    ];
+    /** @var string */
+    public $role;
 
-    /** @var string|null */
-    protected $role;
-
-    /** @var string|null */
+    /** @var string */
     protected $mapper;
 
-    /** @var string|null */
+    /** @var string */
     protected $repository;
 
-    /** @var string|null */
+    /** @var string */
     protected $table;
 
     /** @var bool */
     protected $readonlySchema = false;
 
-    /** @var string|null */
+    /** @var string */
     protected $database;
 
-    /** @var string|null */
+    /** @var string */
     protected $source;
 
-    /** @var string|null */
+    /** @var string */
     protected $constrain;
 
-    /** @var array */
+    /** @var array<Column> */
     protected $columns = [];
 
     /**

@@ -8,15 +8,17 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * @entity
+ * @Entity(role="simple")
  */
 class Simple
 {
     /**
-     * @column(type=primary)
+     * @Column(type=primary)
      * @var int
      */
     protected $id;

@@ -1,53 +1,49 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
-
-final class Column extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target("PROPERTY")
+ */
+final class Column
 {
-    public const NAME   = 'column';
-    public const SCHEMA = [
-        'name'        => Parser::STRING,
-        'type'        => Parser::STRING,
-        'primary'     => Parser::BOOL,
-        'typecast'    => Parser::MIXED,
-        'nullable'    => Parser::BOOL,
-        'default'     => Parser::MIXED,
-        'castDefault' => Parser::BOOL
-    ];
+    /**
+     * @Required()
+     * @var string
+     */
+    public $type;
 
     /** @var bool */
-    protected $nullable = false;
+    public $nullable = false;
 
     /** @var bool */
-    protected $primary = false;
+    public $primary = false;
 
     /** @var bool */
-    protected $hasDefault = false;
+    public $hasDefault = false;
 
     /** @var bool */
-    protected $castDefault = false;
+    public $castDefault = false;
 
-    /** @var string|null */
-    protected $name;
-
-    /** @var string|null */
-    protected $type;
+    /** @var string */
+    public $name;
 
     /** @var mixed */
-    protected $default;
+    public $default;
 
-    /** @var mixed|null */
-    protected $typecast;
+    /** @var mixed */
+    public $typecast;
 
     /**
      * @inheritdoc

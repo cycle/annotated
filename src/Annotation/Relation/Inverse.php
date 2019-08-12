@@ -1,18 +1,22 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\ORM\Relation;
-use Spiral\Annotations\AbstractAnnotation;
 use Spiral\Annotations\Parser;
 
-final class Inverse extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target("ANNOTATION")
+ */
+final class Inverse
 {
     protected const NAME   = 'inverse';
     protected const SCHEMA = [
@@ -23,14 +27,14 @@ final class Inverse extends AbstractAnnotation
         'fetch' => Parser::STRING, // alias to load
     ];
 
-    /** @var string|null */
-    protected $type;
+    /** @var string */
+    public $type;
 
-    /** @var string|null */
-    protected $name;
+    /** @var string */
+    public $name;
 
-    /** @var string|null */
-    protected $load;
+    /** @var string */
+    public $load;
 
     /**
      * @inheritdoc

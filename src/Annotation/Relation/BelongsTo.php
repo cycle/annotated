@@ -1,15 +1,20 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Spiral\Annotations\Parser;
 
+/**
+ * @Annotation
+ * @Target("PROPERTY")
+ */
 final class BelongsTo extends Relation
 {
     protected const NAME    = 'belongsTo';

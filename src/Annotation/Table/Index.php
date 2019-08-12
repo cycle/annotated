@@ -1,32 +1,31 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Table;
 
+use Cycle\Annotated\Annotation\Column;
+use Doctrine\Common\Annotations\Annotation\Target;
 use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
 
+/**
+ * @Annotation
+ * @Target("ANNOTATION")
+ */
 class Index extends AbstractAnnotation
 {
-    public const NAME   = 'index';
-    public const SCHEMA = [
-        'name'    => Parser::STRING,
-        'unique'  => Parser::BOOL,
-        'columns' => [Parser::STRING],
-    ];
-
-    /** @var string|null */
+    /** @var string */
     protected $name;
 
     /** @var bool */
     protected $unique = false;
 
-    /** @var array */
+    /** @var array<Column> */
     protected $columns = [];
 
     /**
@@ -42,11 +41,12 @@ class Index extends AbstractAnnotation
      */
     public function isUnique(): bool
     {
+
         return $this->unique;
     }
 
     /**
-     * @return array
+     * @return Column[]
      */
     public function getColumns(): array
     {

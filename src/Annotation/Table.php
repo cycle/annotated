@@ -1,28 +1,28 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
 use Cycle\Annotated\Annotation\Table\Index;
+use Doctrine\Common\Annotations\Annotation\Target;
 use Spiral\Annotations\AbstractAnnotation;
 
+/**
+ * @Annotation
+ * @Target({"CLASS", "ANNOTATION"})
+ */
 final class Table extends AbstractAnnotation
 {
-    public const NAME   = 'table';
-    public const SCHEMA = [
-        'columns' => [Column::class],
-        'indexes' => [Index::class],
-    ];
-
-    /** @var array */
+    /** @var array<Column> */
     protected $columns = [];
 
-    /** @var array */
+    /** @var array<Index> */
     protected $indexes = [];
 
     /**

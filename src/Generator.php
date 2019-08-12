@@ -12,26 +12,25 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
-use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
-use Spiral\Annotations\Parser;
 
 final class Generator
 {
-    /** @var Parser */
-    private $parser;
+    /** @var AnnotationReader */
+    private $reader;
 
     /**
-     * @param Parser $parser
+     * @param AnnotationReader $reader
      */
-    public function __construct(Parser $parser)
+    public function __construct(AnnotationReader $reader)
     {
-        $this->parser = $parser;
+        $this->reader = $reader;
     }
 
     /**
@@ -89,7 +88,7 @@ final class Generator
                 continue;
             }
 
-            $ann = $this->parser->parse($property->getDocComment());
+            $ann = $this->reader->parse($property->getDocComment());
             if (!isset($ann[Column::NAME])) {
                 continue;
             }
@@ -117,7 +116,7 @@ final class Generator
                 continue;
             }
 
-            $ann = $this->parser->parse($property->getDocComment());
+            $ann = $this->reader->parse($property->getDocComment());
 
             foreach ($ann as $ra) {
                 if (!$ra instanceof RelationAnnotation\RelationInterface) {
@@ -270,31 +269,5 @@ final class Generator
         }
 
         return $typecast;
-    }
-
-    /**
-     * @return Parser
-     */
-    public static function getDefaultParser(): Parser
-    {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Embeddable());
-        $p->register(new Column());
-        $p->register(new Table());
-        $p->register(new Table\Index());
-
-        // embedded relations
-        $p->register(new RelationAnnotation\Embedded());
-        $p->register(new RelationAnnotation\BelongsTo());
-        $p->register(new RelationAnnotation\HasOne());
-        $p->register(new RelationAnnotation\HasMany());
-        $p->register(new RelationAnnotation\RefersTo());
-        $p->register(new RelationAnnotation\ManyToMany());
-        $p->register(new RelationAnnotation\Morphed\BelongsToMorphed());
-        $p->register(new RelationAnnotation\Morphed\MorphedHasOne());
-        $p->register(new RelationAnnotation\Morphed\MorphedHasMany());
-
-        return $p;
     }
 }

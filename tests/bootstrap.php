@@ -5,11 +5,15 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
 error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', true);
 
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
+
+AnnotationRegistry::registerLoader('class_exists');
 
 \Cycle\Annotated\Tests\BaseTest::$config = [
     'debug'     => false,

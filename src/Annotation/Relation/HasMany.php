@@ -1,18 +1,22 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Spiral\Annotations\Parser;
 
+/**
+ * @Annotation
+ * @Target("PROPERTY")
+ */
 final class HasMany extends Relation
 {
-    protected const NAME    = 'hasMany';
     protected const OPTIONS = [
         'cascade'     => Parser::BOOL,
         'nullable'    => Parser::BOOL,

@@ -1,27 +1,24 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Target;
 use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
 
+/**
+ * @Annotation
+ * @Target("CLASS")
+ */
 final class Embeddable extends AbstractAnnotation
 {
-    public const NAME   = 'embeddable';
-    public const SCHEMA = [
-        'role'         => Parser::STRING,
-        'mapper'       => Parser::STRING,
-        'columnPrefix' => Parser::STRING,
-        'columns'      => [Column::class],
-    ];
-
-    /** @var string|null */
+    /** @var string */
     protected $role;
 
     /** @var string|null */

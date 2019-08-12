@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
+/**
+ * @Annotation
+ * @Target("PROPERTY")
+ */
 final class Embedded extends Relation
 {
     protected const NAME    = 'embedded';
