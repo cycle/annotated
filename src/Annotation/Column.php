@@ -18,6 +18,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 final class Column
 {
+    /** @var bool */
+    private $hasDefault = false;
+
     /**
      * @Required()
      * @var string
@@ -31,9 +34,6 @@ final class Column
     public $primary = false;
 
     /** @var bool */
-    public $hasDefault = false;
-
-    /** @var bool */
     public $castDefault = false;
 
     /** @var string */
@@ -45,17 +45,7 @@ final class Column
     /** @var mixed */
     public $typecast;
 
-    /**
-     * @inheritdoc
-     */
-    public function setAttribute(string $name, $value)
-    {
-        if ($name === "default") {
-            $this->hasDefault = true;
-        }
-
-        parent::setAttribute($name, $value);
-    }
+    // todo: set default
 
     /**
      * @return bool

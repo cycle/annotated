@@ -21,28 +21,28 @@ final class Entity
     public $role;
 
     /** @var string */
-    protected $mapper;
+    public $mapper;
 
     /** @var string */
-    protected $repository;
+    public $repository;
 
     /** @var string */
-    protected $table;
+    public $table;
 
     /** @var bool */
-    protected $readonlySchema = false;
+    public $readonlySchema = false;
 
     /** @var string */
-    protected $database;
+    public $database;
 
     /** @var string */
-    protected $source;
+    public $source;
 
     /** @var string */
-    protected $constrain;
+    public $constrain;
 
     /** @var array<Column> */
-    protected $columns = [];
+    public $columns = [];
 
     /**
      * @return string|null

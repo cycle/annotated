@@ -36,10 +36,17 @@ final class Inverse
     /** @var string */
     public $load;
 
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->setValue($key, $value);
+        }
+    }
+
     /**
      * @inheritdoc
      */
-    public function setAttribute(string $name, $value)
+    public function setValue(string $name, $value)
     {
         if ($name == "as") {
             $name = "name";
