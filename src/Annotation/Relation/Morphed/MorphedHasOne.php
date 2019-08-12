@@ -10,22 +10,23 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation\Morphed;
 
 use Cycle\Annotated\Annotation\Relation\Relation;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Attribute;
 
 /**
  * @Annotation
  * @Target("PROPERTY")
+ * @Attributes({
+ *      @Attribute("target", type="string", required=true),
+ *      @Attribute("cascade", type="bool"),
+ *      @Attribute("nullable", type="bool"),
+ *      @Attribute("innerKey", type="string"),
+ *      @Attribute("outerKey", type="string"),
+ *      @Attribute("morphKey", type="string"),
+ *      @Attribute("morphKeyLength", type="int"),
+ *      @Attribute("indexCreate", type="bool"),
+ *      @Attribute("load", type="string"),
+ * })
  */
 final class MorphedHasOne extends Relation
 {
-    protected const NAME    = 'morphedHasOne';
-    protected const OPTIONS = [
-        'cascade'        => Parser::BOOL,
-        'nullable'       => Parser::BOOL,
-        'innerKey'       => Parser::STRING,
-        'outerKey'       => Parser::STRING,
-        'morphKey'       => Parser::STRING,
-        'morphKeyLength' => Parser::INTEGER,
-        'indexCreate'    => Parser::BOOL,
-    ];
 }

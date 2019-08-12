@@ -9,37 +9,16 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
-use Spiral\Annotations\Parser;
-
-abstract class Relation implements RelationInterface
+abstract class Relation
 {
-    protected const NAME    = '';
-    protected const OPTIONS = [
-        'cascade'         => Parser::BOOL,
-        'nullable'        => Parser::BOOL,
-        'innerKey'        => Parser::STRING,
-        'outerKey'        => Parser::STRING,
-        'morphKey'        => Parser::STRING,
-        'morphKeyLength'  => Parser::INTEGER,
-        'though'          => Parser::STRING,
-        'thoughInnerKey'  => Parser::STRING,
-        'thoughOuterKey'  => Parser::STRING,
-        'thoughConstrain' => Parser::STRING,
-        'thoughWhere'     => [Parser::MIXED],
-        'where'           => [Parser::MIXED],
-        'fkCreate'        => Parser::BOOL,
-        'fkAction'        => Parser::STRING,
-        'indexCreate'     => Parser::BOOL,
-    ];
-
     /** @var string|null */
-    protected $target;
+    private $target;
 
     /** @var Inverse|null */
-    protected $inverse;
+    private $inverse;
 
     /** @var array */
-    protected $options = [];
+    private $options = [];
 
     /**
      * @param array $values

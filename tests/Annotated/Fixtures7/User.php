@@ -8,6 +8,8 @@
 
 namespace Cycle\Annotated\Tests\Fixtures7;
 
+use Cycle\Annotated\Annotation\Relation\Embedded;
+
 /**
  * @entity
  */
@@ -20,7 +22,7 @@ class User
     protected $id;
 
     /**
-     * @embedded(target=Address,load=lazy)
+     * @Embedded(target="Address", load="lazy")
      * @var Address
      */
     protected $address;

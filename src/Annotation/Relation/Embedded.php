@@ -12,9 +12,11 @@ namespace Cycle\Annotated\Annotation\Relation;
 /**
  * @Annotation
  * @Target("PROPERTY")
+ * @Attributes({
+ *      @Attribute("target", type="string", required=true),
+ *      @Attribute("load", type="string"),
+ * })
  */
 final class Embedded extends Relation
 {
-    protected const NAME    = 'embedded';
-    protected const OPTIONS = [];
 }
