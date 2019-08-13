@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
@@ -12,26 +13,27 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
-use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
+use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
-use Spiral\Annotations\Parser;
 
-final class Generator
+
+final class Configurator
 {
-    /** @var Parser */
-    private $parser;
+    /** @var AnnotationReader */
+    private $reader;
 
     /**
-     * @param Parser $parser
+     * @param AnnotationReader $reader
      */
-    public function __construct(Parser $parser)
+    public function __construct(AnnotationReader $reader)
     {
-        $this->parser = $parser;
+        $this->reader = $reader;
     }
 
     /**
@@ -85,23 +87,20 @@ final class Generator
     public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = '')
     {
         foreach ($class->getProperties() as $property) {
-            if ($property->getDocComment() === false) {
-                continue;
+            try {
+                /** @var Column $column */
+                $column = $this->reader->getPropertyAnnotation($property, Column::class);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
-            $ann = $this->parser->parse($property->getDocComment());
-            if (!isset($ann[Column::NAME])) {
+            if ($column === null) {
                 continue;
             }
 
             $entity->getFields()->set(
                 $property->getName(),
-                $this->initField(
-                    $property->getName(),
-                    $ann[Column::NAME],
-                    $class,
-                    $columnPrefix
-                )
+                $this->initField($property->getName(), $column, $class, $columnPrefix)
             );
         }
     }
@@ -113,13 +112,13 @@ final class Generator
     public function initRelations(EntitySchema $entity, \ReflectionClass $class)
     {
         foreach ($class->getProperties() as $property) {
-            if ($property->getDocComment() === false) {
-                continue;
+            try {
+                $annotations = $this->reader->getPropertyAnnotations($property);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
-            $ann = $this->parser->parse($property->getDocComment());
-
-            foreach ($ann as $ra) {
+            foreach ($annotations as $ra) {
                 if (!$ra instanceof RelationAnnotation\RelationInterface) {
                     continue;
                 }
@@ -132,13 +131,14 @@ final class Generator
 
                 $relation = new Relation();
                 $relation->setTarget($this->resolveName($ra->getTarget(), $class));
-                $relation->setType($ra->getName());
+                $relation->setType($ra->getType());
 
-                if ($ra->isInversed()) {
+                $inverse = $ra->getInverse();
+                if ($inverse !== null) {
                     $relation->setInverse(
-                        $ra->getInverseName(),
-                        $ra->getInverseType(),
-                        $ra->getInverseLoadMethod()
+                        $inverse->getName(),
+                        $inverse->getType(),
+                        $inverse->getLoadMethod()
                     );
                 }
 
@@ -214,7 +214,7 @@ final class Generator
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, $column->getDefault());
         }
 
-        if ($column->isCastedDefault()) {
+        if ($column->castDefault()) {
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_CAST_DEFAULT, true);
         }
 
@@ -241,7 +241,7 @@ final class Generator
         );
 
         if (class_exists($resolved, true) || interface_exists($resolved, true)) {
-            return $resolved;
+            return ltrim($resolved, '\\');
         }
 
         return $name;
@@ -270,31 +270,5 @@ final class Generator
         }
 
         return $typecast;
-    }
-
-    /**
-     * @return Parser
-     */
-    public static function getDefaultParser(): Parser
-    {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Embeddable());
-        $p->register(new Column());
-        $p->register(new Table());
-        $p->register(new Table\Index());
-
-        // embedded relations
-        $p->register(new RelationAnnotation\Embedded());
-        $p->register(new RelationAnnotation\BelongsTo());
-        $p->register(new RelationAnnotation\HasOne());
-        $p->register(new RelationAnnotation\HasMany());
-        $p->register(new RelationAnnotation\RefersTo());
-        $p->register(new RelationAnnotation\ManyToMany());
-        $p->register(new RelationAnnotation\Morphed\BelongsToMorphed());
-        $p->register(new RelationAnnotation\Morphed\MorphedHasOne());
-        $p->register(new RelationAnnotation\Morphed\MorphedHasMany());
-
-        return $p;
     }
 }

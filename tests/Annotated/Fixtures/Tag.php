@@ -8,19 +8,18 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
+
 /**
- * @entity
+ * @Entity()
  */
 class Tag
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @morphedHasOne(target=Label,outerKey=owner_id,morphKey=owner_role,indexCreate=false)
-     */
+    /** @MorphedHasOne(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false) */
     protected $label;
 }

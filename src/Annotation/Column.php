@@ -1,64 +1,84 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
-
-final class Column extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target({"PROPERTY", "ANNOTATION"})
+ * @Attributes({
+ *      @Attribute("type", type="string", required=true),
+ *      @Attribute("name", type="string"),
+ *      @Attribute("primary", type="bool"),
+ *      @Attribute("nullable", type="bool"),
+ *      @Attribute("default", type="mixed"),
+ *      @Attribute("typecast", type="mixed"),
+ * })
+ */
+final class Column
 {
-    public const NAME   = 'column';
-    public const SCHEMA = [
-        'name'        => Parser::STRING,
-        'type'        => Parser::STRING,
-        'primary'     => Parser::BOOL,
-        'typecast'    => Parser::MIXED,
-        'nullable'    => Parser::BOOL,
-        'default'     => Parser::MIXED,
-        'castDefault' => Parser::BOOL
-    ];
+    /** @var bool */
+    private $hasDefault = false;
+
+    /** @var string */
+    private $name;
+
+    /** @var string */
+    private $type;
 
     /** @var bool */
-    protected $nullable = false;
+    private $nullable = false;
 
     /** @var bool */
-    protected $primary = false;
-
-    /** @var bool */
-    protected $hasDefault = false;
-
-    /** @var bool */
-    protected $castDefault = false;
-
-    /** @var string|null */
-    protected $name;
-
-    /** @var string|null */
-    protected $type;
+    private $primary = false;
 
     /** @var mixed */
-    protected $default;
+    private $default;
 
-    /** @var mixed|null */
-    protected $typecast;
+    /** @var bool */
+    private $castDefault = false;
+
+    /** @var mixed */
+    private $typecast;
 
     /**
-     * @inheritdoc
+     * @param array $values
      */
-    public function setAttribute(string $name, $value)
+    public function __construct(array $values)
     {
-        if ($name === "default") {
+        if (isset($values['default'])) {
             $this->hasDefault = true;
         }
 
-        parent::setAttribute($name, $value);
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getColumn(): ?string
+    {
+        return $this->name;
     }
 
     /**
@@ -86,27 +106,19 @@ final class Column extends AbstractAnnotation
     }
 
     /**
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+
+    /**
      * @return bool
      */
-    public function isCastedDefault(): bool
+    public function castDefault(): bool
     {
         return $this->castDefault;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getColumn(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getType(): ?string
-    {
-        return $this->type;
     }
 
     /**
@@ -115,13 +127,5 @@ final class Column extends AbstractAnnotation
     public function getTypecast()
     {
         return $this->typecast;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefault()
-    {
-        return $this->default;
     }
 }

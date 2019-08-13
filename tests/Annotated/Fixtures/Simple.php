@@ -8,38 +8,44 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasMany;
+use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany;
+use Cycle\Annotated\Annotation\Relation\RefersTo;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * @entity
+ * @Entity(role="simple")
  */
-class Simple
+class Simple implements LabelledInterface
 {
     /**
-     * @column(type=primary)
+     * @Column(type="primary", default="xx")
      * @var int
      */
     protected $id;
 
     /**
-     * @hasOne(target=Complete)
+     * @HasOne(target="Complete")
      * @var Complete
      */
     protected $one;
 
     /**
-     * @hasMany(target=WithTable)
+     * @HasMany(target="WithTable")
      * @var WithTable[]|Collection
      */
     protected $many;
 
     /**
-     * @refersTo(target=Simple, fkAction="NO ACTION")
+     * @RefersTo(target="Simple", fkAction="NO ACTION")
      */
     protected $parent;
 
     /**
-     * @morphedHasMany(target=Label,outerKey=owner_id,morphKey=owner_role)
+     * @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false)
      */
     protected $labels;
 }

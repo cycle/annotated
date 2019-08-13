@@ -8,20 +8,19 @@
 
 namespace Cycle\Annotated\Tests\Fixtures2;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Inverse;
+use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
+
 /**
- * @entity
+ * @Entity()
  */
 class Mark
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @belongsToMorphed(target=MarkedInterface, inverse=@inverse(as="mark",type=morphedHasOne))
-     * @var MarkedInterface
-     */
+    /** @BelongsToMorphed(target="MarkedInterface", inverse=@Inverse(as="mark", type="morphedHasOne")) */
     protected $owner;
 }

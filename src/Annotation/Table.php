@@ -1,29 +1,44 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
 use Cycle\Annotated\Annotation\Table\Index;
-use Spiral\Annotations\AbstractAnnotation;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-final class Table extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target({"CLASS", "ANNOTATION"})
+ * @Attributes({
+ *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
+ *      @Attribute("indexes", type="array<Cycle\Annotated\Annotation\Table\Index>"),
+ * })
+ */
+final class Table
 {
-    public const NAME   = 'table';
-    public const SCHEMA = [
-        'columns' => [Column::class],
-        'indexes' => [Index::class],
-    ];
+    /** @var array<Column> */
+    private $columns = [];
 
-    /** @var array */
-    protected $columns = [];
+    /** @var array<Index> */
+    private $indexes = [];
 
-    /** @var array */
-    protected $indexes = [];
+    /**
+     * @param array $values
+     */
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
     /**
      * @return Column[]

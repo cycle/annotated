@@ -1,26 +1,59 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation\Morphed;
 
 use Cycle\Annotated\Annotation\Relation\Relation;
-use Spiral\Annotations\Parser;
+use Cycle\Annotated\Annotation\Relation\Traits\InverseTrait;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
 
+/**
+ * @Annotation
+ * @Target("PROPERTY")
+ * @Attributes({
+ *      @Attribute("target", type="string", required=true),
+ *      @Attribute("cascade", type="bool"),
+ *      @Attribute("nullable", type="bool"),
+ *      @Attribute("innerKey", type="string"),
+ *      @Attribute("outerKey", type="string"),
+ *      @Attribute("morphKey", type="string"),
+ *      @Attribute("morphKeyLength", type="int"),
+ *      @Attribute("indexCreate", type="bool"),
+ *      @Attribute("load", type="string"),
+ *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
+ * })
+ */
 final class MorphedHasOne extends Relation
 {
-    protected const NAME    = 'morphedHasOne';
-    protected const OPTIONS = [
-        'cascade'        => Parser::BOOL,
-        'nullable'       => Parser::BOOL,
-        'innerKey'       => Parser::STRING,
-        'outerKey'       => Parser::STRING,
-        'morphKey'       => Parser::STRING,
-        'morphKeyLength' => Parser::INTEGER,
-        'indexCreate'    => Parser::BOOL,
-    ];
+    use InverseTrait;
+
+    protected const TYPE = 'morphedHasOne';
+
+    /** @var bool */
+    protected $cascade;
+
+    /** @var bool */
+    protected $nullable;
+
+    /** @var string */
+    protected $innerKey;
+
+    /** @var string */
+    protected $outerKey;
+
+    /** @var string */
+    protected $morphKey;
+
+    /** @var int */
+    protected $morphKeyLength;
+
+    /** @var bool */
+    protected $indexCreate;
 }

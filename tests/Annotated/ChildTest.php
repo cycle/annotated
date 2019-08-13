@@ -8,8 +8,6 @@
 
 namespace Cycle\Annotated\Tests;
 
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Tests\Fixtures\Child;
 use Cycle\Annotated\Tests\Fixtures\Simple;
@@ -17,18 +15,14 @@ use Cycle\Annotated\Tests\Fixtures\Third;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 abstract class ChildTest extends BaseTest
 {
     public function testSimpleSchema()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Column());
-
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $p))->run($r);
+        (new Entities($this->locator, new AnnotationReader()))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));

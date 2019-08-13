@@ -1,97 +1,54 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
-use Spiral\Annotations\AnnotationInterface;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Enum;
+use Doctrine\Common\Annotations\Annotation\Required;
 
-abstract class Relation implements RelationInterface, AnnotationInterface
+abstract class Relation implements RelationInterface
 {
-    protected const NAME    = '';
-    protected const OPTIONS = [
-        'cascade'         => Parser::BOOL,
-        'nullable'        => Parser::BOOL,
-        'innerKey'        => Parser::STRING,
-        'outerKey'        => Parser::STRING,
-        'morphKey'        => Parser::STRING,
-        'morphKeyLength'  => Parser::INTEGER,
-        'though'          => Parser::STRING,
-        'thoughInnerKey'  => Parser::STRING,
-        'thoughOuterKey'  => Parser::STRING,
-        'thoughConstrain' => Parser::STRING,
-        'thoughWhere'     => [Parser::MIXED],
-        'where'           => [Parser::MIXED],
-        'fkCreate'        => Parser::BOOL,
-        'fkAction'        => Parser::STRING,
-        'indexCreate'     => Parser::BOOL,
-    ];
+    // relation type
+    protected const TYPE = '';
 
-    /** @var string|null */
+    /**
+     * @Required()
+     * @var string
+     */
     protected $target;
 
-    /** @var Inverse|null */
-    protected $inverse;
-
-    /** @var array */
-    protected $options = [];
+    /**
+     * @Enum({"eager", "lazy", "promise"}
+     * @var string
+     */
+    protected $load;
 
     /**
-     * Public and unique node name.
-     *
+     * @param array $values
+     */
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            if ($key == "fetch") {
+                $key = "load";
+            }
+
+            $this->$key = $value;
+        }
+    }
+
+    /**
      * @return string
      */
-    public function getName(): string
+    public function getType(): string
     {
-        return static::NAME;
-    }
-
-    /**
-     * Return Node schema in a form of [name => Node|SCALAR|[Node]].
-     *
-     * @return array
-     */
-    public function getSchema(): array
-    {
-        $schema = static::OPTIONS + [
-                'target'  => Parser::STRING,
-                'inverse' => Inverse::class,
-                'load'    => Parser::STRING,
-                'fetch'   => Parser::STRING // alias to `load`
-            ];
-
-        array_walk_recursive($schema, function (&$v) {
-            if (is_string($v) && class_exists($v)) {
-                $v = new $v;
-            }
-        });
-
-        return $schema;
-    }
-
-    /**
-     * Set node attribute value.
-     *
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function setAttribute(string $name, $value)
-    {
-        if (in_array($name, ['target', 'inverse'])) {
-            $this->{$name} = $value;
-            return;
-        }
-
-        if (in_array($name, ['load', 'fetch'])) {
-            $name = 'load';
-        }
-
-        $this->options[$name] = $value;
+        return static::TYPE;
     }
 
     /**
@@ -107,47 +64,9 @@ abstract class Relation implements RelationInterface, AnnotationInterface
      */
     public function getOptions(): array
     {
-        return $this->options;
-    }
+        $options = get_object_vars($this);
+        unset($options['target'], $options['inverse']);
 
-    /**
-     * @return string|null
-     */
-    public function getLoadMethod(): ?string
-    {
-        return $this->options['load'] ?? null;
+        return $options;
     }
-
-    /**
-     * @return bool
-     */
-    public function isInversed(): bool
-    {
-        return $this->inverse !== null && $this->inverse->isValid();
-    }
-
-    /**
-     * @return string
-     */
-    public function getInverseType(): string
-    {
-        return $this->inverse->getType();
-    }
-
-    /**
-     * @return string
-     */
-    public function getInverseName(): string
-    {
-        return $this->inverse->getRelation();
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getInverseLoadMethod(): ?int
-    {
-        return $this->inverse->getLoadMethod();
-    }
-
 }

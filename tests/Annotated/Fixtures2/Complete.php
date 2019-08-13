@@ -8,26 +8,22 @@
 
 namespace Cycle\Annotated\Tests\Fixtures2;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Relation\Inverse;
+
 /**
- * @entity(role = eComplete)
+ * @Entity(role = "eComplete")
  */
 class Complete
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @belongsTo(target=Simple,fkAction="NO ACTION",inverse=@inverse(type=hasOne,as="child"))
-     * @var Simple
-     */
+    /** @BelongsTo(target="Simple", fkAction="NO ACTION", inverse=@Inverse(as="child", type="hasOne")) */
     protected $parent;
 
-    /**
-     * @belongsTo(target=Simple,fkAction="NO ACTION",innerKey=uncle_id,inverse=@inverse(type=hasMany,as="stepKids"))
-     * @var Simple
-     */
+    /** @belongsTo(target="Simple", fkAction="NO ACTION", innerKey="uncle_id", inverse=@Inverse(as="stepKids", type="hasMany")) */
     protected $uncles;
 }

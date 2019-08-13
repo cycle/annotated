@@ -8,27 +8,21 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
 
 /**
- * @entity
+ * @Entity()
  */
 class Label
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @column(type=text)
-     * @var string
-     */
+    /** @Column(type="text") */
     protected $text;
 
-    /**
-     * @belongsToMorphed(target=LabelledInterface)
-     * @var LabelledInterface|null
-     */
+    /** @BelongsToMorphed(target="LabelledInterface", indexCreate=false) */
     protected $owner;
 }

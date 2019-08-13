@@ -8,39 +8,32 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+
 /**
- * @entity(
- *      role       = eComplete,
- *      mapper     = CompleteMapper,
+ * @Entity(
+ *      role       = "eComplete",
+ *      mapper     = "CompleteMapper",
  *      repository = "Repository/CompleteRepository",
- *      source     = Source\TestSource,
- *      constrain  = Constrain\SomeConstrain,
+ *      source     = "Source\TestSource",
+ *      constrain  = "Constrain\SomeConstrain",
  *      database   = "secondary",
  *      table      = "complete_data"
  * )
  */
 class Complete implements LabelledInterface
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @column(type=string, name=username)
-     * @var string
-     */
+    /** @Column(type="string", name="username") */
     protected $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $ignored;
 
-    /**
-     * @belongsTo(target=Simple)
-     * @var Simple
-     */
+    /** @BelongsTo(target="Simple") */
     protected $parent;
 }

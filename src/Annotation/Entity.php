@@ -1,57 +1,70 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-final class Entity extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target("CLASS")
+ * @Attributes({
+ *      @Attribute("role", type="string"),
+ *      @Attribute("mapper", type="string"),
+ *      @Attribute("repository", type="string"),
+ *      @Attribute("table", type="string"),
+ *      @Attribute("database", type="string"),
+ *      @Attribute("source", type="string"),
+ *      @Attribute("constrain", type="string"),
+ *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
+ * })
+ */
+final class Entity
 {
-    public const NAME   = 'entity';
-    public const SCHEMA = [
-        'role'           => Parser::STRING,
-        'mapper'         => Parser::STRING,
-        'repository'     => Parser::STRING,
-        'table'          => Parser::STRING,
-        'database'       => Parser::STRING,
-        'readonlySchema' => Parser::BOOL,
-        'source'         => Parser::STRING,
-        'constrain'      => Parser::STRING,
-        'columns'        => [Column::class],
-    ];
+    /** @var string */
+    private $role;
 
-    /** @var string|null */
-    protected $role;
+    /** @var string */
+    private $mapper;
 
-    /** @var string|null */
-    protected $mapper;
+    /** @var string */
+    private $repository;
 
-    /** @var string|null */
-    protected $repository;
-
-    /** @var string|null */
-    protected $table;
+    /** @var string */
+    private $table;
 
     /** @var bool */
-    protected $readonlySchema = false;
+    private $readonlySchema = false;
 
-    /** @var string|null */
-    protected $database;
+    /** @var string */
+    private $database;
 
-    /** @var string|null */
-    protected $source;
+    /** @var string */
+    private $source;
 
-    /** @var string|null */
-    protected $constrain;
+    /** @var string */
+    private $constrain;
 
-    /** @var array */
-    protected $columns = [];
+    /** @var array<Column> */
+    private $columns = [];
+
+    /**
+     * @param array $values
+     */
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
     /**
      * @return string|null

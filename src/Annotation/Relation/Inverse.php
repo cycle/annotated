@@ -1,59 +1,54 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\ORM\Relation;
-use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Enum;
 
-final class Inverse extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target({"PROPERTY", "ANNOTATION"})
+ * @Attributes({
+ *      @Attribute("as", type="string", required=true),
+ *      @Attribute("type", type="string", required=true),
+ *      @Attribute("load", type="string"),
+ * })
+ */
+final class Inverse
 {
-    protected const NAME   = 'inverse';
-    protected const SCHEMA = [
-        'type'  => Parser::STRING,
-        'name'  => Parser::STRING,
-        'as'    => Parser::STRING, // alias to name
-        'load'  => Parser::STRING,
-        'fetch' => Parser::STRING, // alias to load
-    ];
+    /** @var string */
+    private $as;
 
-    /** @var string|null */
-    protected $type;
-
-    /** @var string|null */
-    protected $name;
-
-    /** @var string|null */
-    protected $load;
+    /** @var string */
+    private $type;
 
     /**
-     * @inheritdoc
+     * @Enum({"eager", "lazy", "promise"}
+     * @var string
      */
-    public function setAttribute(string $name, $value)
-    {
-        if ($name == "as") {
-            $name = "name";
-        }
-
-        if ($name == "fetch") {
-            $name = "load";
-        }
-
-        parent::setAttribute($name, $value);
-    }
+    private $load;
 
     /**
-     * @return bool
+     * @param array $values
      */
-    public function isValid(): bool
+    public function __construct(array $values)
     {
-        return $this->getType() !== null && $this->getRelation() !== null;
+        foreach ($values as $key => $value) {
+            if ($key == "fetch") {
+                $key = "load";
+            }
+
+            $this->$key = $value;
+        }
     }
 
     /**
@@ -67,9 +62,9 @@ final class Inverse extends AbstractAnnotation
     /**
      * @return string|null
      */
-    public function getRelation(): ?string
+    public function getName(): ?string
     {
-        return $this->name;
+        return $this->as;
     }
 
     /**

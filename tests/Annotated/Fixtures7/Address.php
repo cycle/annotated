@@ -9,29 +9,26 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Fixtures7;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Embeddable;
+use Cycle\Annotated\Annotation\Table;
+use Cycle\Annotated\Annotation\Table\Index;
+
 /**
- * @embeddable(role=address, columnPrefix="address_")
- * @table(indexes={@index(columns={zipcode})})
+ * @Embeddable(role="address", columnPrefix="address_")
+ * @Table(indexes={@Index(columns={"zipcode"})})
  */
 class Address
 {
-    /**
-     * @column(type=string)
-     */
+    /** @Column(type="string") */
     protected $city;
 
-    /**
-     * @column(type=string)
-     */
+    /** @Column(type="string") */
     protected $country;
 
-    /**
-     * @column(type=string)
-     */
+    /** @Column(type="string") */
     protected $address;
 
-    /**
-     * @column(type=int)
-     */
+    /** @Column(type="int") */
     protected $zipcode;
 }

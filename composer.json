@@ -5,9 +5,9 @@
   "description": "Cycle ORM Annotated Entities generator",
   "require": {
     "php": "^7.1|^8.0",
+    "spiral/tokenizer": "^2.1",
     "cycle/schema-builder": "^1.0",
-    "spiral/annotations": "^1.0",
-    "spiral/tokenizer": "^2.1"
+    "doctrine/annotations": "^1.7"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",

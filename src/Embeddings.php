@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
@@ -14,8 +15,10 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Spiral\Tokenizer\ClassesInterface;
+
 
 /**
  * Generates ORM schema based on annotated classes.
@@ -25,21 +28,21 @@ final class Embeddings implements GeneratorInterface
     /** @var ClassesInterface */
     private $locator;
 
-    /** @var Parser */
-    private $parser;
+    /** @var AnnotationReader */
+    private $reader;
 
-    /** @var Generator */
+    /** @var Configurator */
     private $generator;
 
     /**
-     * @param ClassesInterface $locator
-     * @param Parser|null      $parser
+     * @param ClassesInterface      $locator
+     * @param AnnotationReader|null $reader
      */
-    public function __construct(ClassesInterface $locator, Parser $parser = null)
+    public function __construct(ClassesInterface $locator, AnnotationReader $reader = null)
     {
         $this->locator = $locator;
-        $this->parser = $parser ?? Generator::getDefaultParser();
-        $this->generator = new Generator($this->parser);
+        $this->reader = $reader ?? new AnnotationReader();
+        $this->generator = new Configurator($this->reader);
     }
 
     /**
@@ -49,17 +52,15 @@ final class Embeddings implements GeneratorInterface
     public function run(Registry $registry): Registry
     {
         foreach ($this->locator->getClasses() as $class) {
-            if ($class->getDocComment() === false) {
+            try {
+                /** @var Embeddable $em */
+                $em = $this->reader->getClassAnnotation($class, Embeddable::class);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            }
+            if ($em === null) {
                 continue;
             }
-
-            $ann = $this->parser->parse($class->getDocComment());
-            if (!isset($ann[Embeddable::NAME])) {
-                continue;
-            }
-
-            /** @var Embeddable $em */
-            $em = $ann[Embeddable::NAME];
 
             $e = $this->generator->initEmbedding($em, $class);
 
@@ -82,11 +83,11 @@ final class Embeddings implements GeneratorInterface
     public function verifyNoRelations(EntitySchema $entity, \ReflectionClass $class)
     {
         foreach ($class->getProperties() as $property) {
-            if ($property->getDocComment() === false) {
-                continue;
+            try {
+                $ann = $this->reader->getPropertyAnnotations($property);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
-
-            $ann = $this->parser->parse($property->getDocComment());
 
             foreach ($ann as $ra) {
                 if ($ra instanceof RelationInterface) {

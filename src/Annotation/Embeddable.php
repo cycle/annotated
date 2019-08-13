@@ -1,37 +1,51 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Spiral\Annotations\AbstractAnnotation;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-final class Embeddable extends AbstractAnnotation
+/**
+ * @Annotation
+ * @Target("CLASS")
+ * @Attributes({
+ *      @Attribute("role", type="string"),
+ *      @Attribute("mapper", type="string"),
+ *      @Attribute("columnPrefix", type="string"),
+ *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
+ * })
+ */
+final class Embeddable
 {
-    public const NAME   = 'embeddable';
-    public const SCHEMA = [
-        'role'         => Parser::STRING,
-        'mapper'       => Parser::STRING,
-        'columnPrefix' => Parser::STRING,
-        'columns'      => [Column::class],
-    ];
-
-    /** @var string|null */
-    protected $role;
-
-    /** @var string|null */
-    protected $mapper;
+    /** @var string */
+    private $role;
 
     /** @var string */
-    protected $columnPrefix = '';
+    private $mapper;
 
-    /** @var array */
-    protected $columns = [];
+    /** @var string */
+    private $columnPrefix = '';
+
+    /** @var array<Column> */
+    private $columns = [];
+
+    /**
+     * @param array $values
+     */
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
     /**
      * @return string|null

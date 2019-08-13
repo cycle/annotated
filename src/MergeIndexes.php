@@ -1,31 +1,35 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Table;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Spiral\Database\Schema\AbstractTable;
+
 
 final class MergeIndexes implements GeneratorInterface
 {
-    /** @var Parser */
-    private $parser;
+    /** @var AnnotationReader */
+    private $reader;
 
     /**
-     * @param Parser|null $parser
+     * @param AnnotationReader|null $reader
      */
-    public function __construct(Parser $parser = null)
+    public function __construct(AnnotationReader $reader = null)
     {
-        $this->parser = $parser ?? Generator::getDefaultParser();
+        $this->reader = $reader ?? new AnnotationReader();
     }
 
     /**
@@ -72,19 +76,17 @@ final class MergeIndexes implements GeneratorInterface
             return;
         }
 
-        if ($class->getDocComment() === false) {
+        try {
+            $tann = $this->reader->getClassAnnotation($class, Table::class);
+        } catch (DoctrineException $e) {
+            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        if ($tann === null) {
             return;
         }
 
-        $ann = $this->parser->parse($class->getDocComment());
-        if (!isset($ann[Table::NAME])) {
-            return;
-        }
-
-        /** @var Table $ta */
-        $ta = $ann[Table::NAME];
-
-        $this->renderIndexes($table, $entity, $ta->getIndexes());
+        $this->renderIndexes($table, $entity, $tann->getIndexes());
     }
 
     /**

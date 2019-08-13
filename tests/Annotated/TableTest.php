@@ -8,29 +8,20 @@
 
 namespace Cycle\Annotated\Tests;
 
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
-use Spiral\Annotations\Parser;
 
 abstract class TableTest extends BaseTest
 {
     public function testColumnsRendered()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Table());
-        $p->register(new Column());
-
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $p))->run($r);
-        (new MergeColumns($p))->run($r);
+        (new Entities($this->locator))->run($r);
+        (new MergeColumns())->run($r);
         (new RenderTables())->run($r);
 
         $this->assertTrue($r->hasTable($r->getEntity('withTable')));
@@ -49,17 +40,12 @@ abstract class TableTest extends BaseTest
 
     public function testIndexes()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Table());
-        $p->register(new Column());
-
         $r = new Registry($this->dbal);
 
-        (new Entities($this->locator, $p))->run($r);
-        (new MergeColumns($p))->run($r);
+        (new Entities($this->locator))->run($r);
+        (new MergeColumns())->run($r);
         (new RenderTables())->run($r);
-        (new MergeIndexes($p))->run($r);
+        (new MergeIndexes())->run($r);
         (new SyncTables())->run($r);
 
         $this->assertTrue($r->hasTable($r->getEntity('withTable')));

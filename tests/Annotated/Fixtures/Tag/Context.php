@@ -8,14 +8,14 @@
 
 namespace Cycle\Annotated\Tests\Fixtures\Tag;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+
 /**
- * @entity(role="tagContext")
+ * @Entity(role="tagContext")
  */
 class Context
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 }

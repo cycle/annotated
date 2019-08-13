@@ -1,21 +1,24 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Exception\RegistryException;
 use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
+use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
-use Spiral\Annotations\Parser;
 use Spiral\Tokenizer\ClassesInterface;
 
 /**
@@ -26,21 +29,21 @@ final class Entities implements GeneratorInterface
     /** @var ClassesInterface */
     private $locator;
 
-    /** @var Parser */
-    private $parser;
+    /** @var AnnotationReader */
+    private $reader;
 
-    /** @var Generator */
+    /** @var Configurator */
     private $generator;
 
     /**
-     * @param ClassesInterface $locator
-     * @param Parser|null      $parser
+     * @param ClassesInterface      $locator
+     * @param AnnotationReader|null $reader
      */
-    public function __construct(ClassesInterface $locator, Parser $parser = null)
+    public function __construct(ClassesInterface $locator, AnnotationReader $reader = null)
     {
         $this->locator = $locator;
-        $this->parser = $parser ?? Generator::getDefaultParser();
-        $this->generator = new Generator($this->parser);
+        $this->reader = $reader ?? new AnnotationReader();
+        $this->generator = new Configurator($this->reader);
     }
 
     /**
@@ -52,19 +55,18 @@ final class Entities implements GeneratorInterface
         /** @var EntitySchema[] $children */
         $children = [];
         foreach ($this->locator->getClasses() as $class) {
-            if ($class->getDocComment() === false) {
+            try {
+                /** @var Entity $ann */
+                $ann = $this->reader->getClassAnnotation($class, Entity::class);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            }
+
+            if ($ann === null) {
                 continue;
             }
 
-            $ann = $this->parser->parse($class->getDocComment());
-            if (!isset($ann[Entity::NAME])) {
-                continue;
-            }
-
-            /** @var Entity $ea */
-            $ea = $ann[Entity::NAME];
-
-            $e = $this->generator->initEntity($ea, $class);
+            $e = $this->generator->initEntity($ann, $class);
 
             // columns
             $this->generator->initFields($e, $class);
@@ -73,7 +75,7 @@ final class Entities implements GeneratorInterface
             $this->generator->initRelations($e, $class);
 
             // additional columns (mapped to local fields automatically)
-            $this->generator->initColumns($e, $ea->getColumns(), $class);
+            $this->generator->initColumns($e, $ann->getColumns(), $class);
 
             if ($this->hasParent($registry, $e->getClass())) {
                 $children[] = $e;
@@ -85,8 +87,8 @@ final class Entities implements GeneratorInterface
 
             $registry->linkTable(
                 $e,
-                $ea->getDatabase(),
-                $ea->getTable() ?? $this->tableName($e->getRole())
+                $ann->getDatabase(),
+                $ann->getTable() ?? $this->tableName($e->getRole())
             );
         }
 
@@ -180,14 +182,20 @@ final class Entities implements GeneratorInterface
     protected function findParent(Registry $registry, string $class): ?string
     {
         $parents = class_parents($class);
+
         foreach (array_reverse($parents) as $parent) {
-            $class = new \ReflectionClass($parent);
+            try {
+                $class = new \ReflectionClass($parent);
+            } catch (\ReflectionException $e) {
+                continue;
+            }
+
             if ($class->getDocComment() === false) {
                 continue;
             }
 
-            $ann = $this->parser->parse($class->getDocComment());
-            if (isset($ann[Entity::NAME])) {
+            $ann = $this->reader->getClassAnnotation($class, Entity::class);
+            if ($ann !== null) {
                 return $parent;
             }
         }

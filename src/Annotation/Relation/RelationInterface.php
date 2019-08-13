@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
@@ -13,7 +14,7 @@ interface RelationInterface
     /**
      * @return string
      */
-    public function getName(): string;
+    public function getType(): string;
 
     /**
      * @return string|null
@@ -26,22 +27,7 @@ interface RelationInterface
     public function getOptions(): array;
 
     /**
-     * @return bool
+     * @return Inverse|null
      */
-    public function isInversed(): bool;
-
-    /**
-     * @return string
-     */
-    public function getInverseType(): string;
-
-    /**
-     * @return string
-     */
-    public function getInverseName(): string;
-
-    /**
-     * @return int|null
-     */
-    public function getInverseLoadMethod(): ?int;
+    public function getInverse(): ?Inverse;
 }

@@ -8,9 +8,8 @@
 
 namespace Cycle\Annotated\Tests;
 
-use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
-use Cycle\Annotated\Generator;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
@@ -38,18 +37,17 @@ abstract class InvalidTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -67,18 +65,17 @@ abstract class InvalidTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

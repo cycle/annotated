@@ -8,14 +8,14 @@
 
 namespace Cycle\Annotated\Tests\Fixtures5;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+
 /**
- * @entity
+ * @Entity()
  */
 class Simple
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 }

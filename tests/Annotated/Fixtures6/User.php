@@ -8,20 +8,18 @@
 
 namespace Cycle\Annotated\Tests\Fixtures6;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Embedded;
+
 /**
- * @entity
+ * @Entity()
  */
 class User
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @embedded(target=Address)
-     * @var Address
-     */
+    /** @Embedded(target=Address::class) */
     protected $address;
 }
