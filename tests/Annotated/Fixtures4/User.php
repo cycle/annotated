@@ -8,14 +8,14 @@
 
 namespace Cycle\Annotated\Tests\Fixtures4;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+
 /**
- * @entity
+ * @Entity()
  */
 class User
 {
-    /**
-     * @column()
-     * @var int
-     */
+    /** @Column() */
     protected $id;
 }

@@ -8,14 +8,14 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+
 /**
- * @entity
+ * @Entity()
  */
 class Child extends Simple
 {
-    /**
-     * @column(type=string)
-     * @var string
-     */
+    /** @Column(type="string") */
     protected $name;
 }

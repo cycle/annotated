@@ -8,12 +8,8 @@
 
 namespace Cycle\Annotated\Tests\Relation;
 
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\RefersTo;
-use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
@@ -26,29 +22,21 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
-use Cycle\Schema\Relation\RefersTo as RefersToRelation;
-use Spiral\Annotations\Parser;
 
 abstract class RefersToTest extends BaseTest
 {
     public function testRelation()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Column());
-        $p->register(new Table());
-        $p->register(new RefersTo());
-
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator, $p),
+            new Entities($this->locator),
             new ResetTables(),
-            new MergeColumns($p),
-            new GenerateRelations(['refersTo' => new RefersToRelation()]),
+            new MergeColumns(),
+            new GenerateRelations(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -60,10 +48,10 @@ abstract class RefersToTest extends BaseTest
         $this->assertSame(
             'NO ACTION',
             $this->dbal->database('default')
-                       ->getDriver()
-                       ->getSchema('simples')
-                       ->foreignKey(['parent_id'])
-                       ->getDeleteRule()
+                ->getDriver()
+                ->getSchema('simples')
+                ->foreignKey(['parent_id'])
+                ->getDeleteRule()
         );
     }
 }

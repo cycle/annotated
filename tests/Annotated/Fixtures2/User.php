@@ -8,20 +8,19 @@
 
 namespace Cycle\Annotated\Tests\Fixtures2;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Relation\Inverse;
+
 /**
- * @entity
+ * @Entity()
  */
 class User implements MarkedInterface
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @hasOne(target=Simple, inverse=(as="user", type=belongsTo))
-     * @var Simple
-     */
+    /** @HasOne(target="Simple", inverse=@Inverse(as="user", type="belongsTo")) */
     protected $simple;
 }

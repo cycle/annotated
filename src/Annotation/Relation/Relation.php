@@ -9,16 +9,25 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
-abstract class Relation
+use Doctrine\Common\Annotations\Annotation\Enum;
+use Doctrine\Common\Annotations\Annotation\Required;
+
+abstract class Relation implements RelationInterface
 {
-    /** @var string|null */
-    private $target;
+    // relation type
+    protected const TYPE = '';
 
-    /** @var Inverse|null */
-    private $inverse;
+    /**
+     * @Required()
+     * @var string
+     */
+    protected $target;
 
-    /** @var array */
-    private $options = [];
+    /**
+     * @Enum({"eager", "lazy", "promise"}
+     * @var string
+     */
+    protected $load;
 
     /**
      * @param array $values
@@ -26,28 +35,20 @@ abstract class Relation
     public function __construct(array $values)
     {
         foreach ($values as $key => $value) {
-            $this->setValue($key, $value);
+            if ($key == "fetch") {
+                $key = "load";
+            }
+
+            $this->$key = $value;
         }
     }
 
     /**
-     * Set node attribute value.
-     *
-     * @param string $name
-     * @param mixed  $value
+     * @return string
      */
-    protected function setValue(string $name, $value)
+    public function getType(): string
     {
-        if (in_array($name, ['target', 'inverse'])) {
-            $this->{$name} = $value;
-            return;
-        }
-
-        if (in_array($name, ['load', 'fetch'])) {
-            $name = 'load';
-        }
-
-        $this->options[$name] = $value;
+        return static::TYPE;
     }
 
     /**
@@ -63,47 +64,9 @@ abstract class Relation
      */
     public function getOptions(): array
     {
-        return $this->options;
-    }
+        $options = get_object_vars($this);
+        unset($options['target'], $options['inverse']);
 
-    /**
-     * @return string|null
-     */
-    public function getLoadMethod(): ?string
-    {
-        return $this->options['load'] ?? null;
+        return $options;
     }
-
-    /**
-     * @return bool
-     */
-    public function isInversed(): bool
-    {
-        return $this->inverse !== null && $this->inverse->isValid();
-    }
-
-    /**
-     * @return string
-     */
-    public function getInverseType(): string
-    {
-        return $this->inverse->getType();
-    }
-
-    /**
-     * @return string
-     */
-    public function getInverseName(): string
-    {
-        return $this->inverse->getRelation();
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getInverseLoadMethod(): ?int
-    {
-        return $this->inverse->getLoadMethod();
-    }
-
 }

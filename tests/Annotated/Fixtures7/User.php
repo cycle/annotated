@@ -8,22 +8,18 @@
 
 namespace Cycle\Annotated\Tests\Fixtures7;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\Embedded;
 
 /**
- * @entity
+ * @Entity()
  */
 class User
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @Embedded(target="Address", load="lazy")
-     * @var Address
-     */
+    /** @Embedded(target="Address", load="lazy") */
     protected $address;
 }

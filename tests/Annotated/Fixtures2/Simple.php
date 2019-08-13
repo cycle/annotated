@@ -8,14 +8,14 @@
 
 namespace Cycle\Annotated\Tests\Fixtures2;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+
 /**
- * @entity
+ * @Entity()
  */
 class Simple implements MarkedInterface
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 }

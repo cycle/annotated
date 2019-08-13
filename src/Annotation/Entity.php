@@ -9,40 +9,62 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
  * @Target("CLASS")
+ * @Attributes({
+ *      @Attribute("role", type="string"),
+ *      @Attribute("mapper", type="string"),
+ *      @Attribute("repository", type="string"),
+ *      @Attribute("table", type="string"),
+ *      @Attribute("database", type="string"),
+ *      @Attribute("source", type="string"),
+ *      @Attribute("constrain", type="string"),
+ *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
+ * })
  */
 final class Entity
 {
     /** @var string */
-    public $role;
+    private $role;
 
     /** @var string */
-    public $mapper;
+    private $mapper;
 
     /** @var string */
-    public $repository;
+    private $repository;
 
     /** @var string */
-    public $table;
+    private $table;
 
     /** @var bool */
-    public $readonlySchema = false;
+    private $readonlySchema = false;
 
     /** @var string */
-    public $database;
+    private $database;
 
     /** @var string */
-    public $source;
+    private $source;
 
     /** @var string */
-    public $constrain;
+    private $constrain;
 
     /** @var array<Column> */
-    public $columns = [];
+    private $columns = [];
+
+    /**
+     * @param array $values
+     */
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
     /**
      * @return string|null

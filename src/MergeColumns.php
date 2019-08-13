@@ -1,34 +1,37 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Table;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 final class MergeColumns implements GeneratorInterface
 {
-    /** @var Parser */
-    private $parser;
+    /** @var AnnotationReader */
+    private $reader;
 
-    /** @var Generator */
+    /** @var Configurator */
     private $generator;
 
     /**
-     * @param Parser|null $parser
+     * @param AnnotationReader|null $reader
      */
-    public function __construct(Parser $parser = null)
+    public function __construct(AnnotationReader $reader = null)
     {
-        $this->parser = $parser ?? Generator::getDefaultParser();;
-        $this->generator = new Generator($this->parser);
+        $this->reader = $reader ?? new AnnotationReader();
+        $this->generator = new Configurator($this->reader);
     }
 
     /**
@@ -74,19 +77,17 @@ final class MergeColumns implements GeneratorInterface
             return;
         }
 
-        if ($class->getDocComment() === false) {
-            return;
+        try {
+            $table = $this->reader->getClassAnnotation($class, Table::class);
+        } catch (DoctrineException $e) {
+            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        $ann = $this->parser->parse($class->getDocComment());
-        if (!isset($ann[Table::NAME])) {
+        if ($table === null) {
             return;
         }
-
-        /** @var Table $ta */
-        $ta = $ann[Table::NAME];
 
         // additional columns (mapped to local fields automatically)
-        $this->generator->initColumns($e, $ta->getColumns(), $class);
+        $this->generator->initColumns($e, $table->getColumns(), $class);
     }
 }

@@ -8,9 +8,8 @@
 
 namespace Cycle\Annotated\Tests\Relation;
 
-use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
-use Cycle\Annotated\Generator;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\Annotated\Tests\Fixtures2\MarkedInterface;
@@ -39,18 +38,17 @@ abstract class InverseTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -73,18 +71,17 @@ abstract class InverseTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -107,18 +104,17 @@ abstract class InverseTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -141,18 +137,17 @@ abstract class InverseTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -179,18 +174,17 @@ abstract class InverseTest extends BaseTest
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
+            new Entities($locator),
             new ResetTables(),
-            new MergeColumns($p),
+            new MergeColumns(),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

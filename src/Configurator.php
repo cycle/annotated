@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
@@ -17,10 +18,12 @@ use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
+use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
 
-final class Generator
+
+final class Configurator
 {
     /** @var AnnotationReader */
     private $reader;
@@ -84,23 +87,20 @@ final class Generator
     public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = '')
     {
         foreach ($class->getProperties() as $property) {
-            if ($property->getDocComment() === false) {
-                continue;
+            try {
+                /** @var Column $column */
+                $column = $this->reader->getPropertyAnnotation($property, Column::class);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
-            $ann = $this->reader->parse($property->getDocComment());
-            if (!isset($ann[Column::NAME])) {
+            if ($column === null) {
                 continue;
             }
 
             $entity->getFields()->set(
                 $property->getName(),
-                $this->initField(
-                    $property->getName(),
-                    $ann[Column::NAME],
-                    $class,
-                    $columnPrefix
-                )
+                $this->initField($property->getName(), $column, $class, $columnPrefix)
             );
         }
     }
@@ -112,13 +112,13 @@ final class Generator
     public function initRelations(EntitySchema $entity, \ReflectionClass $class)
     {
         foreach ($class->getProperties() as $property) {
-            if ($property->getDocComment() === false) {
-                continue;
+            try {
+                $annotations = $this->reader->getPropertyAnnotations($property);
+            } catch (DoctrineException $e) {
+                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
-            $ann = $this->reader->parse($property->getDocComment());
-
-            foreach ($ann as $ra) {
+            foreach ($annotations as $ra) {
                 if (!$ra instanceof RelationAnnotation\RelationInterface) {
                     continue;
                 }
@@ -131,13 +131,14 @@ final class Generator
 
                 $relation = new Relation();
                 $relation->setTarget($this->resolveName($ra->getTarget(), $class));
-                $relation->setType($ra->getName());
+                $relation->setType($ra->getType());
 
-                if ($ra->isInversed()) {
+                $inverse = $ra->getInverse();
+                if ($inverse !== null) {
                     $relation->setInverse(
-                        $ra->getInverseName(),
-                        $ra->getInverseType(),
-                        $ra->getInverseLoadMethod()
+                        $inverse->getName(),
+                        $inverse->getType(),
+                        $inverse->getLoadMethod()
                     );
                 }
 
@@ -213,7 +214,7 @@ final class Generator
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, $column->getDefault());
         }
 
-        if ($column->isCastedDefault()) {
+        if ($column->castDefault()) {
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_CAST_DEFAULT, true);
         }
 
@@ -240,7 +241,7 @@ final class Generator
         );
 
         if (class_exists($resolved, true) || interface_exists($resolved, true)) {
-            return $resolved;
+            return ltrim($resolved, '\\');
         }
 
         return $name;

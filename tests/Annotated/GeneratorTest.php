@@ -8,8 +8,6 @@
 
 namespace Cycle\Annotated\Tests;
 
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Tests\Fixtures\Complete;
 use Cycle\Annotated\Tests\Fixtures\CompleteMapper;
@@ -21,18 +19,13 @@ use Cycle\Annotated\Tests\Fixtures\WithTable;
 use Cycle\ORM\Mapper\Mapper;
 use Cycle\ORM\Select\Repository;
 use Cycle\Schema\Registry;
-use Spiral\Annotations\Parser;
 
 abstract class GeneratorTest extends BaseTest
 {
     public function testLocateAll()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Column());
-
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $p))->run($r);
+        (new Entities($this->locator))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity(WithTable::class));
@@ -41,12 +34,8 @@ abstract class GeneratorTest extends BaseTest
 
     public function testSimpleSchema()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Column());
-
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $p))->run($r);
+        (new Entities($this->locator))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));
@@ -64,12 +53,8 @@ abstract class GeneratorTest extends BaseTest
 
     public function testCompleteSchema()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Column());
-
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $p))->run($r);
+        (new Entities($this->locator))->run($r);
 
         $this->assertTrue($r->hasEntity(Complete::class));
         $this->assertTrue($r->hasEntity('eComplete'));

@@ -10,23 +10,48 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Table;
 
 use Cycle\Annotated\Annotation\Column;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Spiral\Annotations\AbstractAnnotation;
 
 /**
  * @Annotation
  * @Target("ANNOTATION")
+ * @Attributes({
+ *      @Attribute("columns", type="array<string>", required=true),
+ *      @Attribute("unique", type="bool"),
+ *      @Attribute("name", type="string"),
+ * })
  */
-class Index extends AbstractAnnotation
+class Index
 {
-    /** @var string */
-    protected $name;
+    /** @var array<string> */
+    private $columns = [];
 
     /** @var bool */
-    protected $unique = false;
+    private $unique = false;
 
-    /** @var array<Column> */
-    protected $columns = [];
+    /** @var string */
+    private $name;
+
+    /**
+     * @param array $values
+     */
+    public function __construct(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getColumns(): array
+    {
+        return $this->columns;
+    }
+
 
     /**
      * @return string|null
@@ -41,15 +66,6 @@ class Index extends AbstractAnnotation
      */
     public function isUnique(): bool
     {
-
         return $this->unique;
-    }
-
-    /**
-     * @return Column[]
-     */
-    public function getColumns(): array
-    {
-        return $this->columns;
     }
 }

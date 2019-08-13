@@ -8,12 +8,8 @@
 
 namespace Cycle\Annotated\Tests\Relation;
 
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
@@ -27,28 +23,21 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Cycle\Schema\Relation\BelongsTo as BelongsToRelation;
-use Spiral\Annotations\Parser;
 
 abstract class BelongsToTest extends BaseTest
 {
     public function testRelation()
     {
-        $p = new Parser();
-        $p->register(new Entity());
-        $p->register(new Column());
-        $p->register(new Table());
-        $p->register(new BelongsTo());
-
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator, $p),
+            new Entities($this->locator),
             new ResetTables(),
-            new MergeColumns($p),
-            new GenerateRelations(['belongsTo' => new BelongsToRelation(),]),
+            new MergeColumns(),
+            new GenerateRelations(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes($p),
+            new MergeIndexes(),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

@@ -8,31 +8,34 @@
 
 namespace Cycle\Annotated\Tests\Fixtures;
 
-use Cycle\ORM\Relation\Pivoted\PivotedCollectionInterface;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\ManyToMany;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany;
+use Cycle\Annotated\Annotation\Table;
+use Cycle\Annotated\Annotation\Table\Index;
 
 /**
- * @entity
- * @table(
- *      columns={name: @column(type=string), status: (type="enum(active,disabled)", default=active)},
- *      indexes={@index(columns={status}), (columns={name}, unique=true, name=name_index)}
+ * @Entity()
+ * @Table(
+ *      columns = {
+ *          "name":   @Column(type="string"),
+ *          "status": @Column(type="enum(active,disabled)", default="active")
+ *      },
+ *      indexes = {
+ *          @Index(columns={"status"}),
+ *          @Index(columns={"name"}, unique=true, name="name_index")
+ *      }
  * )
  */
 class WithTable implements LabelledInterface
 {
-    /**
-     * @column(type=primary)
-     * @var int
-     */
+    /** @Column(type="primary") */
     protected $id;
 
-    /**
-     * @manyToMany(target=Tag, though="Tag/Context")
-     * @var PivotedCollectionInterface|Tag[]
-     */
+    /** @ManyToMany(target="Tag", though="Tag/Context") */
     protected $tags;
 
-    /**
-     * @morphedHasMany(target=Label,outerKey=owner_id,morphKey=owner_role)
-     */
+    /** @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false) */
     protected $labels;
 }

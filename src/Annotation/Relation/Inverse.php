@@ -10,61 +10,45 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\ORM\Relation;
-use Spiral\Annotations\Parser;
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Enum;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target({"PROPERTY", "ANNOTATION"})
+ * @Attributes({
+ *      @Attribute("as", type="string", required=true),
+ *      @Attribute("type", type="string", required=true),
+ *      @Attribute("load", type="string"),
+ * })
  */
 final class Inverse
 {
-    protected const NAME   = 'inverse';
-    protected const SCHEMA = [
-        'type'  => Parser::STRING,
-        'name'  => Parser::STRING,
-        'as'    => Parser::STRING, // alias to name
-        'load'  => Parser::STRING,
-        'fetch' => Parser::STRING, // alias to load
-    ];
+    /** @var string */
+    private $as;
 
     /** @var string */
-    public $type;
+    private $type;
 
-    /** @var string */
-    public $name;
+    /**
+     * @Enum({"eager", "lazy", "promise"}
+     * @var string
+     */
+    private $load;
 
-    /** @var string */
-    public $load;
-
+    /**
+     * @param array $values
+     */
     public function __construct(array $values)
     {
         foreach ($values as $key => $value) {
-            $this->setValue($key, $value);
+            if ($key == "fetch") {
+                $key = "load";
+            }
+
+            $this->$key = $value;
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setValue(string $name, $value)
-    {
-        if ($name == "as") {
-            $name = "name";
-        }
-
-        if ($name == "fetch") {
-            $name = "load";
-        }
-
-        parent::setAttribute($name, $value);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return $this->getType() !== null && $this->getRelation() !== null;
     }
 
     /**
@@ -78,9 +62,9 @@ final class Inverse
     /**
      * @return string|null
      */
-    public function getRelation(): ?string
+    public function getName(): ?string
     {
-        return $this->name;
+        return $this->as;
     }
 
     /**
