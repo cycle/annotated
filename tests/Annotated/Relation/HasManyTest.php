@@ -22,7 +22,6 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
-use Cycle\Schema\Relation\HasMany as HasManyRelation;
 
 abstract class HasManyTest extends BaseTest
 {
@@ -45,5 +44,9 @@ abstract class HasManyTest extends BaseTest
         $this->assertArrayHasKey('many', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_MANY, $schema['simple'][Schema::RELATIONS]['many'][Relation::TYPE]);
         $this->assertSame("withTable", $schema['simple'][Schema::RELATIONS]['many'][Relation::TARGET]);
+
+        $this->assertSame([
+            'id' => ['>' => 1]
+        ], $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE]);
     }
 }
