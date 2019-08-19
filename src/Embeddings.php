@@ -19,7 +19,6 @@ use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Spiral\Tokenizer\ClassesInterface;
 
-
 /**
  * Generates ORM schema based on annotated classes.
  */
