@@ -18,7 +18,9 @@ use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Spiral\Database\Schema\AbstractTable;
 
-
+/**
+ * Copy index definitions from Mapper/Repository to Entity.
+ */
 final class MergeIndexes implements GeneratorInterface
 {
     /** @var AnnotationReader */
