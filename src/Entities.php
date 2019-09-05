@@ -152,6 +152,17 @@ final class Entities implements GeneratorInterface
             return $name;
         }
 
+        if (!$registry->hasEntity($name)) {
+            // point all relations to the parent
+            foreach ($registry as $entity) {
+                foreach ($registry->getChildren($entity) as $child) {
+                    if ($child->getClass() === $name || $child->getRole() === $name) {
+                        return $entity->getRole();
+                    }
+                }
+            }
+        }
+
         return $registry->getEntity($name)->getRole();
     }
 
