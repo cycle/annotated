@@ -17,6 +17,9 @@ use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
 
+/**
+ * Copy column definitions from Mapper/Repository to Entity.
+ */
 final class MergeColumns implements GeneratorInterface
 {
     /** @var AnnotationReader */

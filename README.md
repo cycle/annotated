@@ -12,16 +12,16 @@ Example:
  */
 class User
 {
-    /** @Column(type=primary) */
+    /** @Column(type="primary") */
     protected $id;
     
-    /** @HasOne(target=Profile, load=eager) */
+    /** @HasOne(target=Profile::class, load="eager") */
     protected $profile;
     
-    /** @HasMany(target=Post, load=lazy) */
+    /** @HasMany(target=Post::class, load="lazy") */
     protected $posts;
    
-    /** @ManyToMany(target=Tag, though=TagMap, load=lazy) */
+    /** @ManyToMany(target=Tag::class, though=TagMap::class, load="lazy") */
     protected $tags;
     
     ...
