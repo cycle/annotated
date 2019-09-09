@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\Postgres; 
+namespace Cycle\Annotated\Tests\Driver\Postgres;
 
-class HasOneTest extends \Cycle\Annotated\Tests\Relation\HasOneTest 
-{ 
-    const DRIVER = "postgres"; 
+class HasOneTest extends \Cycle\Annotated\Tests\Relation\HasOneTest
+{
+    const DRIVER = "postgres";
 }

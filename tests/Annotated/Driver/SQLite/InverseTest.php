@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLite; 
+namespace Cycle\Annotated\Tests\Driver\SQLite;
 
-class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest 
-{ 
-    const DRIVER = "sqlite"; 
+class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest
+{
+    const DRIVER = "sqlite";
 }

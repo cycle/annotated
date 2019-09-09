@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\Postgres; 
+namespace Cycle\Annotated\Tests\Driver\Postgres;
 
-class MorphedHasManyTest extends \Cycle\Annotated\Tests\Relation\Morphed\MorphedHasManyTest 
-{ 
-    const DRIVER = "postgres"; 
+class MorphedHasManyTest extends \Cycle\Annotated\Tests\Relation\Morphed\MorphedHasManyTest
+{
+    const DRIVER = "postgres";
 }

@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLServer; 
+namespace Cycle\Annotated\Tests\Driver\SQLServer;
 
-class GeneratorTest extends \Cycle\Annotated\Tests\GeneratorTest 
-{ 
-    const DRIVER = "sqlserver"; 
+class GeneratorTest extends \Cycle\Annotated\Tests\GeneratorTest
+{
+    const DRIVER = "sqlserver";
 }

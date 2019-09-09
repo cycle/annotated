@@ -24,6 +24,12 @@ class Complete
     /** @BelongsTo(target="Simple", fkAction="NO ACTION", inverse=@Inverse(as="child", type="hasOne")) */
     protected $parent;
 
-    /** @belongsTo(target="Simple", fkAction="NO ACTION", innerKey="uncle_id", inverse=@Inverse(as="stepKids", type="hasMany")) */
+    /** @belongsTo(
+     *     target="Simple",
+     *     fkAction="NO ACTION",
+     *     innerKey="uncle_id",
+     *     inverse=@Inverse(as="stepKids", type="hasMany")
+     * )
+     */
     protected $uncles;
 }

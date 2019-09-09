@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\MySQL; 
+namespace Cycle\Annotated\Tests\Driver\MySQL;
 
-class GeneratorTest extends \Cycle\Annotated\Tests\GeneratorTest 
-{ 
-    const DRIVER = "mysql"; 
+class GeneratorTest extends \Cycle\Annotated\Tests\GeneratorTest
+{
+    const DRIVER = "mysql";
 }

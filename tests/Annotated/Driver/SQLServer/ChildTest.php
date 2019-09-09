@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLServer; 
+namespace Cycle\Annotated\Tests\Driver\SQLServer;
 
-class ChildTest extends \Cycle\Annotated\Tests\ChildTest 
-{ 
-    const DRIVER = "sqlserver"; 
+class ChildTest extends \Cycle\Annotated\Tests\ChildTest
+{
+    const DRIVER = "sqlserver";
 }

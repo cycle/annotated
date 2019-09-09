@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\MySQL; 
+namespace Cycle\Annotated\Tests\Driver\MySQL;
 
-class InvalidTest extends \Cycle\Annotated\Tests\InvalidTest 
-{ 
-    const DRIVER = "mysql"; 
+class InvalidTest extends \Cycle\Annotated\Tests\InvalidTest
+{
+    const DRIVER = "mysql";
 }

@@ -126,7 +126,8 @@ final class Entities implements GeneratorInterface
                     }
                 } catch (RegistryException $ex) {
                     throw new RelationException(
-                        sprintf("Unable to resolve `%s`.`%s` relation target (not found or invalid)",
+                        sprintf(
+                            "Unable to resolve `%s`.`%s` relation target (not found or invalid)",
                             $e->getRole(),
                             $name
                         ),

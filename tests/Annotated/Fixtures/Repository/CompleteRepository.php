@@ -12,5 +12,4 @@ use Cycle\ORM\Select\Repository;
 
 class CompleteRepository extends Repository
 {
-
 }

@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLite; 
+namespace Cycle\Annotated\Tests\Driver\SQLite;
 
-class BelongsToTest extends \Cycle\Annotated\Tests\Relation\BelongsToTest 
-{ 
-    const DRIVER = "sqlite"; 
+class BelongsToTest extends \Cycle\Annotated\Tests\Relation\BelongsToTest
+{
+    const DRIVER = "sqlite";
 }

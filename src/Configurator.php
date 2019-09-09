@@ -22,7 +22,6 @@ use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
 
-
 final class Configurator
 {
     /** @var AnnotationReader */

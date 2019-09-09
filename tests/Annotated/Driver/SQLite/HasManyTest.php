@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLite; 
+namespace Cycle\Annotated\Tests\Driver\SQLite;
 
-class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest 
-{ 
-    const DRIVER = "sqlite"; 
+class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest
+{
+    const DRIVER = "sqlite";
 }

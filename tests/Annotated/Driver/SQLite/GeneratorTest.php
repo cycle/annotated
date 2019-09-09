@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLite; 
+namespace Cycle\Annotated\Tests\Driver\SQLite;
 
-class GeneratorTest extends \Cycle\Annotated\Tests\GeneratorTest 
-{ 
-    const DRIVER = "sqlite"; 
+class GeneratorTest extends \Cycle\Annotated\Tests\GeneratorTest
+{
+    const DRIVER = "sqlite";
 }
