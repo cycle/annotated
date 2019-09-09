@@ -10,5 +10,4 @@ namespace Cycle\Annotated\Exception;
 
 class AnnotationException extends \RuntimeException
 {
-
 }

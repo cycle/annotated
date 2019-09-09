@@ -98,4 +98,3 @@ final class Embeddings implements GeneratorInterface
         }
     }
 }
-

@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\MySQL; 
+namespace Cycle\Annotated\Tests\Driver\MySQL;
 
-class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest 
-{ 
-    const DRIVER = "mysql"; 
+class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest
+{
+    const DRIVER = "mysql";
 }

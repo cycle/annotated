@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLite; 
+namespace Cycle\Annotated\Tests\Driver\SQLite;
 
-class EmbeddedTest extends \Cycle\Annotated\Tests\Relation\EmbeddedTest 
-{ 
-    const DRIVER = "sqlite"; 
+class EmbeddedTest extends \Cycle\Annotated\Tests\Relation\EmbeddedTest
+{
+    const DRIVER = "sqlite";
 }

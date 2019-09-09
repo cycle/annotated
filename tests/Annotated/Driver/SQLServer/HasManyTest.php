@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLServer; 
+namespace Cycle\Annotated\Tests\Driver\SQLServer;
 
-class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest 
-{ 
-    const DRIVER = "sqlserver"; 
+class HasManyTest extends \Cycle\Annotated\Tests\Relation\HasManyTest
+{
+    const DRIVER = "sqlserver";
 }

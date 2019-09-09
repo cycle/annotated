@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\SQLServer; 
+namespace Cycle\Annotated\Tests\Driver\SQLServer;
 
-class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest 
-{ 
-    const DRIVER = "sqlserver"; 
+class InverseTest extends \Cycle\Annotated\Tests\Relation\InverseTest
+{
+    const DRIVER = "sqlserver";
 }

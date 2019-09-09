@@ -10,5 +10,4 @@ namespace Cycle\Annotated\Tests\Fixtures\Constrain;
 
 class SomeConstrain
 {
-
 }

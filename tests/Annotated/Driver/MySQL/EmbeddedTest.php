@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
  
-namespace Cycle\Annotated\Tests\Driver\MySQL; 
+namespace Cycle\Annotated\Tests\Driver\MySQL;
 
-class EmbeddedTest extends \Cycle\Annotated\Tests\Relation\EmbeddedTest 
-{ 
-    const DRIVER = "mysql"; 
+class EmbeddedTest extends \Cycle\Annotated\Tests\Relation\EmbeddedTest
+{
+    const DRIVER = "mysql";
 }
