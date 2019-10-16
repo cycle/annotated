@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -26,7 +29,7 @@ use Cycle\Schema\Registry;
 
 abstract class BelongsToMorphedTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 

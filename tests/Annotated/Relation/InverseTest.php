@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -29,7 +32,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class InverseTest extends BaseTest
 {
-    public function testBelongsToOne()
+    public function testBelongsToOne(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -55,14 +58,14 @@ abstract class InverseTest extends BaseTest
 
         $this->assertArrayHasKey('parent', $schema['eComplete'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TYPE]);
-        $this->assertSame("simple", $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET]);
+        $this->assertSame('simple', $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET]);
 
         $this->assertArrayHasKey('child', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_ONE, $schema['simple'][Schema::RELATIONS]['child'][Relation::TYPE]);
-        $this->assertSame("eComplete", $schema['simple'][Schema::RELATIONS]['child'][Relation::TARGET]);
+        $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['child'][Relation::TARGET]);
     }
 
-    public function testBelongsToMany()
+    public function testBelongsToMany(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -88,14 +91,14 @@ abstract class InverseTest extends BaseTest
 
         $this->assertArrayHasKey('uncles', $schema['eComplete'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TYPE]);
-        $this->assertSame("simple", $schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TARGET]);
+        $this->assertSame('simple', $schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TARGET]);
 
         $this->assertArrayHasKey('stepKids', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_MANY, $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TYPE]);
-        $this->assertSame("eComplete", $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TARGET]);
+        $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TARGET]);
     }
 
-    public function testHasOne()
+    public function testHasOne(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -121,14 +124,14 @@ abstract class InverseTest extends BaseTest
 
         $this->assertArrayHasKey('simple', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_ONE, $schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE]);
-        $this->assertSame("simple", $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
+        $this->assertSame('simple', $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
 
         $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
-        $this->assertSame("user", $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+        $this->assertSame('user', $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
     }
 
-    public function testHasOneInverseLoad()
+    public function testHasOneInverseLoad(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures5'],
@@ -154,18 +157,18 @@ abstract class InverseTest extends BaseTest
 
         $this->assertArrayHasKey('simple', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_ONE, $schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE]);
-        $this->assertSame("simple", $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
+        $this->assertSame('simple', $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
 
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['simple'][Relation::LOAD]);
 
         $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
-        $this->assertSame("user", $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+        $this->assertSame('user', $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
 
         $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['user'][Relation::LOAD]);
     }
 
-    public function testBelongsTo()
+    public function testBelongsTo(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],

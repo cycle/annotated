@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -29,7 +30,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class EmbeddedTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures6'],
@@ -56,11 +57,11 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
 
-        $this->assertSame("user:address", $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
+        $this->assertSame('user:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
     }
 
-    public function testRelationLazyLoad()
+    public function testRelationLazyLoad(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures7'],
@@ -87,7 +88,7 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
 
-        $this->assertSame("user:address", $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
+        $this->assertSame('user:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_PROMISE, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
     }
 }

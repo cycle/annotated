@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +20,7 @@ use Cycle\Schema\Registry;
 
 abstract class TableTest extends BaseTest
 {
-    public function testColumnsRendered()
+    public function testColumnsRendered(): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator))->run($r);
@@ -38,7 +41,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame(['active', 'disabled'], $schema->column('status')->getEnumValues());
     }
 
-    public function testIndexes()
+    public function testIndexes(): void
     {
         $r = new Registry($this->dbal);
 
@@ -57,5 +60,61 @@ abstract class TableTest extends BaseTest
         $this->assertSame('name_index', $schema->index(['name'])->getName());
 
         $this->assertTrue($schema->hasIndex(['status']));
+    }
+
+    public function testNamingDefault(): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator))->run($r);
+        (new MergeColumns())->run($r);
+        (new RenderTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+
+        $schema = $r->getTableSchema($r->getEntity('withTable'));
+
+        $this->assertSame('with_tables', $schema->getName());
+    }
+
+    public function testNamingPluralize(): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, null, Entities::TABLE_NAMING_PLURAL))->run($r);
+        (new MergeColumns())->run($r);
+        (new RenderTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+
+        $schema = $r->getTableSchema($r->getEntity('withTable'));
+
+        $this->assertSame('with_tables', $schema->getName());
+    }
+
+    public function testNamingSingular(): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, null, Entities::TABLE_NAMING_SINGULAR))->run($r);
+        (new MergeColumns())->run($r);
+        (new RenderTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+
+        $schema = $r->getTableSchema($r->getEntity('withTable'));
+
+        $this->assertSame('with_table', $schema->getName());
+    }
+
+    public function testNamingNone(): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, null, Entities::TABLE_NAMING_NONE))->run($r);
+        (new MergeColumns())->run($r);
+        (new RenderTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+
+        $schema = $r->getTableSchema($r->getEntity('withTable'));
+
+        $this->assertSame('with_table', $schema->getName());
     }
 }

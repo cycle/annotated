@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -26,7 +29,7 @@ use Cycle\Schema\Relation\HasOne as HasOneRelation;
 
 abstract class HasOneTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 
@@ -44,7 +47,7 @@ abstract class HasOneTest extends BaseTest
 
         $this->assertArrayHasKey('one', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_ONE, $schema['simple'][Schema::RELATIONS]['one'][Relation::TYPE]);
-        $this->assertSame("eComplete", $schema['simple'][Schema::RELATIONS]['one'][Relation::TARGET]);
+        $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['one'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['one'][Relation::LOAD]);
     }
 }

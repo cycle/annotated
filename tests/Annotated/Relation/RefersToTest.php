@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -25,7 +28,7 @@ use Cycle\Schema\Registry;
 
 abstract class RefersToTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 
@@ -43,7 +46,7 @@ abstract class RefersToTest extends BaseTest
 
         $this->assertArrayHasKey('parent', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::REFERS_TO, $schema['simple'][Schema::RELATIONS]['parent'][Relation::TYPE]);
-        $this->assertSame("simple", $schema['simple'][Schema::RELATIONS]['parent'][Relation::TARGET]);
+        $this->assertSame('simple', $schema['simple'][Schema::RELATIONS]['parent'][Relation::TARGET]);
 
         $this->assertSame(
             'NO ACTION',

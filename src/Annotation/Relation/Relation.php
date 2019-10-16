@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -35,8 +36,8 @@ abstract class Relation implements RelationInterface
     public function __construct(array $values)
     {
         foreach ($values as $key => $value) {
-            if ($key == "fetch") {
-                $key = "load";
+            if ($key == 'fetch') {
+                $key = 'load';
             }
 
             $this->$key = $value;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -83,7 +84,7 @@ final class Configurator
      * @param \ReflectionClass $class
      * @param string           $columnPrefix
      */
-    public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = '')
+    public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = ''): void
     {
         foreach ($class->getProperties() as $property) {
             try {
@@ -108,7 +109,7 @@ final class Configurator
      * @param EntitySchema     $entity
      * @param \ReflectionClass $class
      */
-    public function initRelations(EntitySchema $entity, \ReflectionClass $class)
+    public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
         foreach ($class->getProperties() as $property) {
             try {
@@ -142,7 +143,7 @@ final class Configurator
                 }
 
                 foreach ($ra->getOptions() as $option => $value) {
-                    if ($option === "though") {
+                    if ($option === 'though') {
                         $value = $this->resolveName($value, $class);
                     }
 
@@ -160,7 +161,7 @@ final class Configurator
      * @param Column[]         $columns
      * @param \ReflectionClass $class
      */
-    public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class)
+    public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class): void
     {
         foreach ($columns as $name => $column) {
             if ($column->getColumn() === null && is_numeric($name)) {
@@ -234,7 +235,7 @@ final class Configurator
         }
 
         $resolved = sprintf(
-            "%s\\%s",
+            '%s\\%s',
             $class->getNamespaceName(),
             ltrim(str_replace('/', '\\', $name), '\\')
         );

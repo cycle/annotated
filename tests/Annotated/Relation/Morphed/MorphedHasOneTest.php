@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -25,7 +28,7 @@ use Cycle\Schema\Registry;
 
 abstract class MorphedHasOneTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 
@@ -43,7 +46,7 @@ abstract class MorphedHasOneTest extends BaseTest
 
         $this->assertArrayHasKey('label', $schema['tag'][Schema::RELATIONS]);
         $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['tag'][Schema::RELATIONS]['label'][Relation::TYPE]);
-        $this->assertSame("label", $schema['tag'][Schema::RELATIONS]['label'][Relation::TARGET]);
+        $this->assertSame('label', $schema['tag'][Schema::RELATIONS]['label'][Relation::TARGET]);
 
         $this->assertTrue(
             $this->dbal->database('default')

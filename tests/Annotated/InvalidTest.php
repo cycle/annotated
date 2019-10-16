@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -28,7 +31,7 @@ abstract class InvalidTest extends BaseTest
     /**
      * @expectedException \Cycle\Schema\Exception\RelationException
      */
-    public function testInvalidRelation()
+    public function testInvalidRelation(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures3'],
@@ -56,7 +59,7 @@ abstract class InvalidTest extends BaseTest
     /**
      * @expectedException \Cycle\Annotated\Exception\AnnotationException
      */
-    public function testInvalidColumn()
+    public function testInvalidColumn(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures4'],

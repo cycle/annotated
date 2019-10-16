@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -26,7 +29,7 @@ use Cycle\Schema\Relation\BelongsTo as BelongsToRelation;
 
 abstract class BelongsToTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 
@@ -44,6 +47,6 @@ abstract class BelongsToTest extends BaseTest
 
         $this->assertArrayHasKey('parent', $schema['eComplete'][Schema::RELATIONS]);
         $this->assertSame(Relation::BELONGS_TO, $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TYPE]);
-        $this->assertSame("simple", $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET]);
+        $this->assertSame('simple', $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET]);
     }
 }

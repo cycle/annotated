@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -79,7 +80,7 @@ final class Embeddings implements GeneratorInterface
      * @param EntitySchema     $entity
      * @param \ReflectionClass $class
      */
-    public function verifyNoRelations(EntitySchema $entity, \ReflectionClass $class)
+    public function verifyNoRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
         foreach ($class->getProperties() as $property) {
             try {

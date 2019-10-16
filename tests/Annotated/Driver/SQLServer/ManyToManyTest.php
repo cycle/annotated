@@ -1,14 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
- 
+
 namespace Cycle\Annotated\Tests\Driver\SQLServer;
 
 class ManyToManyTest extends \Cycle\Annotated\Tests\Relation\ManyToManyTest
 {
-    const DRIVER = "sqlserver";
+    public const DRIVER = 'sqlserver';
 }

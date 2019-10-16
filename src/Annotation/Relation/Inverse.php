@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -43,8 +44,8 @@ final class Inverse
     public function __construct(array $values)
     {
         foreach ($values as $key => $value) {
-            if ($key == "fetch") {
-                $key = "load";
+            if ($key == 'fetch') {
+                $key = 'load';
             }
 
             $this->$key = $value;

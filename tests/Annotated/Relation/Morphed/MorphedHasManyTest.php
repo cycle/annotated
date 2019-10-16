@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -25,7 +28,7 @@ use Cycle\Schema\Registry;
 
 abstract class MorphedHasManyTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 
@@ -43,7 +46,7 @@ abstract class MorphedHasManyTest extends BaseTest
 
         $this->assertArrayHasKey('labels', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::MORPHED_HAS_MANY, $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE]);
-        $this->assertSame("label", $schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET]);
+        $this->assertSame('label', $schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET]);
 
         $this->assertArrayHasKey('labels', $schema['withTable'][Schema::RELATIONS]);
         $this->assertSame(
@@ -51,7 +54,7 @@ abstract class MorphedHasManyTest extends BaseTest
             $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TYPE]
         );
 
-        $this->assertSame("label", $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TARGET]);
+        $this->assertSame('label', $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TARGET]);
 
         $this->assertTrue(
             $this->dbal->database('default')

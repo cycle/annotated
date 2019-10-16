@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -64,9 +65,32 @@ final class MergeIndexes implements GeneratorInterface
     /**
      * @param AbstractTable $table
      * @param Entity        $entity
+     * @param Table\Index[] $indexes
+     */
+    public function renderIndexes(AbstractTable $table, Entity $entity, array $indexes): void
+    {
+        foreach ($indexes as $index) {
+            if ($index->getColumns() === []) {
+                continue;
+            }
+
+            $columns = $this->mapColumns($entity, $index->getColumns());
+
+            $indexSchema = $table->index($columns);
+            $indexSchema->unique($index->isUnique());
+
+            if ($index->getIndex() !== null) {
+                $indexSchema->setName($index->getIndex());
+            }
+        }
+    }
+
+    /**
+     * @param AbstractTable $table
+     * @param Entity        $entity
      * @param string|null   $class
      */
-    protected function render(AbstractTable $table, Entity $entity, ?string $class)
+    protected function render(AbstractTable $table, Entity $entity, ?string $class): void
     {
         if ($class === null) {
             return;
@@ -89,29 +113,6 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         $this->renderIndexes($table, $entity, $tann->getIndexes());
-    }
-
-    /**
-     * @param AbstractTable $table
-     * @param Entity        $entity
-     * @param Table\Index[] $indexes
-     */
-    public function renderIndexes(AbstractTable $table, Entity $entity, array $indexes)
-    {
-        foreach ($indexes as $index) {
-            if ($index->getColumns() === []) {
-                continue;
-            }
-
-            $columns = $this->mapColumns($entity, $index->getColumns());
-
-            $indexSchema = $table->index($columns);
-            $indexSchema->unique($index->isUnique());
-
-            if ($index->getIndex() !== null) {
-                $indexSchema->setName($index->getIndex());
-            }
-        }
     }
 
     /**

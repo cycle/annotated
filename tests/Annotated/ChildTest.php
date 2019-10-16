@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -31,7 +34,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class ChildTest extends BaseTest
 {
-    public function testSimpleSchema()
+    public function testSimpleSchema(): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator, new AnnotationReader()))->run($r);
@@ -50,7 +53,7 @@ abstract class ChildTest extends BaseTest
         $this->assertSame([Schema::ROLE => 'simple'], $schema[Third::class]);
     }
 
-    public function testRelationToChild()
+    public function testRelationToChild(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures8'],
@@ -77,6 +80,6 @@ abstract class ChildTest extends BaseTest
         $this->assertArrayHasKey('article', $schema['some'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_ONE, $schema['some'][Schema::RELATIONS]['article'][Relation::TYPE]);
 
-        $this->assertSame("post", $schema['some'][Schema::RELATIONS]['article'][Relation::TARGET]);
+        $this->assertSame('post', $schema['some'][Schema::RELATIONS]['article'][Relation::TARGET]);
     }
 }

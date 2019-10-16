@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -68,7 +69,7 @@ final class MergeColumns implements GeneratorInterface
      * @param EntitySchema $e
      * @param string|null  $class
      */
-    protected function copy(EntitySchema $e, ?string $class)
+    protected function copy(EntitySchema $e, ?string $class): void
     {
         if ($class === null) {
             return;

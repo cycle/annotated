@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -26,6 +27,11 @@ use Spiral\Tokenizer\ClassesInterface;
  */
 final class Entities implements GeneratorInterface
 {
+    // table name generation
+    public const TABLE_NAMING_PLURAL   = 1;
+    public const TABLE_NAMING_SINGULAR = 2;
+    public const TABLE_NAMING_NONE     = 3;
+
     /** @var ClassesInterface */
     private $locator;
 
@@ -35,15 +41,23 @@ final class Entities implements GeneratorInterface
     /** @var Configurator */
     private $generator;
 
+    /** @var int */
+    private $tableNaming;
+
     /**
      * @param ClassesInterface      $locator
      * @param AnnotationReader|null $reader
+     * @param int                   $tableNaming
      */
-    public function __construct(ClassesInterface $locator, AnnotationReader $reader = null)
-    {
+    public function __construct(
+        ClassesInterface $locator,
+        AnnotationReader $reader = null,
+        int $tableNaming = self::TABLE_NAMING_PLURAL
+    ) {
         $this->locator = $locator;
         $this->reader = $reader ?? new AnnotationReader();
         $this->generator = new Configurator($this->reader);
+        $this->tableNaming = $tableNaming;
     }
 
     /**
@@ -127,7 +141,7 @@ final class Entities implements GeneratorInterface
                 } catch (RegistryException $ex) {
                     throw new RelationException(
                         sprintf(
-                            "Unable to resolve `%s`.`%s` relation target (not found or invalid)",
+                            'Unable to resolve `%s`.`%s` relation target (not found or invalid)',
                             $e->getRole(),
                             $name
                         ),
@@ -173,7 +187,18 @@ final class Entities implements GeneratorInterface
      */
     protected function tableName(string $role): string
     {
-        return Inflector::pluralize(Inflector::tableize($role));
+        $table = Inflector::tableize($role);
+
+        switch ($this->tableNaming) {
+            case self::TABLE_NAMING_PLURAL:
+                return Inflector::pluralize(Inflector::tableize($role));
+
+            case self::TABLE_NAMING_SINGULAR:
+                return Inflector::singularize(Inflector::tableize($role));
+
+            default:
+                return $table;
+        }
     }
 
     /**

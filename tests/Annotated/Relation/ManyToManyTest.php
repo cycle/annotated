@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -26,7 +29,7 @@ use Cycle\Schema\Relation\ManyToMany as ManyToManyRelation;
 
 abstract class ManyToManyTest extends BaseTest
 {
-    public function testRelation()
+    public function testRelation(): void
     {
         $r = new Registry($this->dbal);
 
@@ -50,13 +53,13 @@ abstract class ManyToManyTest extends BaseTest
         );
 
         $this->assertSame(
-            "tag",
+            'tag',
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TARGET]
         );
 
 
         $this->assertSame(
-            "tagContext",
+            'tagContext',
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THOUGH_ENTITY]
         );
     }

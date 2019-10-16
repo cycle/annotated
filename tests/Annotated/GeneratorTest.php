@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -22,7 +25,7 @@ use Cycle\Schema\Registry;
 
 abstract class GeneratorTest extends BaseTest
 {
-    public function testLocateAll()
+    public function testLocateAll(): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator))->run($r);
@@ -32,7 +35,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertTrue($r->hasEntity(Complete::class));
     }
 
-    public function testSimpleSchema()
+    public function testSimpleSchema(): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator))->run($r);
@@ -51,7 +54,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());
     }
 
-    public function testCompleteSchema()
+    public function testCompleteSchema(): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator))->run($r);
