@@ -44,20 +44,6 @@ jobs:
         - vendor/bin/phpunit tests/Annotated/Driver/MySQL
         - vendor/bin/phpunit tests/Annotated/Driver/Postgres
 
-    # PHP 7.3 builds does not support SQLServer yet
-    - stage: Test
-      php: 7.4snapshot
-      env:
-        - "DB=postgres,mysql,sqlite"
-      before_install:
-        - cd tests
-        - docker-compose up -d
-        - cd ..
-      script:
-        - vendor/bin/phpunit tests/Annotated/Driver/SQLite
-        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
-        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
-
     # Testing various PostgresSQL version
     - stage: Test
       php: 7.2
