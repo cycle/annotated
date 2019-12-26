@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Cycle\Annotated;
@@ -208,6 +209,7 @@ final class Configurator
 
         if ($column->isNullable()) {
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_NULLABLE, true);
+            $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, null);
         }
 
         if ($column->hasDefault()) {
@@ -230,7 +232,7 @@ final class Configurator
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
     {
-        if (is_null($name) || class_exists($name, true) || interface_exists($name, true)) {
+        if ($name === null || class_exists($name, true) || interface_exists($name, true)) {
             return $name;
         }
 
@@ -258,7 +260,7 @@ final class Configurator
             // short definition
             $typecast = explode('::', $typecast);
 
-            // rsolve class name
+            // resolve class name
             $typecast[0] = $this->resolveName($typecast[0], $class);
         }
 

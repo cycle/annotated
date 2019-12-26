@@ -5,6 +5,7 @@
  *
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
