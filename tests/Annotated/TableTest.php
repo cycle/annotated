@@ -81,9 +81,9 @@ abstract class TableTest extends BaseTest
         (new MergeIndexes())->run($r);
         (new SyncTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTableOrderedIndex')));
+        $this->assertTrue($r->hasTable($r->getEntity('orderedIdx')));
 
-        $schema = $r->getTableSchema($r->getEntity('withTableOrderedIndex'));
+        $schema = $r->getTableSchema($r->getEntity('orderedIdx'));
 
         $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
     }

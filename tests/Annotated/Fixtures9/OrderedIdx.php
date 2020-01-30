@@ -27,7 +27,7 @@ use Cycle\Annotated\Annotation\Table\Index;
  *      }
  * )
  */
-class WithTableOrderedIndex
+class OrderedIdx
 {
     /** @Column(type="primary") */
     protected $id;
