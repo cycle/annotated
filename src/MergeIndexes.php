@@ -18,6 +18,7 @@ use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Database\Schema\AbstractIndex;
 use Spiral\Database\Schema\AbstractTable;
 
 /**
@@ -125,12 +126,17 @@ final class MergeIndexes implements GeneratorInterface
     {
         $result = [];
 
-        foreach ($columns as $column) {
+        foreach ($columns as $expression) {
+            [$column, $order] = AbstractIndex::parseColumn($expression);
+
             if ($entity->getFields()->has($column)) {
-                $result[] = $entity->getFields()->get($column)->getColumn();
+                $mappedName = $entity->getFields()->get($column)->getColumn();
             } else {
-                $result[] = $column;
+                $mappedName = $column;
             }
+
+            // Re-construct `column ORDER` with mapped column name
+            $result[] = $order ? "$mappedName $order" : $mappedName;
         }
 
         return $result;
