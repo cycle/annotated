@@ -17,6 +17,8 @@ use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
 
 abstract class TableTest extends BaseTest
 {
@@ -60,6 +62,30 @@ abstract class TableTest extends BaseTest
         $this->assertSame('name_index', $schema->index(['name'])->getName());
 
         $this->assertTrue($schema->hasIndex(['status']));
+    }
+
+    public function testOrderedIndexes(): void
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures9'],
+            'exclude'     => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        (new Entities($locator))->run($r);
+        (new MergeColumns())->run($r);
+        (new RenderTables())->run($r);
+        (new MergeIndexes())->run($r);
+        (new SyncTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('orderedIdx')));
+
+        $schema = $r->getTableSchema($r->getEntity('orderedIdx'));
+
+        $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
     }
 
     public function testNamingDefault(): void
