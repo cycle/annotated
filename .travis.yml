@@ -8,6 +8,7 @@ services:
 php:
   - 7.2
   - 7.3
+  - 7.4
 
 env:
   - "DB=ALL COVERAGE=ALL"
@@ -32,7 +33,7 @@ jobs:
   include:
     # PHP 7.4 builds does not support SQLServer yet
     - stage: Test
-      php: 7.4snapshot
+      php: 7.4
       env:
         - "DB=postgres,mysql,sqlite"
       before_install:
