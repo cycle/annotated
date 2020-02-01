@@ -3,9 +3,15 @@
   "type": "library",
   "license": "MIT",
   "description": "Cycle ORM Annotated Entities generator",
-  "require": {
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/rauanmayemir/spiral-database.git"
+    }
+  ],  "require": {
     "php": "^7.2",
     "spiral/tokenizer": "^2.1",
+    "spiral/database": "dev-master#5da58f3 as 2.99.x-dev",
     "cycle/schema-builder": "^1.0",
     "doctrine/annotations": "^1.7"
   },
