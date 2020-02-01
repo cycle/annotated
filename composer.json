@@ -18,7 +18,7 @@
   "require": {
     "php": "^7.2",
     "spiral/tokenizer": "^2.1",
-    "spiral/database": "dev-master#7fbfd12 as 2.88.x-dev",
+    "spiral/database": "dev-master#7fbfd12d2374f2eb8f471a3b239127c5adb25034 as 2.89.x-dev",
     "cycle/schema-builder": "^1.0",
     "doctrine/annotations": "^1.7"
   },
