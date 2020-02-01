@@ -15,6 +15,7 @@
       "*": "dist"
     }
   },
+  "minimum-stability": "dev",
   "require": {
     "php": "^7.2",
     "spiral/tokenizer": "^2.1",
