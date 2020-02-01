@@ -19,7 +19,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 AnnotationRegistry::registerLoader('class_exists');
 
 \Cycle\Annotated\Tests\BaseTest::$config = [
-    'debug'     => false,
+    'debug'     => true,
     'strict'    => true,
     'benchmark' => false,
     'sqlite'    => [
