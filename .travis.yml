@@ -20,7 +20,7 @@ services:
 
 install:
   - composer clearcache
-  - composer install --no-interaction --no-cache
+  - composer install -vvv --no-interaction --no-cache
 
 script:
   - vendor/bin/spiral-cs check src tests
@@ -41,7 +41,7 @@ jobs:
 #        - docker-compose up -d
 #        - cd ..
       script:
-        - vendor/bin/phpunit tests/Annotated/Driver/SQLite
+        - vendor/bin/phpunit --debug tests/Annotated/Driver/SQLite
 #        - vendor/bin/phpunit tests/Annotated/Driver/MySQL
 #        - vendor/bin/phpunit tests/Annotated/Driver/Postgres
 
