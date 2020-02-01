@@ -20,7 +20,7 @@ services:
 
 install:
   - composer clearcache
-  - composer install --no-interaction
+  - composer install --no-interaction --no-cache
 
 script:
   - vendor/bin/spiral-cs check src tests
