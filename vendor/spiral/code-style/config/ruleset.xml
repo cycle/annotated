@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Spiral code style ruleset">
+    <description>The PSR-12 coding standard.</description>
+    <rule ref="PSR12">
+        <exclude name="PSR12.Classes.AnonClassDeclaration"/>
+    </rule>
+</ruleset>

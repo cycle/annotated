@@ -1,0 +1,208 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use PHP_CodeSniffer\Runner;
+use PhpCsFixer\Console\Application as PhpCsFixApplication;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class CodeStyleHelper
+{
+    public const PACKAGE_NAME             = 'code-style';
+    public const PHP_CS_CONFIG_FILE       = 'ruleset.xml';
+    public const PHP_CS_FIXER_CONFIG_FILE = '.php_cs';
+
+    public static function init(): self
+    {
+        self::defineComposerAutoloadLocation();
+        self::defineConfigFolderLocation();
+        return new self();
+    }
+
+    private function __construct()
+    {
+    }
+
+    private static function defineComposerAutoloadLocation(): void
+    {
+        foreach (
+            [
+                __DIR__ . '/../../../autoload.php',
+                __DIR__ . '/../autoload.php',
+                __DIR__ . '/../vendor/autoload.php',
+                __DIR__ . '/vendor/autoload.php'
+            ] as $file
+        ) {
+            if (file_exists($file)) {
+                define('COMPOSER_AUTOLOAD', realpath($file));
+                define('VENDOR_DIR', dirname(realpath($file)));
+                define('PROJECT_ROOT', dirname(VENDOR_DIR));
+                break;
+            }
+        }
+        if (!defined('COMPOSER_AUTOLOAD')) {
+            fwrite(
+                STDERR,
+                'You need to set up the project dependencies using Composer:' . PHP_EOL . PHP_EOL .
+                '    composer install' . PHP_EOL . PHP_EOL .
+                'You can learn all about Composer on https://getcomposer.org/.' . PHP_EOL
+            );
+            die(1);
+        }
+    }
+
+    private static function defineConfigFolderLocation(): void
+    {
+        foreach (
+            [
+                VENDOR_DIR . DIRECTORY_SEPARATOR . 'spiral' . DIRECTORY_SEPARATOR . self::PACKAGE_NAME,
+                __DIR__,
+                __DIR__ . DIRECTORY_SEPARATOR . '..'
+            ] as $directory
+        ) {
+            if (
+                is_dir($directory) &&
+                is_dir($configDir = $directory . DIRECTORY_SEPARATOR . 'config') &&
+                file_exists($configDir . DIRECTORY_SEPARATOR . self::PHP_CS_FIXER_CONFIG_FILE) &&
+                file_exists($configDir . DIRECTORY_SEPARATOR . self::PHP_CS_CONFIG_FILE)
+            ) {
+                define('CONFIG_DIR', $configDir);
+                break;
+            }
+        }
+
+        if (!defined('CONFIG_DIR')) {
+            fwrite(
+                STDERR,
+                'Unable to find code style config locations' . PHP_EOL
+            );
+            die(1);
+        }
+    }
+
+    public function getPhpCsConfigPath(): string
+    {
+        return CONFIG_DIR . DIRECTORY_SEPARATOR . self::PHP_CS_CONFIG_FILE;
+    }
+
+    public function getPhpCsFixerConfigPath(): string
+    {
+        return CONFIG_DIR . DIRECTORY_SEPARATOR . self::PHP_CS_FIXER_CONFIG_FILE;
+    }
+
+    public function wrapPaths(array $paths): array
+    {
+        array_walk($paths, function (&$path) {
+            $path = PROJECT_ROOT . DIRECTORY_SEPARATOR . $path;
+        });
+        return $paths;
+    }
+
+    public function normalizeEndings(array $paths)
+    {
+        $finder = new Symfony\Component\Finder\Finder();
+        foreach ($paths as $path) {
+            if (is_file($path)) {
+                $finder->append([$path]);
+            } else {
+                $finder->in($path);
+            }
+        }
+
+        foreach ($finder->files() as $path) {
+            $this->normalizeContent((string)$path);
+        }
+    }
+
+    private function normalizeContent(string $filename)
+    {
+        $lines = file($filename);
+        foreach ($lines as &$line) {
+            $line = rtrim($line, "\n\r ");
+            unset($line);
+        }
+
+        file_put_contents($filename, join("\n", $lines));
+    }
+}
+
+$codeStyleHelper = CodeStyleHelper::init();
+
+require COMPOSER_AUTOLOAD;
+require VENDOR_DIR . '/squizlabs/php_codesniffer/autoload.php';
+
+$codeStyleApp = new Application('Spiral code style application');
+$codeStyleApp->addCommands([
+    (new Symfony\Component\Console\Command\Command('fix'))
+        ->setDescription('Code style fix command')
+        ->addArgument(
+            'paths',
+            InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+            'Enumerate directories or files to check'
+        )
+        ->addOption(
+            'preserve-endings',
+            'l',
+            InputOption::VALUE_NONE,
+            'Preserve original line-endings, otherwise forced into LF'
+        )
+        ->setCode(function (InputInterface $input, OutputInterface $output) use ($codeStyleHelper) {
+            $paths = $codeStyleHelper->wrapPaths($input->getArgument('paths'));
+
+            if (!$input->getOption('preserve-endings')) {
+                $codeStyleHelper->normalizeEndings($paths);
+            }
+
+            // PHPCBF call
+            $_SERVER['argv'] = array_merge([
+                'placeholder',
+                '--report=code',
+                '--standard=' . $codeStyleHelper->getPhpCsConfigPath(),
+            ], $paths);
+
+            $runner = new Runner();
+            $runner->runPHPCBF();
+
+            // PHPCS-Fixer call
+            $application = new PhpCsFixApplication();
+            $application->setAutoExit(false);
+            foreach ($paths as $path) {
+                $_SERVER['argv'] = [
+                    'placeholder',
+                    'fix',
+                    '--config',
+                    $codeStyleHelper->getPhpCsFixerConfigPath(),
+                    $path,
+                ];
+                $application->run();
+            }
+        }),
+    (new Symfony\Component\Console\Command\Command('check'))
+        ->setDescription('Code style correctness check command')
+        ->addArgument(
+            'paths',
+            InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+            'Enumerate directories or files to check'
+        )
+        ->setCode(function (InputInterface $input, OutputInterface $output) use ($codeStyleHelper) {
+            $_SERVER['argv'] = array_merge([
+                'placeholder',
+                '--report=code',
+                '--standard=' . $codeStyleHelper->getPhpCsConfigPath(),
+            ], $codeStyleHelper->wrapPaths($input->getArgument('paths')));
+            $runner = new Runner();
+            $exitCode = $runner->runPHPCS();
+
+            if ($exitCode === 0) {
+                $output->writeln('<info>No codestyle issues</info>');
+            }
+            return $exitCode;
+        }),
+]);
+
+$codeStyleApp->run();

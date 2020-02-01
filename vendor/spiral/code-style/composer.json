@@ -1,0 +1,29 @@
+{
+    "name": "spiral/code-style",
+    "description": "Code style and static analysis tools rulesets collection",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/spiral/code-style",
+    "authors": [
+        {
+            "name": "Aleksandr Novikov",
+            "email": "aleksandr.novikov@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "bin": [
+        "bin/spiral-cs"
+    ],
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.4"
+    }
+}

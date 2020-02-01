@@ -1,0 +1,27 @@
+{
+  "name": "cycle/schema-builder",
+  "type": "library",
+  "license": "MIT",
+  "description": "Cycle ORM Schema Builder",
+  "require": {
+    "php": "^7.2",
+    "cycle/orm": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "^1.1",
+    "spiral/tokenizer": "^2.1",
+    "spiral/debug": "^1.3",
+    "spiral/code-style": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cycle\\Schema\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Cycle\\Schema\\Tests\\": "tests/Schema/"
+    }
+  }
+}

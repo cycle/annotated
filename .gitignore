@@ -1,7 +1,7 @@
 .idea/
 .env
 composer.lock
-vendor/
+#vendor/
 *.db
 clover.xml
 .php_cs.cache

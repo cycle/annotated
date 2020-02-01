@@ -18,8 +18,8 @@ services:
 #  - cd ..
 #  - bash ./tests/install-sqlsrv.sh
 
-install:
-  - composer update --no-interaction
+#install:
+#  - composer update --no-interaction
 
 script:
   - vendor/bin/spiral-cs check src tests
