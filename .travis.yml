@@ -5,17 +5,17 @@ sudo: required
 services:
   - docker
 
-php:
-  - 7.2
-  - 7.3
+#php:
+#  - 7.2
+#  - 7.3
+#
+#env:
+#  - "DB=ALL COVERAGE=ALL"
 
-env:
-  - "DB=ALL COVERAGE=ALL"
-
-before_install:
-  - cd tests
-  - docker-compose up -d
-  - cd ..
+#before_install:
+#  - cd tests
+#  - docker-compose up -d
+#  - cd ..
 #  - bash ./tests/install-sqlsrv.sh
 
 install:
