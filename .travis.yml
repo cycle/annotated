@@ -19,8 +19,7 @@ services:
 #  - bash ./tests/install-sqlsrv.sh
 
 install:
-  - composer clearcache
-  - composer install -vvv --no-interaction --no-cache
+  - composer install --no-interaction
 
 script:
   - vendor/bin/spiral-cs check src tests
