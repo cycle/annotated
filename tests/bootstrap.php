@@ -40,15 +40,6 @@ AnnotationRegistry::registerLoader('class_exists');
         'user'   => 'root',
         'pass'   => 'root'
     ],
-    'mysql56'   => [
-        'driver' => \Spiral\Database\Driver\MySQL\MySQLDriver::class,
-        'check'  => function () {
-            return !in_array('mysql', \PDO::getAvailableDrivers());
-        },
-        'conn'   => 'mysql:host=127.0.0.1:13305;dbname=spiral',
-        'user'   => 'root',
-        'pass'   => 'root'
-    ],
     'postgres'  => [
         'driver' => \Spiral\Database\Driver\Postgres\PostgresDriver::class,
         'check'  => function () {
@@ -81,22 +72,7 @@ if (!empty(getenv('DB'))) {
                     },
                     'conn'   => 'pgsql:host=127.0.0.1;port=5432;dbname=spiral',
                     'user'   => 'postgres',
-                    'pass'   => ''
-                ],
-            ];
-            break;
-
-        case 'mysql':
-            \Cycle\Annotated\Tests\BaseTest::$config = [
-                'debug' => false,
-                'mysql' => [
-                    'driver' => \Spiral\Database\Driver\MySQL\MySQLDriver::class,
-                    'check'  => function () {
-                        return true;
-                    },
-                    'conn'   => 'mysql:host=127.0.0.1:3306;dbname=spiral',
-                    'user'   => 'root',
-                    'pass'   => 'root'
+                    'pass'   => 'postgres',
                 ],
             ];
             break;
@@ -109,9 +85,9 @@ if (!empty(getenv('DB'))) {
                     'check'  => function () {
                         return true;
                     },
-                    'conn'   => 'mysql:host=127.0.0.1:3306;dbname=spiral',
+                    'conn'   => 'mysql:host=127.0.0.1:23306;dbname=spiral',
                     'user'   => 'root',
-                    'pass'   => ''
+                    'pass'   => 'root'
                 ],
             ];
             break;
