@@ -30,6 +30,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
+ *      @Attribute("indexUnique", type="bool")
  * })
  */
 final class MorphedHasOne extends Relation
@@ -58,4 +59,7 @@ final class MorphedHasOne extends Relation
 
     /** @var bool */
     protected $indexCreate;
+
+    /** @var bool */
+    protected $indexUnique;
 }

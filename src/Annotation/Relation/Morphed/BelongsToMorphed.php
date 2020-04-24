@@ -31,6 +31,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
+ *      @Attribute("indexUnique", type="bool")
  * })
  */
 final class BelongsToMorphed extends Relation
@@ -59,4 +60,7 @@ final class BelongsToMorphed extends Relation
 
     /** @var bool */
     protected $indexCreate;
+
+    /** @var bool */
+    protected $indexUnique;
 }

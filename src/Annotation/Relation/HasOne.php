@@ -30,6 +30,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
+ *      @Attribute("indexUnique", type="bool")
  * })
  */
 final class HasOne extends Relation
@@ -61,4 +62,7 @@ final class HasOne extends Relation
 
     /** @var bool */
     protected $indexCreate;
+
+    /** @var bool */
+    protected $indexUnique;
 }
