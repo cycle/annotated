@@ -22,12 +22,14 @@ use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
 use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Inflector\Inflector;
 
 final class Configurator
 {
     /** @var AnnotationReader */
     private $reader;
+
+    /** @var \Doctrine\Inflector\Inflector */
+    private $inflector;
 
     /**
      * @param AnnotationReader $reader
@@ -35,6 +37,7 @@ final class Configurator
     public function __construct(AnnotationReader $reader)
     {
         $this->reader = $reader;
+        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
     /**
@@ -47,7 +50,7 @@ final class Configurator
         $e = new EntitySchema();
         $e->setClass($class->getName());
 
-        $e->setRole($ann->getRole() ?? Inflector::camelize($class->getShortName()));
+        $e->setRole($ann->getRole() ?? $this->inflector->camelize($class->getShortName()));
 
         // representing classes
         $e->setMapper($this->resolveName($ann->getMapper(), $class));
@@ -72,7 +75,7 @@ final class Configurator
         $e = new EntitySchema();
         $e->setClass($class->getName());
 
-        $e->setRole($emb->getRole() ?? Inflector::camelize($class->getShortName()));
+        $e->setRole($emb->getRole() ?? $this->inflector->camelize($class->getShortName()));
 
         // representing classes
         $e->setMapper($this->resolveName($emb->getMapper(), $class));
@@ -202,7 +205,7 @@ final class Configurator
         $field = new Field();
 
         $field->setType($column->getType());
-        $field->setColumn($columnPrefix . ($column->getColumn() ?? Inflector::tableize($name)));
+        $field->setColumn($columnPrefix . ($column->getColumn() ?? $this->inflector->tableize($name)));
         $field->setPrimary($column->isPrimary());
 
         $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));

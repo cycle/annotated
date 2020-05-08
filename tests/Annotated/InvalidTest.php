@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests;
 
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Compiler;
+use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
 use Cycle\Schema\Generator\RenderRelations;
@@ -28,11 +30,10 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class InvalidTest extends BaseTest
 {
-    /**
-     * @expectedException \Cycle\Schema\Exception\RelationException
-     */
     public function testInvalidRelation(): void
     {
+        $this->expectException(RelationException::class);
+
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures3'],
             'exclude'     => [],
@@ -56,11 +57,10 @@ abstract class InvalidTest extends BaseTest
         ]);
     }
 
-    /**
-     * @expectedException \Cycle\Annotated\Exception\AnnotationException
-     */
     public function testInvalidColumn(): void
     {
+        $this->expectException(AnnotationException::class);
+
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures4'],
             'exclude'     => [],
