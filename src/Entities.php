@@ -45,6 +45,9 @@ final class Entities implements GeneratorInterface
     /** @var int */
     private $tableNaming;
 
+    /** @var \Doctrine\Inflector\Inflector */
+    private $inflector;
+
     /**
      * @param ClassesInterface      $locator
      * @param AnnotationReader|null $reader
@@ -59,6 +62,7 @@ final class Entities implements GeneratorInterface
         $this->reader = $reader ?? new AnnotationReader();
         $this->generator = new Configurator($this->reader);
         $this->tableNaming = $tableNaming;
+        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
     /**
@@ -188,14 +192,14 @@ final class Entities implements GeneratorInterface
      */
     protected function tableName(string $role): string
     {
-        $table = Inflector::tableize($role);
+        $table = $this->inflector->tableize($role);
 
         switch ($this->tableNaming) {
             case self::TABLE_NAMING_PLURAL:
-                return Inflector::pluralize(Inflector::tableize($role));
+                return $this->inflector->pluralize($this->inflector->tableize($role));
 
             case self::TABLE_NAMING_SINGULAR:
-                return Inflector::singularize(Inflector::tableize($role));
+                return $this->inflector->singularize($this->inflector->tableize($role));
 
             default:
                 return $table;
