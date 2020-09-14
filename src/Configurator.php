@@ -89,7 +89,12 @@ final class Configurator
      * @param string           $columnPrefix
      * @param bool             $skipInherited
      */
-    public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = '', $skipInherited = false): void
+    public function initFields(
+        EntitySchema $entity,
+        \ReflectionClass $class,
+        string $columnPrefix = '',
+        $skipInherited = false
+    ): void
     {
         foreach ($class->getProperties() as $property) {
             try {
