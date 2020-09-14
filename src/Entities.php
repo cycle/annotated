@@ -87,16 +87,36 @@ final class Entities implements GeneratorInterface
 
             $e = $this->generator->initEntity($ann, $class);
 
+            // parent
+            $parent = null;
+            $parentAnnotation = null;
+            $isClassTableInheritance = false;
+            if ($this->hasParent($registry, $e->getClass())) {
+                $parent = $this->findParent($registry, $e->getClass());
+                try {
+                    $parentClass = $this->locator->getClasses($parent)[$parent];
+                    /** @var Entity $parentAnnotation */
+                    $parentAnnotation = $this->reader->getClassAnnotation($parentClass, Entity::class);
+                } catch (DoctrineException $e) {
+                    throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+                }
+            }
+
+            // check if we have class table inheritance
+            if ($parent !== null && $parentAnnotation !== null && $ann->getTable() !== $parentAnnotation->getTable()) {
+                $isClassTableInheritance = true;
+            }
+
             // columns
-            $this->generator->initFields($e, $class);
+            $this->generator->initFields($e, $class, '', $isClassTableInheritance);
 
             // relations
-            $this->generator->initRelations($e, $class);
+            $this->generator->initRelations($e, $class, $isClassTableInheritance);
 
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $ann->getColumns(), $class);
 
-            if ($this->hasParent($registry, $e->getClass())) {
+            if ($parent !== null && !$isClassTableInheritance) {
                 $children[] = $e;
                 continue;
             }

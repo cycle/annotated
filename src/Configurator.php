@@ -87,8 +87,9 @@ final class Configurator
      * @param EntitySchema     $entity
      * @param \ReflectionClass $class
      * @param string           $columnPrefix
+     * @param bool             $skipInherited
      */
-    public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = ''): void
+    public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = '', $skipInherited = false): void
     {
         foreach ($class->getProperties() as $property) {
             try {
@@ -102,6 +103,12 @@ final class Configurator
                 continue;
             }
 
+            if ($skipInherited
+                && $property->getDeclaringClass()->getName() !== $entity->getClass()
+                && $column->getType() !== 'primary') {
+                continue;
+            }
+
             $entity->getFields()->set(
                 $property->getName(),
                 $this->initField($property->getName(), $column, $class, $columnPrefix)
@@ -112,10 +119,15 @@ final class Configurator
     /**
      * @param EntitySchema     $entity
      * @param \ReflectionClass $class
+     * @param bool             $skipInherited
      */
-    public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
+    public function initRelations(EntitySchema $entity, \ReflectionClass $class, $skipInherited = false): void
     {
         foreach ($class->getProperties() as $property) {
+            if ($skipInherited && $property->getDeclaringClass()->getName() !== $entity->getClass()) {
+                continue;
+            }
+
             try {
                 $annotations = $this->reader->getPropertyAnnotations($property);
             } catch (DoctrineException $e) {
