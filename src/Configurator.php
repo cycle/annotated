@@ -103,10 +103,20 @@ final class Configurator
                 continue;
             }
 
-            if ($skipInherited
-                && $property->getDeclaringClass()->getName() !== $entity->getClass()
-                && $column->getType() !== 'primary') {
-                continue;
+            if ($skipInherited && $property->getDeclaringClass()->getName() !== $entity->getClass()) {
+                if ($column->getType() === 'primary' || $column->isPrimary()) {
+                    $relation = new Relation();
+                    $relation->setType('belongsTo');
+                    $relation->setTarget($property->getDeclaringClass()->getName());
+                    $relation->getOptions()->set('innerKey', $property->getName());
+
+                    $entity->getRelations()->set(
+                        $this->inflector->camelize($property->getDeclaringClass()->getShortName()),
+                        $relation
+                    );
+                } else {
+                    continue;
+                }
             }
 
             $entity->getFields()->set(
