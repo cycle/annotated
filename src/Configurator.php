@@ -94,8 +94,7 @@ final class Configurator
         \ReflectionClass $class,
         string $columnPrefix = '',
         $skipInherited = false
-    ): void
-    {
+    ): void {
         foreach ($class->getProperties() as $property) {
             try {
                 /** @var Column $column */
