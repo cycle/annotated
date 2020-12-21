@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "Cycle ORM Annotated Entities generator",
   "require": {
-    "php": "^7.2",
+    "php": ">=7.2",
     "spiral/tokenizer": "^2.1",
     "cycle/schema-builder": "^1.0",
     "doctrine/annotations": "^1.7"
