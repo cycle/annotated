@@ -27,6 +27,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("outerKey", type="string"),
  *      @Attribute("innerKey", type="string"),
  *      @Attribute("where", type="array"),
+ *      @Attribute("orderBy", type="array"),
  *      @Attribute("though", type="string", required=true),
  *      @Attribute("thoughInnerKey", type="string"),
  *      @Attribute("thoughOuterKey", type="string"),
@@ -57,6 +58,9 @@ final class ManyToMany extends Relation
 
     /** @var array */
     protected $where;
+
+    /** @var array */
+    protected $orderBy;
 
     /** @var string */
     protected $though;

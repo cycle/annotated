@@ -25,6 +25,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("innerKey", type="string"),
  *      @Attribute("outerKey", type="string"),
  *      @Attribute("where", type="array"),
+ *      @Attribute("orderBy", type="array"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
  *      @Attribute("indexCreate", type="bool"),
@@ -52,6 +53,9 @@ final class HasMany extends Relation
 
     /** @var array */
     protected $where;
+
+    /** @var array */
+    protected $orderBy;
 
     /** @var bool */
     protected $fkCreate;
