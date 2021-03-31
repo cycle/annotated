@@ -28,7 +28,6 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("morphKey", type="string"),
  *      @Attribute("morphKeyLength", type="int"),
  *      @Attribute("where", type="array"),
- *      @Attribute("orderBy", type="array"),
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
@@ -60,9 +59,6 @@ final class MorphedHasMany extends Relation
 
     /** @var array */
     protected $where;
-
-    /** @var array */
-    protected $orderBy;
 
     /** @var bool */
     protected $indexCreate;
