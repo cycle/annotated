@@ -36,7 +36,7 @@ class WithTable implements LabelledInterface
     /** @Column(type="primary") */
     protected $id;
 
-    /** @ManyToMany(target="Tag", though="Tag/Context") */
+    /** @ManyToMany(target="Tag", though="Tag/Context", where={"id": {">=": "1"}}, orderBy={"id": "DESC"}) */
     protected $tags;
 
     /** @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false) */

@@ -37,7 +37,7 @@ class Simple implements LabelledInterface
     protected $one;
 
     /**
-     * @HasMany(target="WithTable", where={"id": {">": 1}})
+     * @HasMany(target="WithTable", where={"id": {">=": 1}}, orderBy={"id": "DESC"})
      * @var WithTable[]|Collection
      */
     protected $many;
