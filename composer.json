@@ -6,7 +6,7 @@
   "require": {
     "php": ">=7.2",
     "spiral/tokenizer": "^2.7",
-    "cycle/schema-builder": "^1.0",
+    "cycle/schema-builder": "^1.2",
     "doctrine/annotations": "^1.7"
   },
   "require-dev": {

@@ -32,24 +32,31 @@ abstract class HasManyTest extends BaseTest
     {
         $r = new Registry($this->dbal);
 
-        $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator),
-            new ResetTables(),
-            new MergeColumns(),
-            new GenerateRelations(),
-            new RenderTables(),
-            new RenderRelations(),
-            new MergeIndexes(),
-            new SyncTables(),
-            new GenerateTypecast(),
-        ]);
+        $schema = (new Compiler())->compile(
+            $r,
+            [
+                new Entities($this->locator),
+                new ResetTables(),
+                new MergeColumns(),
+                new GenerateRelations(),
+                new RenderTables(),
+                new RenderRelations(),
+                new MergeIndexes(),
+                new SyncTables(),
+                new GenerateTypecast(),
+            ]
+        );
 
         $this->assertArrayHasKey('many', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(Relation::HAS_MANY, $schema['simple'][Schema::RELATIONS]['many'][Relation::TYPE]);
         $this->assertSame('withTable', $schema['simple'][Schema::RELATIONS]['many'][Relation::TARGET]);
-
-        $this->assertSame([
-            'id' => ['>' => 1]
-        ], $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE]);
+        $this->assertSame(
+            ["id" => [">=" => 1]],
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE]
+        );
+        $this->assertSame(
+            ["id" => "DESC"],
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY]
+        );
     }
 }
