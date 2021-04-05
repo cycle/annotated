@@ -16,8 +16,7 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\AnnotationReader;
 use Spiral\Database\Schema\AbstractIndex;
 use Spiral\Database\Schema\AbstractTable;
 
@@ -105,8 +104,8 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         try {
-            $tann = $this->reader->getClassAnnotation($class, Table::class);
-        } catch (DoctrineException $e) {
+            $tann = $this->reader->firstClassMetadata($class, Table::class);
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 

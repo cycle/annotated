@@ -16,24 +16,24 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\ReaderInterface;
 
 /**
  * Copy column definitions from Mapper/Repository to Entity.
  */
 final class MergeColumns implements GeneratorInterface
 {
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /** @var Configurator */
     private $generator;
 
     /**
-     * @param AnnotationReader|null $reader
+     * @param ReaderInterface|null $reader
      */
-    public function __construct(AnnotationReader $reader = null)
+    public function __construct(ReaderInterface $reader = null)
     {
         $this->reader = $reader ?? new AnnotationReader();
         $this->generator = new Configurator($this->reader);
@@ -83,8 +83,8 @@ final class MergeColumns implements GeneratorInterface
         }
 
         try {
-            $table = $this->reader->getClassAnnotation($class, Table::class);
-        } catch (DoctrineException $e) {
+            $table = $this->reader->firstClassMetadata($class, Table::class);
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 

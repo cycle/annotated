@@ -18,9 +18,14 @@ use Cycle\Schema\Exception\RegistryException;
 use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
+use ReflectionClass;
+use ReflectionException;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
 /**
@@ -36,7 +41,7 @@ final class Entities implements GeneratorInterface
     /** @var ClassesInterface */
     private $locator;
 
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /** @var Configurator */
@@ -45,24 +50,25 @@ final class Entities implements GeneratorInterface
     /** @var int */
     private $tableNaming;
 
-    /** @var \Doctrine\Inflector\Inflector */
+    /** @var Inflector */
     private $inflector;
 
     /**
      * @param ClassesInterface      $locator
-     * @param AnnotationReader|null $reader
+     * @param ReaderInterface|null $reader
      * @param int                   $tableNaming
      */
     public function __construct(
         ClassesInterface $locator,
-        AnnotationReader $reader = null,
+        ReaderInterface $reader = null,
         int $tableNaming = self::TABLE_NAMING_PLURAL
     ) {
         $this->locator = $locator;
+        // $this->reader = $reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]);
         $this->reader = $reader ?? new AnnotationReader();
         $this->generator = new Configurator($this->reader);
         $this->tableNaming = $tableNaming;
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**
@@ -76,8 +82,8 @@ final class Entities implements GeneratorInterface
         foreach ($this->locator->getClasses() as $class) {
             try {
                 /** @var Entity $ann */
-                $ann = $this->reader->getClassAnnotation($class, Entity::class);
-            } catch (DoctrineException $e) {
+                $ann = $this->reader->firstClassMetadata($class, Entity::class);
+            } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
@@ -227,8 +233,8 @@ final class Entities implements GeneratorInterface
 
         foreach (array_reverse($parents) as $parent) {
             try {
-                $class = new \ReflectionClass($parent);
-            } catch (\ReflectionException $e) {
+                $class = new ReflectionClass($parent);
+            } catch (ReflectionException $e) {
                 continue;
             }
 
@@ -236,7 +242,7 @@ final class Entities implements GeneratorInterface
                 continue;
             }
 
-            $ann = $this->reader->getClassAnnotation($class, Entity::class);
+            $ann = $this->reader->firstClassMetadata($class, Entity::class);
             if ($ann !== null) {
                 return $parent;
             }

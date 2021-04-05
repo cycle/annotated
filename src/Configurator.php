@@ -20,24 +20,26 @@ use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
+use Exception;
+use Spiral\Attributes\ReaderInterface;
 
 final class Configurator
 {
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
-    /** @var \Doctrine\Inflector\Inflector */
+    /** @var Inflector */
     private $inflector;
 
     /**
-     * @param AnnotationReader $reader
+     * @param ReaderInterface $reader
      */
-    public function __construct(AnnotationReader $reader)
+    public function __construct(ReaderInterface $reader)
     {
         $this->reader = $reader;
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**
@@ -93,8 +95,8 @@ final class Configurator
         foreach ($class->getProperties() as $property) {
             try {
                 /** @var Column $column */
-                $column = $this->reader->getPropertyAnnotation($property, Column::class);
-            } catch (DoctrineException $e) {
+                $column = $this->reader->firstPropertyMetadata($property, Column::class);
+            } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
@@ -117,8 +119,8 @@ final class Configurator
     {
         foreach ($class->getProperties() as $property) {
             try {
-                $annotations = $this->reader->getPropertyAnnotations($property);
-            } catch (DoctrineException $e) {
+                $annotations = $this->reader->getPropertyMetadata($property);
+            } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
