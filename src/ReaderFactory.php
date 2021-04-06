@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
-use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\SelectiveReader;
@@ -13,7 +13,8 @@ use Spiral\Attributes\ReaderInterface;
 final class ReaderFactory
 {
     /**
-     * @param ReaderInterface|DoctrineAnnotationReader|null $reader
+     * @param ReaderInterface|DoctrineReader|null $reader
+     *
      * @return ReaderInterface
      *
      * @psalm-type ReaderType = ReaderInterface | DoctrineAnnotationReader | null
@@ -25,7 +26,7 @@ final class ReaderFactory
             case $reader instanceof ReaderInterface:
                 return $reader;
 
-            case $reader instanceof DoctrineAnnotationReader:
+            case $reader instanceof DoctrineReader:
                 return new AnnotationReader($reader);
 
             case $reader === null:

@@ -18,12 +18,9 @@ use Cycle\Schema\Exception\RegistryException;
 use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use Spiral\Attributes\AnnotationReader;
-use Spiral\Attributes\AttributeReader;
-use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
@@ -54,7 +51,7 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param ClassesInterface      $locator
-     * @param ReaderInterface|DoctrineAnnotationReader|null $reader
+     * @param ReaderInterface|DoctrineReader|null $reader
      * @param int                   $tableNaming
      */
     public function __construct(
