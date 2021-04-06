@@ -27,12 +27,16 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
 abstract class InverseTest extends BaseTest
 {
-    public function testBelongsToOne(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testBelongsToOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -44,14 +48,14 @@ abstract class InverseTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -65,7 +69,10 @@ abstract class InverseTest extends BaseTest
         $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['child'][Relation::TARGET]);
     }
 
-    public function testBelongsToMany(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testBelongsToMany(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -77,14 +84,14 @@ abstract class InverseTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -98,7 +105,10 @@ abstract class InverseTest extends BaseTest
         $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TARGET]);
     }
 
-    public function testHasOne(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testHasOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -110,14 +120,14 @@ abstract class InverseTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -131,7 +141,10 @@ abstract class InverseTest extends BaseTest
         $this->assertSame('user', $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
     }
 
-    public function testHasOneInverseLoad(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testHasOneInverseLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures5'],
@@ -143,14 +156,14 @@ abstract class InverseTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -168,7 +181,10 @@ abstract class InverseTest extends BaseTest
         $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['user'][Relation::LOAD]);
     }
 
-    public function testBelongsTo(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testBelongsTo(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
@@ -180,14 +196,14 @@ abstract class InverseTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

@@ -17,8 +17,10 @@ use Cycle\Annotated\Annotation\Entity;
 /**
  * @Entity()
  */
+#[Entity]
 class Child extends Simple
 {
     /** @Column(type="string") */
+    #[Column(type: "string")]
     protected $name;
 }

@@ -17,8 +17,10 @@ use Cycle\Annotated\Annotation\Entity;
 /**
  * @Entity()
  */
+#[Entity]
 class Third extends Child
 {
     /** @Column(type="string") */
+    #[Column(type: 'string')]
     protected $email;
 }

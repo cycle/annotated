@@ -19,12 +19,16 @@ use Cycle\Annotated\Annotation\Relation\Inverse;
 /**
  * @Entity(role = "eComplete")
  */
+#[Entity(role: "eComplete")]
 class Complete
 {
     /** @Column(type="primary") */
+    #[Column(type: "primary")]
     protected $id;
 
     /** @BelongsTo(target="Simple", fkAction="NO ACTION", inverse=@Inverse(as="child", type="hasOne")) */
+    #[BelongsTo(target: "Simple", fkAction: "NO ACTION")]
+    #[Inverse(as: "child", type: "hasOne")]
     protected $parent;
 
     /** @belongsTo(
@@ -34,5 +38,7 @@ class Complete
      *     inverse=@Inverse(as="stepKids", type="hasMany")
      * )
      */
+    #[BelongsTo(target: "Simple", fkAction: "NO ACTION", innerKey: "uncle_id")]
+    #[Inverse(as: "stepKids", type: "hasMany")]
     protected $uncles;
 }

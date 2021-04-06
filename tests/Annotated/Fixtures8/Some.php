@@ -18,11 +18,14 @@ use Cycle\Annotated\Annotation\Relation\HasOne;
 /**
  * @Entity()
  */
+#[Entity]
 class Some
 {
     /** @Column(type="primary") */
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @HasOne(target="Article") */
+    #[HasOne(target: 'Article')]
     protected $article;
 }

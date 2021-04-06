@@ -19,26 +19,31 @@ use Cycle\Annotated\Tests\Fixtures\Repository\CompleteRepository;
 use Cycle\Annotated\Tests\Fixtures\Simple;
 use Cycle\Annotated\Tests\Fixtures\Source\TestSource;
 use Cycle\Annotated\Tests\Fixtures\WithTable;
-use Cycle\ORM\Mapper\Mapper;
-use Cycle\ORM\Select\Repository;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\ReaderInterface;
 
 abstract class GeneratorTest extends BaseTest
 {
-    public function testLocateAll(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testLocateAll(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator))->run($r);
+        (new Entities($this->locator, $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity(WithTable::class));
         $this->assertTrue($r->hasEntity(Complete::class));
     }
 
-    public function testSimpleSchema(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testSimpleSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator))->run($r);
+        (new Entities($this->locator, $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));
@@ -54,10 +59,13 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());
     }
 
-    public function testCompleteSchema(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testCompleteSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator))->run($r);
+        (new Entities($this->locator, $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Complete::class));
         $this->assertTrue($r->hasEntity('eComplete'));

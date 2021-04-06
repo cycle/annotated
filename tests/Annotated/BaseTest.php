@@ -20,6 +20,10 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Database\Config\DatabaseConfig;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
@@ -205,5 +209,20 @@ abstract class BaseTest extends TestCase
         if (!is_null($this->logger)) {
             $this->logger->hide();
         }
+    }
+
+    public function singularReadersProvider(): array
+    {
+        return [
+            'Annotation reader' => [new AnnotationReader()],
+            'Attribute reader' => [new AttributeReader()],
+        ];
+    }
+
+    public function allReadersProvider(): array
+    {
+        return array_merge($this->singularReadersProvider(), [
+            'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])],
+        ]);
     }
 }

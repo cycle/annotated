@@ -18,11 +18,14 @@ use Cycle\Annotated\Annotation\Relation\Embedded;
 /**
  * @Entity()
  */
+#[Entity]
 class User
 {
     /** @Column(type="primary") */
+    #[Column(type: "primary")]
     protected $id;
 
     /** @Embedded(target=Address::class) */
+    #[Embedded(target: Address::class)]
     protected $address;
 }

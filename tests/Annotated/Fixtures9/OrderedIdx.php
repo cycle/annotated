@@ -27,8 +27,12 @@ use Cycle\Annotated\Annotation\Table\Index;
  *      }
  * )
  */
+#[Entity]
+#[Index(columns: ['name', 'id DESC'])]
+#[Column(name: 'name', type: 'string')]
 class OrderedIdx
 {
     /** @Column(type="primary") */
+    #[Column(type: "primary")]
     protected $id;
 }

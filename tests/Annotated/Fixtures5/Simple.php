@@ -17,8 +17,10 @@ use Cycle\Annotated\Annotation\Entity;
 /**
  * @Entity()
  */
+#[Entity]
 class Simple
 {
     /** @Column(type="primary") */
+    #[Column(type: "primary")]
     protected $id;
 }

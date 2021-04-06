@@ -26,17 +26,21 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
  *      table      = "complete_data"
  * )
  */
+#[Entity(role: "eComplete", mapper: "CompleteMapper", repository: "Repository/CompleteRepository", source: "Source\TestSource", constrain: "Constrain\SomeConstrain", database: "secondary", table: "complete_data")]
 class Complete implements LabelledInterface
 {
     /** @Column(type="primary") */
+    #[Column(type: "primary")]
     protected $id;
 
     /** @Column(type="string", name="username") */
+    #[Column(type: "string", name: 'username')]
     protected $name;
 
     /** @var string */
     protected $ignored;
 
     /** @BelongsTo(target="Simple") */
+    #[BelongsTo(target: "Simple")]
     protected $parent;
 }

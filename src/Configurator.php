@@ -143,10 +143,10 @@ final class Configurator
                 $relation->setTarget($this->resolveName($meta->getTarget(), $class));
                 $relation->setType($meta->getType());
 
-                $inverse = $meta->getInverse()/* ?? $this->reader->firstPropertyMetadata(
+                $inverse = $meta->getInverse() ?? $this->reader->firstPropertyMetadata(
                         $property,
                         RelationAnnotation\Inverse::class
-                    )*/;
+                    );
                 if ($inverse !== null) {
                     $relation->setInverse(
                         $inverse->getName(),
