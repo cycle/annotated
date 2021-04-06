@@ -38,6 +38,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("load", type="string"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class ManyToMany extends Relation
 {
     use InverseTrait;

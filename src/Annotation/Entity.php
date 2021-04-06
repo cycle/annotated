@@ -29,6 +29,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 final class Entity
 {
     /** @var string */
@@ -61,7 +62,7 @@ final class Entity
     /**
      * @param array $values
      */
-    public function __construct(array $values)
+    public function __construct(array $values = [])
     {
         foreach ($values as $key => $value) {
             $this->$key = $value;

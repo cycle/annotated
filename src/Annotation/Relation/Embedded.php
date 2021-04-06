@@ -22,6 +22,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("load", type="string"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Embedded extends Relation
 {
     protected const TYPE = 'embedded';

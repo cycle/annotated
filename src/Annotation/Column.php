@@ -27,6 +27,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("typecast", type="mixed"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Column
 {
     /** @var bool */
@@ -53,9 +54,6 @@ final class Column
     /** @var mixed */
     private $typecast;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         if (isset($values['default'])) {

@@ -31,6 +31,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class BelongsTo extends Relation
 {
     use InverseTrait;

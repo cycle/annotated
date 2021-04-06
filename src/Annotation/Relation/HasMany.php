@@ -33,6 +33,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class HasMany extends Relation
 {
     use InverseTrait;

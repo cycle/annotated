@@ -24,6 +24,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("indexes", type="array<Cycle\Annotated\Annotation\Table\Index>"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 final class Table
 {
     /** @var array<Column> */

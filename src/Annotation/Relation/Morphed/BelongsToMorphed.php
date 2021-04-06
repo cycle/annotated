@@ -33,6 +33,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class BelongsToMorphed extends Relation
 {
     use InverseTrait;
