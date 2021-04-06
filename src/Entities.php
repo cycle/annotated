@@ -21,8 +21,6 @@ use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use ReflectionClass;
-use ReflectionException;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\SelectiveReader;
@@ -235,8 +233,8 @@ final class Entities implements GeneratorInterface
 
         foreach (array_reverse($parents) as $parent) {
             try {
-                $class = new ReflectionClass($parent);
-            } catch (ReflectionException $e) {
+                $class = new \ReflectionClass($parent);
+            } catch (\ReflectionException $e) {
                 continue;
             }
 
