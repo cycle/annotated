@@ -38,8 +38,10 @@ class ReaderFactoryTest extends TestCase
     public function testCreateFromBadObjectValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Reader must be instance of Spiral\Attributes\ReaderInterface.');
-        $this->expectExceptionMessage('Instance of DateTimeImmutable given instead.');
+        $this->expectExceptionMessage(
+            'Argument $reader must be an instance of Spiral\Attributes\ReaderInterface '
+            . 'or Doctrine\Common\Annotations\Reader, but instance of DateTimeImmutable passed.'
+        );
 
         ReaderFactory::create(new \DateTimeImmutable());
     }
@@ -47,8 +49,10 @@ class ReaderFactoryTest extends TestCase
     public function testCreateFromBadValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Reader must be instance of Spiral\Attributes\ReaderInterface.');
-        $this->expectExceptionMessage('Array given instead.');
+        $this->expectExceptionMessage(
+            'Argument $reader must be an instance of Spiral\Attributes\ReaderInterface '
+            . 'or Doctrine\Common\Annotations\Reader, but array passed.'
+        );
 
         ReaderFactory::create([]);
     }

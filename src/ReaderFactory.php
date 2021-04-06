@@ -38,9 +38,10 @@ final class ReaderFactory
             default:
                 throw new \InvalidArgumentException(
                     sprintf(
-                        'Reader must be instance of %s. %s given instead.',
+                        'Argument $reader must be an instance of %s or %s, but %s passed.',
                         ReaderInterface::class,
-                        is_object($reader) ? 'Instance of ' . get_class($reader) : ucfirst(gettype($reader))
+                        DoctrineReader::class,
+                        is_object($reader) ? 'instance of ' . get_class($reader) : gettype($reader)
                     )
                 );
         }
