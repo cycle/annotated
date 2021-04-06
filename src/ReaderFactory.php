@@ -13,14 +13,14 @@ use Spiral\Attributes\ReaderInterface;
 final class ReaderFactory
 {
     /**
-     * @param ReaderInterface|DoctrineReader|null $reader
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
      *
      * @return ReaderInterface
      *
      * @psalm-type ReaderType = ReaderInterface | DoctrineAnnotationReader | null
      * @psalm-param ReaderType $reader
      */
-    public static function create($reader = null): ReaderInterface
+    public static function create(object $reader = null): ReaderInterface
     {
         switch (true) {
             case $reader instanceof ReaderInterface:
@@ -41,9 +41,7 @@ final class ReaderFactory
                         'Argument $reader must be an instance of %s or %s, but %s passed.',
                         ReaderInterface::class,
                         DoctrineReader::class,
-                        is_object($reader)
-                            ? 'instance of ' . explode("\0", get_class($reader))[0]
-                            : gettype($reader)
+                        'instance of ' . explode("\0", get_class($reader))[0]
                     )
                 );
         }
