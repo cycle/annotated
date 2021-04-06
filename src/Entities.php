@@ -18,6 +18,7 @@ use Cycle\Schema\Exception\RegistryException;
 use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
+use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use ReflectionClass;
@@ -55,17 +56,18 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param ClassesInterface      $locator
-     * @param ReaderInterface|null $reader
+     * @param ReaderInterface|DoctrineAnnotationReader|null $reader
      * @param int                   $tableNaming
      */
     public function __construct(
         ClassesInterface $locator,
-        ReaderInterface $reader = null,
+        $reader = null,
         int $tableNaming = self::TABLE_NAMING_PLURAL
     ) {
         $this->locator = $locator;
-        // $this->reader = $reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]);
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
+            ? new AnnotationReader($reader)
+            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
         $this->generator = new Configurator($this->reader);
         $this->tableNaming = $tableNaming;
         $this->inflector = (new InflectorFactory())->build();

@@ -20,9 +20,11 @@ use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
+use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Exception;
+use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\ReaderInterface;
 
 final class Configurator
@@ -34,11 +36,13 @@ final class Configurator
     private $inflector;
 
     /**
-     * @param ReaderInterface $reader
+     * @param AnnotationReader|DoctrineAnnotationReader|null $reader
      */
-    public function __construct(ReaderInterface $reader)
+    public function __construct($reader)
     {
-        $this->reader = $reader;
+        $this->reader = $reader instanceof DoctrineAnnotationReader
+            ? new AnnotationReader($reader)
+            : $reader;
         $this->inflector = (new InflectorFactory())->build();
     }
 

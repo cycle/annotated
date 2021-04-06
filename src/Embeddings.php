@@ -17,7 +17,10 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
+use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\MergeReader;
 use Spiral\Tokenizer\ClassesInterface;
 
 /**
@@ -36,12 +39,14 @@ final class Embeddings implements GeneratorInterface
 
     /**
      * @param ClassesInterface      $locator
-     * @param AnnotationReader|null $reader
+     * @param AnnotationReader|DoctrineAnnotationReader|null $reader
      */
-    public function __construct(ClassesInterface $locator, AnnotationReader $reader = null)
+    public function __construct(ClassesInterface $locator, $reader = null)
     {
         $this->locator = $locator;
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
+            ? new AnnotationReader($reader)
+            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
         $this->generator = new Configurator($this->reader);
     }
 

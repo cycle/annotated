@@ -16,7 +16,10 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
+use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\MergeReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -31,11 +34,13 @@ final class MergeColumns implements GeneratorInterface
     private $generator;
 
     /**
-     * @param ReaderInterface|null $reader
+     * @param ReaderInterface|DoctrineAnnotationReader|null $reader
      */
-    public function __construct(ReaderInterface $reader = null)
+    public function __construct($reader = null)
     {
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
+            ? new AnnotationReader($reader)
+            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
         $this->generator = new Configurator($this->reader);
     }
 
