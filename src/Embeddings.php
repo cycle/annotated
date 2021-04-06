@@ -20,7 +20,7 @@ use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
-use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Tokenizer\ClassesInterface;
 
 /**
@@ -46,7 +46,7 @@ final class Embeddings implements GeneratorInterface
         $this->locator = $locator;
         $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
             ? new AnnotationReader($reader)
-            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
+            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
         $this->generator = new Configurator($this->reader);
     }
 

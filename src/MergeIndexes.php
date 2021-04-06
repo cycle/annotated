@@ -19,7 +19,7 @@ use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
-use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Database\Schema\AbstractIndex;
 use Spiral\Database\Schema\AbstractTable;
@@ -39,7 +39,7 @@ final class MergeIndexes implements GeneratorInterface
     {
         $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
             ? new AnnotationReader($reader)
-            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
+            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
     }
 
     /**
@@ -110,16 +110,24 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         try {
-            $tann = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Table|null $tableMeta */
+            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Table\Index[] $indexMeta */
+            $indexMeta = $this->reader->getClassMetadata($class, Table\Index::class);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if ($tann === null) {
+        $indexes = $tableMeta === null ? [] : $tableMeta->getIndexes();
+        foreach ($indexMeta as $index) {
+            $indexes[] = $index;
+        }
+
+        if ($indexes === []) {
             return;
         }
 
-        $this->renderIndexes($table, $entity, $tann->getIndexes());
+        $this->renderIndexes($table, $entity, $indexes);
     }
 
     /**

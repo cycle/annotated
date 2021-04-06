@@ -17,7 +17,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
- * @Target({"PROPERTY", "ANNOTATION"})
+ * @Target({"PROPERTY", "ANNOTATION", "CLASS"})
  * @Attributes({
  *      @Attribute("type", type="string", required=true),
  *      @Attribute("name", type="string"),
@@ -27,7 +27,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("typecast", type="mixed"),
  * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY|\Attribute::TARGET_CLASS|\Attribute::IS_REPEATABLE)]
 final class Column
 {
     /** @var bool */

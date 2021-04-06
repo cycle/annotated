@@ -25,7 +25,7 @@ use ReflectionClass;
 use ReflectionException;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
-use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
@@ -67,7 +67,7 @@ final class Entities implements GeneratorInterface
         $this->locator = $locator;
         $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
             ? new AnnotationReader($reader)
-            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
+            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
         $this->generator = new Configurator($this->reader);
         $this->tableNaming = $tableNaming;
         $this->inflector = (new InflectorFactory())->build();

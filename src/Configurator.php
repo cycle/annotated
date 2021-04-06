@@ -187,7 +187,7 @@ final class Configurator
             }
 
             $entity->getFields()->set(
-                $name ?? $column->getColumn(),
+                $column->getColumn() ?? $name,
                 $this->initField($column->getColumn() ?? $name, $column, $class, '')
             );
         }

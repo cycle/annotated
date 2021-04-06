@@ -18,13 +18,14 @@ use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target("ANNOTATION", "CLASS")
  * @Attributes({
  *      @Attribute("columns", type="array<string>", required=true),
  *      @Attribute("unique", type="bool"),
  *      @Attribute("name", type="string"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class Index
 {
     /** @var array<string> */

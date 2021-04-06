@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
+use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
@@ -19,7 +20,7 @@ use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
-use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -40,7 +41,7 @@ final class MergeColumns implements GeneratorInterface
     {
         $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
             ? new AnnotationReader($reader)
-            : ($reader ?? new MergeReader([new AttributeReader(), new AnnotationReader()]));
+            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
         $this->generator = new Configurator($this->reader);
     }
 
@@ -88,16 +89,24 @@ final class MergeColumns implements GeneratorInterface
         }
 
         try {
-            $table = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Table|null $tableMeta */
+            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Column[] $columnsMeta */
+            $columnsMeta = $this->reader->getClassMetadata($class, Column::class);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if ($table === null) {
+        $columns = $tableMeta === null ? [] : $tableMeta->getColumns();
+        foreach ($columnsMeta as $column) {
+            $columns[] = $column;
+        }
+
+        if ($columns === []) {
             return;
         }
 
         // additional columns (mapped to local fields automatically)
-        $this->generator->initColumns($e, $table->getColumns(), $class);
+        $this->generator->initColumns($e, $columns, $class);
     }
 }
