@@ -27,7 +27,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("typecast", type="mixed"),
  * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY|\Attribute::TARGET_CLASS|\Attribute::IS_REPEATABLE)]
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class Column
 {
     /** @var bool */
