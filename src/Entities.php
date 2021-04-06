@@ -63,9 +63,7 @@ final class Entities implements GeneratorInterface
         int $tableNaming = self::TABLE_NAMING_PLURAL
     ) {
         $this->locator = $locator;
-        $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
-            ? new AnnotationReader($reader)
-            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
+        $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
         $this->tableNaming = $tableNaming;
         $this->inflector = (new InflectorFactory())->build();

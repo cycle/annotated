@@ -39,9 +39,7 @@ final class MergeColumns implements GeneratorInterface
      */
     public function __construct($reader = null)
     {
-        $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
-            ? new AnnotationReader($reader)
-            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
+        $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
     }
 

@@ -44,9 +44,7 @@ final class Embeddings implements GeneratorInterface
     public function __construct(ClassesInterface $locator, $reader = null)
     {
         $this->locator = $locator;
-        $this->reader = $reader === null || $reader instanceof DoctrineAnnotationReader
-            ? new AnnotationReader($reader)
-            : ($reader ?? new SelectiveReader([new AttributeReader(), new AnnotationReader()]));
+        $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
     }
 

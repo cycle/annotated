@@ -40,9 +40,7 @@ final class Configurator
      */
     public function __construct($reader)
     {
-        $this->reader = $reader instanceof DoctrineAnnotationReader
-            ? new AnnotationReader($reader)
-            : $reader;
+        $this->reader = ReaderFactory::create($reader);
         $this->inflector = (new InflectorFactory())->build();
     }
 
