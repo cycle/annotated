@@ -123,27 +123,30 @@ final class Configurator
     {
         foreach ($class->getProperties() as $property) {
             try {
-                $annotations = $this->reader->getPropertyMetadata($property);
+                $metadata = $this->reader->getPropertyMetadata($property);
             } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
-            foreach ($annotations as $ra) {
-                if (!$ra instanceof RelationAnnotation\RelationInterface) {
+            foreach ($metadata as $meta) {
+                if (!$meta instanceof RelationAnnotation\RelationInterface) {
                     continue;
                 }
 
-                if ($ra->getTarget() === null) {
+                if ($meta->getTarget() === null) {
                     throw new AnnotationException(
-                        "Relation target definition is required on `{$entity->getClass()}`"
+                        "Relation target definition is required on `{$entity->getClass()}`.`{$property->getName()}`"
                     );
                 }
 
                 $relation = new Relation();
-                $relation->setTarget($this->resolveName($ra->getTarget(), $class));
-                $relation->setType($ra->getType());
+                $relation->setTarget($this->resolveName($meta->getTarget(), $class));
+                $relation->setType($meta->getType());
 
-                $inverse = $ra->getInverse();
+                $inverse = $meta->getInverse()/* ?? $this->reader->firstPropertyMetadata(
+                        $property,
+                        RelationAnnotation\Inverse::class
+                    )*/;
                 if ($inverse !== null) {
                     $relation->setInverse(
                         $inverse->getName(),
@@ -152,7 +155,7 @@ final class Configurator
                     );
                 }
 
-                foreach ($ra->getOptions() as $option => $value) {
+                foreach ($meta->getOptions() as $option => $value) {
                     if ($option === 'though') {
                         $value = $this->resolveName($value, $class);
                     }

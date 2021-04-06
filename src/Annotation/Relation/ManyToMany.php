@@ -25,7 +25,6 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("nullable", type="bool"),
  *      @Attribute("innerKey", type="string"),
  *      @Attribute("outerKey", type="string"),
- *      @Attribute("innerKey", type="string"),
  *      @Attribute("where", type="array"),
  *      @Attribute("orderBy", type="array"),
  *      @Attribute("though", type="string", required=true),

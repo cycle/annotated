@@ -29,7 +29,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("morphKey", type="string"),
  *      @Attribute("morphKeyLength", type="int"),
  *      @Attribute("indexCreate", type="bool"),
- *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
  * })
  */
