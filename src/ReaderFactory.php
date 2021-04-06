@@ -41,7 +41,9 @@ final class ReaderFactory
                         'Argument $reader must be an instance of %s or %s, but %s passed.',
                         ReaderInterface::class,
                         DoctrineReader::class,
-                        is_object($reader) ? 'instance of ' . get_class($reader) : gettype($reader)
+                        is_object($reader)
+                            ? 'instance of ' . explode("\0", get_class($reader))[0]
+                            : gettype($reader)
                     )
                 );
         }

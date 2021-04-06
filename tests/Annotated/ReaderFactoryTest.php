@@ -56,4 +56,15 @@ class ReaderFactoryTest extends TestCase
 
         ReaderFactory::create([]);
     }
+
+    public function testCreateFromBadValueAnonymousClass(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Argument $reader must be an instance of Spiral\Attributes\ReaderInterface '
+            . 'or Doctrine\Common\Annotations\Reader, but instance of class@anonymous passed.'
+        );
+
+        ReaderFactory::create(new class() {});
+    }
 }
