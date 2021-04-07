@@ -19,8 +19,7 @@ final class MorphedHasMany
         array $where = [],
         bool $indexCreate = true,
         #[ExpectedValues(values: ['lazy', 'eager'])]
-        string $load = 'lazy',
-        // Inverse $inverse = null, // can be uncommented for compatibility with php 8.1
+        string $load = 'lazy'
     ) {
     }
 }

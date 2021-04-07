@@ -25,8 +25,7 @@ final class ManyToMany
         string $fkAction = 'SET NULL',
         bool $indexCreate = true,
         #[ExpectedValues(values: ['lazy', 'eager'])]
-        string $load = 'lazy',
-        // Inverse $inverse = null, // can be uncommented for compatibility with php 8.1
+        string $load = 'lazy'
     ) {
     }
 }

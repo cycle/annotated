@@ -14,8 +14,7 @@ final class BelongsToMorphed
         string $outerKey = null,
         string $morphKey = '{relationName}_role',
         int $morphKeyLength = 32,
-        bool $indexCreate = true,
-        // Inverse $inverse = null, // can be uncommented for compatibility with php 8.1
+        bool $indexCreate = true
     ) {
     }
 }
