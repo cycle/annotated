@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Fixtures;
@@ -26,7 +19,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
  *      table      = "complete_data"
  * )
  */
-#[Entity(role: "eComplete", mapper: "CompleteMapper", repository: "Repository/CompleteRepository", source: "Source\TestSource", constrain: "Constrain\SomeConstrain", database: "secondary", table: "complete_data")]
+#[Entity(role: "eComplete", mapper: CompleteMapper::class, repository: "Repository/CompleteRepository", source: "Source\TestSource", constrain: "Constrain\SomeConstrain", database: "secondary", table: "complete_data")]
 class Complete implements LabelledInterface
 {
     /** @Column(type="primary") */

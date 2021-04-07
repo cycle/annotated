@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
