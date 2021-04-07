@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Relation\Morphed;
@@ -25,21 +18,25 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\ReaderInterface;
 
 abstract class MorphedHasOneTest extends BaseTest
 {
-    public function testRelation(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator),
+            new Entities($this->locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

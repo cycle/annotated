@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Fixtures3;
@@ -19,11 +12,15 @@ use Cycle\Annotated\Annotation\Relation\Inverse;
 /**
  * @Entity()
  */
+#[Entity]
 class User
 {
     /** @Column(type="primary") */
+    #[Column(type: "primary")]
     protected $id;
 
     /** @HasOne(target=Simple::class, inverse=@Inverse(as="user", type="belongsTo")) */
+    #[HasOne(target: Simple::class)]
+    #[Inverse(as: "user", type: "belongsTo")]
     protected $simple;
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated;
@@ -16,8 +9,8 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Database\Schema\AbstractIndex;
 use Spiral\Database\Schema\AbstractTable;
 
@@ -26,15 +19,15 @@ use Spiral\Database\Schema\AbstractTable;
  */
 final class MergeIndexes implements GeneratorInterface
 {
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /**
-     * @param AnnotationReader|null $reader
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
      */
-    public function __construct(AnnotationReader $reader = null)
+    public function __construct(object $reader = null)
     {
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = ReaderFactory::create($reader);
     }
 
     /**
@@ -105,16 +98,24 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         try {
-            $tann = $this->reader->getClassAnnotation($class, Table::class);
-        } catch (DoctrineException $e) {
+            /** @var Table|null $tableMeta */
+            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Table\Index[] $indexMeta */
+            $indexMeta = $this->reader->getClassMetadata($class, Table\Index::class);
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if ($tann === null) {
+        $indexes = $tableMeta === null ? [] : $tableMeta->getIndexes();
+        foreach ($indexMeta as $index) {
+            $indexes[] = $index;
+        }
+
+        if ($indexes === []) {
             return;
         }
 
-        $this->renderIndexes($table, $entity, $tann->getIndexes());
+        $this->renderIndexes($table, $entity, $indexes);
     }
 
     /**

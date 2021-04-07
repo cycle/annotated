@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
@@ -25,6 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("load", type="string"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Inverse
 {
     /** @var string */

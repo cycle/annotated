@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Relation;
@@ -26,12 +19,16 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
 abstract class EmbeddedTest extends BaseTest
 {
-    public function testRelation(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testRelation(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures6'],
@@ -43,14 +40,14 @@ abstract class EmbeddedTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator),
-            new Entities($locator),
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
@@ -62,7 +59,10 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
     }
 
-    public function testRelationLazyLoad(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testRelationLazyLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures7'],
@@ -74,14 +74,14 @@ abstract class EmbeddedTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator),
-            new Entities($locator),
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

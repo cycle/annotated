@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated;
@@ -17,8 +10,8 @@ use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
 /**
@@ -29,20 +22,20 @@ final class Embeddings implements GeneratorInterface
     /** @var ClassesInterface */
     private $locator;
 
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /** @var Configurator */
     private $generator;
 
     /**
-     * @param ClassesInterface      $locator
-     * @param AnnotationReader|null $reader
+     * @param ClassesInterface $locator
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
      */
-    public function __construct(ClassesInterface $locator, AnnotationReader $reader = null)
+    public function __construct(ClassesInterface $locator, object $reader = null)
     {
         $this->locator = $locator;
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
     }
 
@@ -55,8 +48,8 @@ final class Embeddings implements GeneratorInterface
         foreach ($this->locator->getClasses() as $class) {
             try {
                 /** @var Embeddable $em */
-                $em = $this->reader->getClassAnnotation($class, Embeddable::class);
-            } catch (DoctrineException $e) {
+                $em = $this->reader->firstClassMetadata($class, Embeddable::class);
+            } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
             if ($em === null) {
@@ -85,8 +78,8 @@ final class Embeddings implements GeneratorInterface
     {
         foreach ($class->getProperties() as $property) {
             try {
-                $ann = $this->reader->getPropertyAnnotations($property);
-            } catch (DoctrineException $e) {
+                $ann = $this->reader->getPropertyMetadata($property);
+            } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 

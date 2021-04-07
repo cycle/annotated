@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated;
@@ -20,24 +13,27 @@ use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineReader;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
+use Exception;
+use Spiral\Attributes\ReaderInterface;
 
 final class Configurator
 {
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
-    /** @var \Doctrine\Inflector\Inflector */
+    /** @var Inflector */
     private $inflector;
 
     /**
-     * @param AnnotationReader $reader
+     * @param object<ReaderInterface|DoctrineReader> $reader
      */
-    public function __construct(AnnotationReader $reader)
+    public function __construct(object $reader)
     {
-        $this->reader = $reader;
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->reader = ReaderFactory::create($reader);
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**
@@ -93,8 +89,8 @@ final class Configurator
         foreach ($class->getProperties() as $property) {
             try {
                 /** @var Column $column */
-                $column = $this->reader->getPropertyAnnotation($property, Column::class);
-            } catch (DoctrineException $e) {
+                $column = $this->reader->firstPropertyMetadata($property, Column::class);
+            } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
@@ -117,27 +113,30 @@ final class Configurator
     {
         foreach ($class->getProperties() as $property) {
             try {
-                $annotations = $this->reader->getPropertyAnnotations($property);
-            } catch (DoctrineException $e) {
+                $metadata = $this->reader->getPropertyMetadata($property);
+            } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
-            foreach ($annotations as $ra) {
-                if (!$ra instanceof RelationAnnotation\RelationInterface) {
+            foreach ($metadata as $meta) {
+                if (!$meta instanceof RelationAnnotation\RelationInterface) {
                     continue;
                 }
 
-                if ($ra->getTarget() === null) {
+                if ($meta->getTarget() === null) {
                     throw new AnnotationException(
-                        "Relation target definition is required on `{$entity->getClass()}`"
+                        "Relation target definition is required on `{$entity->getClass()}`.`{$property->getName()}`"
                     );
                 }
 
                 $relation = new Relation();
-                $relation->setTarget($this->resolveName($ra->getTarget(), $class));
-                $relation->setType($ra->getType());
+                $relation->setTarget($this->resolveName($meta->getTarget(), $class));
+                $relation->setType($meta->getType());
 
-                $inverse = $ra->getInverse();
+                $inverse = $meta->getInverse() ?? $this->reader->firstPropertyMetadata(
+                        $property,
+                        RelationAnnotation\Inverse::class
+                    );
                 if ($inverse !== null) {
                     $relation->setInverse(
                         $inverse->getName(),
@@ -146,7 +145,7 @@ final class Configurator
                     );
                 }
 
-                foreach ($ra->getOptions() as $option => $value) {
+                foreach ($meta->getOptions() as $option => $value) {
                     if ($option === 'though') {
                         $value = $this->resolveName($value, $class);
                     }
@@ -181,7 +180,7 @@ final class Configurator
             }
 
             $entity->getFields()->set(
-                $name ?? $column->getColumn(),
+                $column->getColumn() ?? $name,
                 $this->initField($column->getColumn() ?? $name, $column, $class, '')
             );
         }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests;
@@ -28,16 +21,19 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
 abstract class ChildTest extends BaseTest
 {
-    public function testSimpleSchema(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testSimpleSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, new AnnotationReader()))->run($r);
+        (new Entities($this->locator, $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));
@@ -53,7 +49,10 @@ abstract class ChildTest extends BaseTest
         $this->assertSame([Schema::ROLE => 'simple'], $schema[Third::class]);
     }
 
-    public function testRelationToChild(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testRelationToChild(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures8'],
@@ -65,14 +64,14 @@ abstract class ChildTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator),
-            new Entities($locator),
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests;
@@ -25,14 +18,17 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
 abstract class InvalidTest extends BaseTest
 {
-    public function testInvalidRelation(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testInvalidRelation(ReaderInterface $reader): void
     {
-        $this->expectException(RelationException::class);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures3'],
@@ -43,21 +39,26 @@ abstract class InvalidTest extends BaseTest
 
         $r = new Registry($this->dbal);
 
-        $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+        $this->expectException(RelationException::class);
+
+        (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);
     }
 
-    public function testInvalidColumn(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testInvalidColumn(ReaderInterface $reader): void
     {
         $this->expectException(AnnotationException::class);
 
@@ -70,15 +71,15 @@ abstract class InvalidTest extends BaseTest
 
         $r = new Registry($this->dbal);
 
-        $schema = (new Compiler())->compile($r, [
-            new Entities($locator),
+        (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
             new ResetTables(),
-            new MergeColumns(),
+            new MergeColumns($reader),
             new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new MergeIndexes(),
+            new MergeIndexes($reader),
             new SyncTables(),
             new GenerateTypecast(),
         ]);

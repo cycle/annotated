@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
@@ -25,7 +18,6 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("nullable", type="bool"),
  *      @Attribute("innerKey", type="string"),
  *      @Attribute("outerKey", type="string"),
- *      @Attribute("innerKey", type="string"),
  *      @Attribute("where", type="array"),
  *      @Attribute("orderBy", type="array"),
  *      @Attribute("though", type="string", required=true),
@@ -38,6 +30,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("load", type="string"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class ManyToMany extends Relation
 {
     use InverseTrait;

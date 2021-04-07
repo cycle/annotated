@@ -1,17 +1,12 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests;
 
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\MergeColumns;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Complete;
 use Cycle\Annotated\Tests\Fixtures\CompleteMapper;
 use Cycle\Annotated\Tests\Fixtures\Constrain\SomeConstrain;
@@ -19,13 +14,20 @@ use Cycle\Annotated\Tests\Fixtures\Repository\CompleteRepository;
 use Cycle\Annotated\Tests\Fixtures\Simple;
 use Cycle\Annotated\Tests\Fixtures\Source\TestSource;
 use Cycle\Annotated\Tests\Fixtures\WithTable;
-use Cycle\ORM\Mapper\Mapper;
-use Cycle\ORM\Select\Repository;
+use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\ReaderInterface;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
 
 abstract class GeneratorTest extends BaseTest
 {
-    public function testLocateAll(): void
+    public function testCreateEntitiesWithNullReader(): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator))->run($r);
@@ -35,10 +37,76 @@ abstract class GeneratorTest extends BaseTest
         $this->assertTrue($r->hasEntity(Complete::class));
     }
 
-    public function testSimpleSchema(): void
+    public function testCreateGeneratorsWithDoctrineAnnotationReader(): void
+    {
+        $reader = new DoctrineAnnotationReader();
+        $r = new Registry($this->dbal);
+
+        (new Entities($this->locator, $reader))->run($r);
+        (new MergeColumns($reader))->run($r);
+        (new RenderTables())->run($r);
+        (new MergeIndexes($reader))->run($r);
+        (new SyncTables())->run($r);
+
+        // Entities
+        $this->assertTrue($r->hasEntity(Simple::class));
+        $this->assertTrue($r->hasEntity(WithTable::class));
+        $this->assertTrue($r->hasEntity(Complete::class));
+        // MergeColumns
+        $schema = $r->getTableSchema($r->getEntity('withTable'));
+        $this->assertTrue($schema->hasColumn('name'));
+        $this->assertSame('string', $schema->column('status')->getType());
+        // MergeIndexes
+        $this->assertTrue($schema->hasIndex(['name']));
+        $this->assertTrue($schema->index(['name'])->isUnique());
+        $this->assertSame('name_index', $schema->index(['name'])->getName());
+    }
+
+    public function testCreateGeneratorsWithCustomMergeReader(): void
+    {
+        $reader = new MergeReader([new AnnotationReader(), new AttributeReader()]);
+        $r = new Registry($this->dbal);
+
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures10'],
+            'exclude'     => [],
+        ]));
+        $locator = $tokenizer->classLocator();
+
+        (new Entities($locator, $reader))->run($r);
+        (new MergeColumns($reader))->run($r);
+        (new RenderTables())->run($r);
+        (new MergeIndexes($reader))->run($r);
+        (new SyncTables())->run($r);
+
+
+        $this->assertTrue($r->hasTable($r->getEntity('MergedMeta')));
+        $schema = $r->getTableSchema($r->getEntity('MergedMeta'));
+        $this->assertTrue($schema->hasColumn('name'));
+        $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
+
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testLocateAll(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator))->run($r);
+        (new Entities($this->locator, $reader))->run($r);
+
+        $this->assertTrue($r->hasEntity(Simple::class));
+        $this->assertTrue($r->hasEntity(WithTable::class));
+        $this->assertTrue($r->hasEntity(Complete::class));
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testSimpleSchema(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));
@@ -54,10 +122,13 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());
     }
 
-    public function testCompleteSchema(): void
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testCompleteSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator))->run($r);
+        (new Entities($this->locator, $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Complete::class));
         $this->assertTrue($r->hasEntity('eComplete'));

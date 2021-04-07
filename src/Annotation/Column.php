@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
@@ -17,7 +10,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
- * @Target({"PROPERTY", "ANNOTATION"})
+ * @Target({"PROPERTY", "ANNOTATION", "CLASS"})
  * @Attributes({
  *      @Attribute("type", type="string", required=true),
  *      @Attribute("name", type="string"),
@@ -27,6 +20,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("typecast", type="mixed"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class Column
 {
     /** @var bool */
@@ -53,9 +47,6 @@ final class Column
     /** @var mixed */
     private $typecast;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         if (isset($values['default'])) {

@@ -1,41 +1,35 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
+use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Doctrine\Common\Annotations\AnnotationException as DoctrineException;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineReader;
+use Spiral\Attributes\ReaderInterface;
 
 /**
  * Copy column definitions from Mapper/Repository to Entity.
  */
 final class MergeColumns implements GeneratorInterface
 {
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /** @var Configurator */
     private $generator;
 
     /**
-     * @param AnnotationReader|null $reader
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
      */
-    public function __construct(AnnotationReader $reader = null)
+    public function __construct(object $reader = null)
     {
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
     }
 
@@ -83,16 +77,24 @@ final class MergeColumns implements GeneratorInterface
         }
 
         try {
-            $table = $this->reader->getClassAnnotation($class, Table::class);
-        } catch (DoctrineException $e) {
+            /** @var Table|null $tableMeta */
+            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Column[] $columnsMeta */
+            $columnsMeta = $this->reader->getClassMetadata($class, Column::class);
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if ($table === null) {
+        $columns = $tableMeta === null ? [] : $tableMeta->getColumns();
+        foreach ($columnsMeta as $column) {
+            $columns[] = $column;
+        }
+
+        if ($columns === []) {
             return;
         }
 
         // additional columns (mapped to local fields automatically)
-        $this->generator->initColumns($e, $table->getColumns(), $class);
+        $this->generator->initColumns($e, $columns, $class);
     }
 }

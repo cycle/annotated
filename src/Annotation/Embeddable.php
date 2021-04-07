@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
@@ -25,6 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
  * })
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 final class Embeddable
 {
     /** @var string */

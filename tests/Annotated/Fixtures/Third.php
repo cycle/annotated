@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Fixtures;
@@ -17,8 +10,10 @@ use Cycle\Annotated\Annotation\Entity;
 /**
  * @Entity()
  */
+#[Entity]
 class Third extends Child
 {
     /** @Column(type="string") */
+    #[Column(type: 'string')]
     protected $email;
 }
