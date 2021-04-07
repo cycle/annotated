@@ -50,13 +50,13 @@ final class Entities implements GeneratorInterface
     private $inflector;
 
     /**
-     * @param ClassesInterface      $locator
-     * @param ReaderInterface|DoctrineReader|null $reader
-     * @param int                   $tableNaming
+     * @param ClassesInterface $locator
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
+     * @param int $tableNaming
      */
     public function __construct(
         ClassesInterface $locator,
-        $reader = null,
+        object $reader = null,
         int $tableNaming = self::TABLE_NAMING_PLURAL
     ) {
         $this->locator = $locator;

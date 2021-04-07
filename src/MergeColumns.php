@@ -32,9 +32,9 @@ final class MergeColumns implements GeneratorInterface
     private $generator;
 
     /**
-     * @param ReaderInterface|DoctrineReader|null $reader
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
      */
-    public function __construct($reader = null)
+    public function __construct(object $reader = null)
     {
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);

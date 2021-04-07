@@ -16,9 +16,6 @@ final class ReaderFactory
      * @param object<ReaderInterface|DoctrineReader>|null $reader
      *
      * @return ReaderInterface
-     *
-     * @psalm-type ReaderType = ReaderInterface | DoctrineAnnotationReader | null
-     * @psalm-param ReaderType $reader
      */
     public static function create(object $reader = null): ReaderInterface
     {

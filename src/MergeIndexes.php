@@ -30,9 +30,9 @@ final class MergeIndexes implements GeneratorInterface
     private $reader;
 
     /**
-     * @param ReaderInterface|DoctrineReader|null $reader
+     * @param object<ReaderInterface|DoctrineReader>|null $reader
      */
-    public function __construct($reader = null)
+    public function __construct(object $reader = null)
     {
         $this->reader = ReaderFactory::create($reader);
     }
