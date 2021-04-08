@@ -167,7 +167,11 @@ final class Configurator
     public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class): void
     {
         foreach ($columns as $name => $column) {
-            if ($column->getColumn() === null && is_numeric($name)) {
+            $property = !is_numeric($name) ? $name : $column->getProperty();
+            $columnName = $column->getColumn() ?? (!is_numeric($name) ? $name : $property);
+            $property = $property ?? $columnName;
+
+            if ($columnName === null) {
                 throw new AnnotationException(
                     "Column name definition is required on `{$entity->getClass()}`"
                 );
@@ -180,8 +184,8 @@ final class Configurator
             }
 
             $entity->getFields()->set(
-                $column->getColumn() ?? $name,
-                $this->initField($column->getColumn() ?? $name, $column, $class, '')
+                $property,
+                $this->initField($columnName, $column, $class, '')
             );
         }
     }

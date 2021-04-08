@@ -14,13 +14,15 @@ use Cycle\Annotated\Annotation\Table\Index;
  * Short syntax
  * @Entity()
  * @Column(name="name", type="string"),
- * @Column(name="status", type="enum(active,disabled)", default="active")
+ * @Column(name="status", type="enum(active,disabled)", default="active", property="status_property")
+ * @Column(property="no_column_name", type="string", default="")
  * @Index(columns={"status"}),
  * @Index(columns={"name"}, unique=true, name="name_index")
  */
 #[Entity]
 #[Column(name: 'name', type: 'string')]
-#[Column(name: 'status', type: 'enum(active,disabled)', default: 'active')]
+#[Column(name: 'status', property: 'status_property', type: 'enum(active,disabled)', default: 'active')]
+#[Column(property: 'no_column_name', type: 'string', default: '')]
 #[Index(columns: ["status"])]
 #[Index(name: "name_index", columns: ["name"], unique: true)]
 class WithTable implements LabelledInterface
