@@ -166,10 +166,20 @@ final class Configurator
      */
     public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class): void
     {
-        foreach ($columns as $name => $column) {
-            $property = !is_numeric($name) ? $name : $column->getProperty();
-            $columnName = $column->getColumn() ?? (!is_numeric($name) ? $name : $property);
-            $property = $property ?? $columnName;
+        foreach ($columns as $key => $column) {
+            $isNumericKey = is_numeric($key);
+            $propertyName = $column->getProperty();
+
+            if (!$isNumericKey && $propertyName !== null && $key !== $propertyName) {
+                throw new AnnotationException(
+                    "Can not use name \"{$key}\" for Column of the `{$entity->getRole()}` role, because the "
+                    . "\"property\" field of the metadata class has already been set to \"{$propertyName}\"."
+                );
+            }
+
+            $propertyName = $propertyName ?? ($isNumericKey ? null : $key);
+            $columnName = $column->getColumn() ?? $propertyName;
+            $propertyName = $propertyName ?? $columnName;
 
             if ($columnName === null) {
                 throw new AnnotationException(
@@ -184,7 +194,7 @@ final class Configurator
             }
 
             $entity->getFields()->set(
-                $property,
+                $propertyName,
                 $this->initField($columnName, $column, $class, '')
             );
         }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests;
 
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\ORM\Schema;
@@ -99,6 +100,29 @@ abstract class TableTest extends BaseTest
         $this->assertArrayHasKey('orderedIdx', $schema);
         $this->assertArrayHasKey('other_name', $schema['orderedIdx'][Schema::COLUMNS]);
         $this->assertSame('other_name', $schema['orderedIdx'][Schema::COLUMNS]['other_name']);
+    }
+
+    public function testColumnWithPropertyInTableAnnotationByNamedKey(): void
+    {
+        $reader = new AnnotationReader();
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures11'],
+            'exclude'     => [],
+        ]));
+        $locator = $tokenizer->classLocator();
+        $r = new Registry($this->dbal);
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            'Can not use name "name1" for Column of the `badEntity` role, because the '
+            . '"property" field of the metadata class has already been set to "name2".'
+        );
+
+        (new Compiler)->compile($r, [
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new RenderTables(),
+        ]);
     }
 
     /**
