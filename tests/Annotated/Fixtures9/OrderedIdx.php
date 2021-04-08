@@ -14,6 +14,7 @@ use Cycle\Annotated\Annotation\Table\Index;
  * @Table(
  *      columns = {
  *          "name": @Column(type="string"),
+ *          @Column(property="other_name", type="string"),
  *      },
  *      indexes = {
  *          @Index(columns={"name", "id DESC"}),

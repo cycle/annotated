@@ -14,6 +14,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Attributes({
  *      @Attribute("type", type="string", required=true),
  *      @Attribute("name", type="string"),
+ *      @Attribute("property", type="string"),
  *      @Attribute("primary", type="bool"),
  *      @Attribute("nullable", type="bool"),
  *      @Attribute("default", type="mixed"),
@@ -26,8 +27,11 @@ final class Column
     /** @var bool */
     private $hasDefault = false;
 
-    /** @var string */
+    /** @var string|null */
     private $name;
+
+    /** @var string|null */
+    private $property;
 
     /** @var string */
     private $type;
@@ -72,6 +76,14 @@ final class Column
     public function getColumn(): ?string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProperty(): ?string
+    {
+        return $this->property;
     }
 
     /**

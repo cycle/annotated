@@ -16,6 +16,7 @@ final class Column
         ])]
         string $type,
         string $name = null,
+        string $property = null,
         bool $primary = false,
         bool $nullable = false,
         mixed $default = null,
