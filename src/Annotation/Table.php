@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation;
 
 use Cycle\Annotated\Annotation\Table\Index;
+use Cycle\Annotated\Annotation\Table\PrimaryKey;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -14,6 +15,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"CLASS", "ANNOTATION"})
  * @Attributes({
  *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
+ *      @Attribute("primary", type="Cycle\Annotated\Annotation\Table\PrimaryKey"),
  *      @Attribute("indexes", type="array<Cycle\Annotated\Annotation\Table\Index>"),
  * })
  */
@@ -22,6 +24,9 @@ final class Table
 {
     /** @var array<Column> */
     private $columns = [];
+
+    /** @var PrimaryKey */
+    private $primary = null;
 
     /** @var array<Index> */
     private $indexes = [];
@@ -42,6 +47,14 @@ final class Table
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    /**
+     * @return ?PrimaryKey
+     */
+    public function getPrimary(): ?PrimaryKey
+    {
+        return $this->primary;
     }
 
     /**
