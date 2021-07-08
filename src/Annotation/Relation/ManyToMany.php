@@ -20,10 +20,14 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("outerKey", type="string"),
  *      @Attribute("where", type="array"),
  *      @Attribute("orderBy", type="array"),
- *      @Attribute("though", type="string", required=true),
+ *      @Attribute("though", type="string"),
  *      @Attribute("thoughInnerKey", type="string"),
  *      @Attribute("thoughOuterKey", type="string"),
  *      @Attribute("thoughWhere", type="array"),
+ *      @Attribute("through", type="string"),
+ *      @Attribute("throughInnerKey", type="array<string>"),
+ *      @Attribute("throughOuterKey", type="array<string>"),
+ *      @Attribute("throughWhere", type="array"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
  *      @Attribute("indexCreate", type="bool"),
@@ -55,17 +59,29 @@ final class ManyToMany extends Relation
     /** @var array */
     protected $orderBy;
 
-    /** @var string */
+    /** @var string @deprecated */
     protected $though;
 
-    /** @var string */
+    /** @var string @deprecated */
     protected $thoughInnerKey;
 
-    /** @var string */
+    /** @var string @deprecated */
     protected $thoughOuterKey;
 
-    /** @var array */
+    /** @var array @deprecated */
     protected $thoughWhere;
+
+    /** @var string */
+    protected $through;
+
+    /** @var array */
+    protected $throughInnerKey;
+
+    /** @var array */
+    protected $throughOuterKey;
+
+    /** @var array */
+    protected $throughWhere;
 
     /** @var bool */
     protected $fkCreate;

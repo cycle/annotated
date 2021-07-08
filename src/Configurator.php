@@ -146,7 +146,7 @@ final class Configurator
                 }
 
                 foreach ($meta->getOptions() as $option => $value) {
-                    if ($option === 'though') {
+                    if ($option === 'though' || $option === 'through') {
                         $value = $this->resolveName($value, $class);
                     }
 
