@@ -25,7 +25,7 @@ final class Table
     /** @var array<Column> */
     private $columns = [];
 
-    /** @var PrimaryKey */
+    /** @var PrimaryKey|null */
     private $primary = null;
 
     /** @var array<Index> */
@@ -49,9 +49,6 @@ final class Table
         return $this->columns;
     }
 
-    /**
-     * @return ?PrimaryKey
-     */
     public function getPrimary(): ?PrimaryKey
     {
         return $this->primary;

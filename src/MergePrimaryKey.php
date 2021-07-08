@@ -67,15 +67,13 @@ final class MergePrimaryKey implements GeneratorInterface
         try {
             /** @var Table|null $tableMeta */
             $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
-            /** @var Table\PrimaryKey $primaryKeyMeta */
-            $primaryKeyMeta = $this->reader->firstClassMetadata($class, Table\PrimaryKey::class);
+            /** @var Table\PrimaryKey $primaryKey */
+            $primaryKey = $tableMeta->getPrimary() ?? $this->reader->firstClassMetadata($class, Table\PrimaryKey::class);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        $primaryKey = $tableMeta->getPrimary() ?? $primaryKeyMeta;
-
-        if (!$primaryKey) {
+        if ($primaryKey === null) {
             return;
         }
 

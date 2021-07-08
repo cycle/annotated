@@ -19,12 +19,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class PrimaryKey
 {
-    /** @var array<string> */
+    /** @var string[] */
     private $columns = [];
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         foreach ($values as $key => $value) {
@@ -33,7 +30,7 @@ class PrimaryKey
     }
 
     /**
-     * @return Column[]
+     * @return string[]
      */
     public function getColumns(): array
     {
