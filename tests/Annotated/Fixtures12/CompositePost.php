@@ -20,6 +20,10 @@ use Cycle\Annotated\Annotation\Table\PrimaryKey;
  *      primary = @PrimaryKey(columns={"id", "userId"}),
  * )
  */
+#[Entity(role: 'compositePost')]
+#[Column(name: 'id', type: 'primary')]
+#[Column(property: 'userId', type: 'integer', name: 'user_id')]
+#[PrimaryKey(columns: ['id', 'userId'])]
 class CompositePost
 {
     protected $id;

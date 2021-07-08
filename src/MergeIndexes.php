@@ -71,11 +71,21 @@ final class MergeIndexes implements GeneratorInterface
 
             $columns = $this->mapColumns($entity, $index->getColumns());
 
-            $indexSchema = $table->index($columns);
-            $indexSchema->unique($index->isUnique());
+            if ($index instanceof Table\PrimaryKey) {
+                if ($columns === []) {
+                    throw new AnnotationException(
+                        "Invalid primary key definition in `{$entity->getClass()}`, columns can't be empty"
+                    );
+                }
 
-            if ($index->getIndex() !== null) {
-                $indexSchema->setName($index->getIndex());
+                $table->setPrimaryKeys($columns);
+            } else {
+                $indexSchema = $table->index($columns);
+                $indexSchema->unique($index->isUnique());
+
+                if ($index->getIndex() !== null) {
+                    $indexSchema->setName($index->getIndex());
+                }
             }
         }
     }
@@ -100,6 +110,9 @@ final class MergeIndexes implements GeneratorInterface
         try {
             /** @var Table|null $tableMeta */
             $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
+            /** @var Table\PrimaryKey $primaryKey */
+            $primaryKey = $tableMeta ? $tableMeta->getPrimary() : $this->reader->firstClassMetadata($class, Table\PrimaryKey::class);
+
             /** @var Table\Index[] $indexMeta */
             $indexMeta = $this->reader->getClassMetadata($class, Table\Index::class);
         } catch (\Exception $e) {
@@ -107,6 +120,11 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         $indexes = $tableMeta === null ? [] : $tableMeta->getIndexes();
+
+        if ($primaryKey !== null) {
+            $indexes[] = $primaryKey;
+        }
+
         foreach ($indexMeta as $index) {
             $indexes[] = $index;
         }

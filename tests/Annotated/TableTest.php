@@ -15,6 +15,7 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -126,22 +127,22 @@ abstract class TableTest extends BaseTest
         ]);
     }
 
-    public function testCompositePrimaryKey(): void
+    /**
+     * @dataProvider singularReadersProvider
+     */
+    public function testCompositePrimaryKey(ReaderInterface $reader): void
     {
-        $reader = new AnnotationReader();
+        $r = new Registry($this->dbal);
+
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures12'],
             'exclude'     => [],
         ]));
-
         $locator = $tokenizer->classLocator();
-
-        $r = new Registry($this->dbal);
 
         (new Entities($locator, $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
-        (new MergePrimaryKey($reader))->run($r);
         (new MergeIndexes($reader))->run($r);
         (new SyncTables())->run($r);
 
