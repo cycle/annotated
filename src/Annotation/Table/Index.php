@@ -21,13 +21,13 @@ use Doctrine\Common\Annotations\Annotation\Target;
 class Index
 {
     /** @var array<string> */
-    private $columns = [];
+    protected $columns = [];
 
     /** @var bool */
-    private $unique = false;
+    protected $unique = false;
 
     /** @var string */
-    private $name;
+    protected $name;
 
     /**
      * @param array $values
