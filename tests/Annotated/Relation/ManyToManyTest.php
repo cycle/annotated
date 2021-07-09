@@ -59,12 +59,78 @@ abstract class ManyToManyTest extends BaseTest
         );
 
         $this->assertSame(
+            'withTable_id',
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY]
+        );
+
+        $this->assertSame(
+            'tag_id',
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY]
+        );
+
+        $this->assertSame(
             ["id" => [">=" => "1"]],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE]
         );
         $this->assertSame(
             ["id" => "DESC"],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
+        );
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testThoughRelation(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($this->locator, $reader),
+            new ResetTables(),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertArrayHasKey('tags', $schema['withTable2'][Schema::RELATIONS]);
+
+        $this->assertSame(
+            Relation::MANY_TO_MANY,
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::TYPE]
+        );
+
+        $this->assertSame(
+            'tag',
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::TARGET]
+        );
+
+        $this->assertSame(
+            'tagContext',
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY]
+        );
+
+        $this->assertSame(
+            'withTable2_id',
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY]
+        );
+
+        $this->assertSame(
+            'tag_id',
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY]
+        );
+
+        $this->assertSame(
+            ["id" => [">=" => "1"]],
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE]
+        );
+        $this->assertSame(
+            ["id" => "DESC"],
+            $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
         );
     }
 }
