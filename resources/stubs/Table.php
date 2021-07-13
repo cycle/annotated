@@ -17,7 +17,7 @@ final class Table
     public function __construct(
         array $columns = [],
         $primary = null,
-        array $indexes = [],
+        array $indexes = []
     ) {
     }
 }

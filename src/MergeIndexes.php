@@ -74,7 +74,7 @@ final class MergeIndexes implements GeneratorInterface
             if ($index instanceof Table\PrimaryKey) {
                 if ($columns === []) {
                     throw new AnnotationException(
-                        "Invalid primary key definition in `{$entity->getClass()}`, columns can't be empty"
+                        "Invalid primary key definition for `{$entity->getRole()}`. Columns can't be empty."
                     );
                 }
 
@@ -102,19 +102,21 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         try {
-            $class = new \ReflectionClass($class);
+            $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
             return;
         }
 
         try {
             /** @var Table|null $tableMeta */
-            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
-            /** @var Table\PrimaryKey $primaryKey */
-            $primaryKey = $tableMeta ? $tableMeta->getPrimary() : $this->reader->firstClassMetadata($class, Table\PrimaryKey::class);
+            $tableMeta = $this->reader->firstClassMetadata($reflection, Table::class);
+            /** @var Table\PrimaryKey|null $primaryKey */
+            $primaryKey = $tableMeta
+                ? $tableMeta->getPrimary()
+                : $this->reader->firstClassMetadata($reflection, Table\PrimaryKey::class);
 
             /** @var Table\Index[] $indexMeta */
-            $indexMeta = $this->reader->getClassMetadata($class, Table\Index::class);
+            $indexMeta = $this->reader->getClassMetadata($reflection, Table\Index::class);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }

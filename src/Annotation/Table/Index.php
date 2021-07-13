@@ -20,14 +20,14 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class Index
 {
-    /** @var array<string> */
-    protected $columns = [];
+    /** @var string[] */
+    private $columns = [];
 
     /** @var bool */
-    protected $unique = false;
+    private $unique = false;
 
     /** @var string */
-    protected $name;
+    private $name;
 
     /**
      * @param array $values

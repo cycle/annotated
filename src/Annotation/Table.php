@@ -22,13 +22,13 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class Table
 {
-    /** @var array<Column> */
+    /** @var Column[] */
     private $columns = [];
 
     /** @var PrimaryKey|null */
     private $primary = null;
 
-    /** @var array<Index> */
+    /** @var Index[] */
     private $indexes = [];
 
     /**

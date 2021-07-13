@@ -18,16 +18,10 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class PrimaryKey extends Index
 {
-    protected $unique = true;
-
     public function __construct(array $values)
     {
-        foreach ($values as $key => $value) {
-            if ($key === 'unique') {
-                continue;
-            }
-
-            $this->$key = $value;
-        }
+        $values['unique'] = true;
+        $values['name'] = 'PK';
+        parent::__construct($values);
     }
 }
