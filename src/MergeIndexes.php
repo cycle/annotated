@@ -71,11 +71,21 @@ final class MergeIndexes implements GeneratorInterface
 
             $columns = $this->mapColumns($entity, $index->getColumns());
 
-            $indexSchema = $table->index($columns);
-            $indexSchema->unique($index->isUnique());
+            if ($index instanceof Table\PrimaryKey) {
+                if ($columns === []) {
+                    throw new AnnotationException(
+                        "Invalid primary key definition for `{$entity->getRole()}`. Columns can't be empty."
+                    );
+                }
 
-            if ($index->getIndex() !== null) {
-                $indexSchema->setName($index->getIndex());
+                $table->setPrimaryKeys($columns);
+            } else {
+                $indexSchema = $table->index($columns);
+                $indexSchema->unique($index->isUnique());
+
+                if ($index->getIndex() !== null) {
+                    $indexSchema->setName($index->getIndex());
+                }
             }
         }
     }
@@ -92,21 +102,31 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         try {
-            $class = new \ReflectionClass($class);
+            $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
             return;
         }
 
         try {
             /** @var Table|null $tableMeta */
-            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
+            $tableMeta = $this->reader->firstClassMetadata($reflection, Table::class);
+            /** @var Table\PrimaryKey|null $primaryKey */
+            $primaryKey = $tableMeta
+                ? $tableMeta->getPrimary()
+                : $this->reader->firstClassMetadata($reflection, Table\PrimaryKey::class);
+
             /** @var Table\Index[] $indexMeta */
-            $indexMeta = $this->reader->getClassMetadata($class, Table\Index::class);
+            $indexMeta = $this->reader->getClassMetadata($reflection, Table\Index::class);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
         $indexes = $tableMeta === null ? [] : $tableMeta->getIndexes();
+
+        if ($primaryKey !== null) {
+            $indexes[] = $primaryKey;
+        }
+
         foreach ($indexMeta as $index) {
             $indexes[] = $index;
         }

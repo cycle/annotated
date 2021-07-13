@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Table;
 
-use Cycle\Annotated\Annotation\Column;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -21,7 +20,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class Index
 {
-    /** @var array<string> */
+    /** @var string[] */
     private $columns = [];
 
     /** @var bool */
@@ -41,7 +40,7 @@ class Index
     }
 
     /**
-     * @return Column[]
+     * @return string[]
      */
     public function getColumns(): array
     {

@@ -8,12 +8,14 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
+use Cycle\Annotated\MergePrimaryKey;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -123,6 +125,30 @@ abstract class TableTest extends BaseTest
             new MergeColumns($reader),
             new RenderTables(),
         ]);
+    }
+
+    /**
+     * @dataProvider singularReadersProvider
+     */
+    public function testCompositePrimaryKey(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures12'],
+            'exclude'     => [],
+        ]));
+        $locator = $tokenizer->classLocator();
+
+        (new Entities($locator, $reader))->run($r);
+        (new MergeColumns($reader))->run($r);
+        (new RenderTables())->run($r);
+        (new MergeIndexes($reader))->run($r);
+        (new SyncTables())->run($r);
+
+        $schema = $r->getTableSchema($r->getEntity('compositePost'));
+
+        $this->assertEquals(['id', 'user_id'], $schema->getPrimaryKeys());
     }
 
     /**
