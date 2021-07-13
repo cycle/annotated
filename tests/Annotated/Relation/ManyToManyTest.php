@@ -132,5 +132,10 @@ abstract class ManyToManyTest extends BaseTest
             ["id" => "DESC"],
             $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
         );
+
+        $this->assertSame(
+            'label',
+            $schema['throughThough'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY]
+        );
     }
 }

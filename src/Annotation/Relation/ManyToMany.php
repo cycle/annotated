@@ -59,16 +59,28 @@ final class ManyToMany extends Relation
     /** @var array */
     protected $orderBy;
 
-    /** @var string @deprecated */
+    /**
+     * @var string
+     * @deprecated
+     */
     protected $though;
 
-    /** @var string @deprecated */
+    /**
+     * @var string
+     * @deprecated
+     */
     protected $thoughInnerKey;
 
-    /** @var string @deprecated */
+    /**
+     * @var string
+     * @deprecated
+     */
     protected $thoughOuterKey;
 
-    /** @var array @deprecated */
+    /**
+     * @var array
+     * @deprecated
+     */
     protected $thoughWhere;
 
     /** @var string */
