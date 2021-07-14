@@ -21,7 +21,7 @@ class User
     /** @HasMany(target=Post::class, load="lazy") */
     protected $posts;
    
-    /** @ManyToMany(target=Tag::class, though=TagMap::class, load="lazy") */
+    /** @ManyToMany(target=Tag::class, through=TagMap::class, load="lazy") */
     protected $tags;
     
     ...
