@@ -151,42 +151,14 @@ final class Entities implements GeneratorInterface
                         }
                     }
 
-                    /**
-                     * We wanted to include composite keys support because it would be harder
-                     * to change the annotation signature later, but cycle itself doesn't support
-                     * composite keys on the ORM schema level, so we include a temporary hack
-                     * that limits the THROUGH inner and outer keys to a single element array.
-                     *
-                     * @see https://github.com/cycle/schema-builder/issues/25
-                     */
                     if ($r->getOptions()->has('throughInnerKey')) {
                         if ($throughInnerKey = (array)$r->getOptions()->get('throughInnerKey')) {
-                            if (count($throughInnerKey) > 1) {
-                                throw new AnnotationException(
-                                    sprintf(
-                                        'Invalid `%s`.`%s` relation, composite `throughInnerKey`s are not supported for ManyToMany yet',
-                                        $e->getRole(),
-                                        $name
-                                    )
-                                );
-                            }
-
                             $r->getOptions()->set('throughInnerKey', $throughInnerKey[0]);
                         }
                     }
 
                     if ($r->getOptions()->has('throughOuterKey')) {
                         if ($throughOuterKey = (array)$r->getOptions()->get('throughOuterKey')) {
-                            if (count($throughOuterKey) > 1) {
-                                throw new AnnotationException(
-                                    sprintf(
-                                        'Invalid `%s`.`%s` relation, composite `throughOuterKey`s are not supported for ManyToMany yet',
-                                        $e->getRole(),
-                                        $name
-                                    )
-                                );
-                            }
-
                             $r->getOptions()->set('throughOuterKey', $throughOuterKey[0]);
                         }
                     }
