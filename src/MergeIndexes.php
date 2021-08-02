@@ -65,20 +65,18 @@ final class MergeIndexes implements GeneratorInterface
     public function renderIndexes(AbstractTable $table, Entity $entity, array $indexes): void
     {
         foreach ($indexes as $index) {
+            // TODO cover with tests
             if ($index->getColumns() === []) {
-                continue;
+                throw new AnnotationException(
+                    "Invalid index definition for `{$entity->getRole()}`. Column list can't be empty."
+                );
             }
 
             $columns = $this->mapColumns($entity, $index->getColumns());
 
             if ($index instanceof Table\PrimaryKey) {
-                if ($columns === []) {
-                    throw new AnnotationException(
-                        "Invalid primary key definition for `{$entity->getRole()}`. Columns can't be empty."
-                    );
-                }
-
                 $table->setPrimaryKeys($columns);
+                $entity->setPrimaryKeys($index->getColumns());
             } else {
                 $indexSchema = $table->index($columns);
                 $indexSchema->unique($index->isUnique());
