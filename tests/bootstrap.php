@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Spiral\Database;
+use Cycle\Database;
 
 error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', '1');
