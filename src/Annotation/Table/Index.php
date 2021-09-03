@@ -48,7 +48,6 @@ class Index
         return $this->columns;
     }
 
-
     /**
      * @return string|null
      */

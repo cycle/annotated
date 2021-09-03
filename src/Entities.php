@@ -23,9 +23,9 @@ use Spiral\Tokenizer\ClassesInterface;
 final class Entities implements GeneratorInterface
 {
     // table name generation
-    public const TABLE_NAMING_PLURAL   = 1;
+    public const TABLE_NAMING_PLURAL = 1;
     public const TABLE_NAMING_SINGULAR = 2;
-    public const TABLE_NAMING_NONE     = 3;
+    public const TABLE_NAMING_NONE = 3;
 
     /** @var ClassesInterface */
     private $locator;
@@ -44,7 +44,7 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param ClassesInterface $locator
-     * @param object<ReaderInterface|DoctrineReader>|null $reader
+     * @param object<DoctrineReader|ReaderInterface>|null $reader
      * @param int $tableNaming
      */
     public function __construct(
@@ -61,6 +61,7 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param Registry $registry
+     *
      * @return Registry
      */
     public function run(Registry $registry): Registry
@@ -114,6 +115,7 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param Registry $registry
+     *
      * @return Registry
      */
     protected function normalizeNames(Registry $registry): Registry
@@ -157,11 +159,12 @@ final class Entities implements GeneratorInterface
     /**
      * @param Registry $registry
      * @param string   $name
+     *
      * @return string|null
      */
     protected function resolveTarget(Registry $registry, string $name): ?string
     {
-        if (is_null($name) || interface_exists($name, true)) {
+        if (null === $name || interface_exists($name, true)) {
             // do not resolve interfaces
             return $name;
         }
@@ -182,6 +185,7 @@ final class Entities implements GeneratorInterface
 
     /**
      * @param string $role
+     *
      * @return string
      */
     protected function tableName(string $role): string
@@ -203,6 +207,7 @@ final class Entities implements GeneratorInterface
     /**
      * @param Registry $registry
      * @param string   $class
+     *
      * @return bool
      */
     protected function hasParent(Registry $registry, string $class): bool
@@ -213,6 +218,7 @@ final class Entities implements GeneratorInterface
     /**
      * @param Registry $registry
      * @param string   $class
+     *
      * @return string|null
      */
     protected function findParent(Registry $registry, string $class): ?string

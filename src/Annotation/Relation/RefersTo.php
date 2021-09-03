@@ -49,6 +49,7 @@ final class RefersTo extends Relation
 
     /**
      * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+     *
      * @var string
      */
     protected $fkAction;

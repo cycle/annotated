@@ -12,6 +12,7 @@ use Cycle\Annotated\Annotation\Table\Index;
 
 /**
  * Short syntax
+ *
  * @Entity()
  * @Column(name="name", type="string"),
  * @Column(name="status", type="enum(active,disabled)", default="active", property="status_property")

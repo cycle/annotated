@@ -56,7 +56,7 @@ abstract class ChildTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures8'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
