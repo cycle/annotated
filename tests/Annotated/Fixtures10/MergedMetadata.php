@@ -20,6 +20,6 @@ use Cycle\Annotated\Annotation\Table\Index;
 #[Index(columns: ['name', 'id DESC'])]
 class MergedMetadata
 {
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 }

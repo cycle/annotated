@@ -25,7 +25,7 @@ final class MergeColumns implements GeneratorInterface
     private $generator;
 
     /**
-     * @param object<ReaderInterface|DoctrineReader>|null $reader
+     * @param object<DoctrineReader|ReaderInterface>|null $reader
      */
     public function __construct(object $reader = null)
     {
@@ -35,6 +35,7 @@ final class MergeColumns implements GeneratorInterface
 
     /**
      * @param Registry $registry
+     *
      * @return Registry
      */
     public function run(Registry $registry): Registry

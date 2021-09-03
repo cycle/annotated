@@ -12,6 +12,7 @@ use Cycle\Annotated\Annotation\Table\Index;
 
 /**
  * Short syntax
+ *
  * @Entity()
  * @Column(name="name", type="string"),
  * @Column(name="status", type="enum(active,disabled)", default="active", property="status_property")
@@ -23,19 +24,19 @@ use Cycle\Annotated\Annotation\Table\Index;
 #[Column(name: 'name', type: 'string')]
 #[Column(name: 'status', property: 'status_property', type: 'enum(active,disabled)', default: 'active')]
 #[Column(property: 'no_column_name', type: 'string', default: '')]
-#[Index(columns: ["status"])]
-#[Index(name: "name_index", columns: ["name"], unique: true)]
+#[Index(columns: ['status'])]
+#[Index(name: 'name_index', columns: ['name'], unique: true)]
 class WithTable implements LabelledInterface
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @ManyToMany(target="Tag", through="Tag/Context", throughInnerKey={"withTable_id"}, throughOuterKey="tag_id", where={"id": {">=": "1"}}, orderBy={"id": "DESC"}) */
-    #[ManyToMany(target: "Tag", through: "Tag/Context", throughInnerKey: "withTable_id", throughOuterKey: ["tag_id"], where: ["id" => [">=" => "1"]], orderBy: ["id" => "DESC"])]
+    #[ManyToMany(target: 'Tag', through: 'Tag/Context', throughInnerKey: 'withTable_id', throughOuterKey: ['tag_id'], where: ['id' => ['>=' => '1']], orderBy: ['id' => 'DESC'])]
     protected $tags;
 
     /** @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false) */
-    #[MorphedHasMany(target: "Label", outerKey: "owner_id", morphKey: "owner_role", indexCreate: false)]
+    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false)]
     protected $labels;
 }

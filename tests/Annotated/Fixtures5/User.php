@@ -16,14 +16,14 @@ use Cycle\Annotated\Annotation\Relation\Inverse;
 class User
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /**
      * @HasOne(target=Simple::class, load="eager")
      * @Inverse(as="user", type="belongsTo", load="lazy")
      */
-    #[HasOne(target: Simple::class, load: "eager")]
-    #[Inverse(as: "user", type: "belongsTo", load: "lazy")]
+    #[HasOne(target: Simple::class, load: 'eager')]
+    #[Inverse(as: 'user', type: 'belongsTo', load: 'lazy')]
     protected $simple;
 }

@@ -69,11 +69,11 @@ abstract class ManyToManyTest extends BaseTest
         );
 
         $this->assertSame(
-            ["id" => [">=" => "1"]],
+            ['id' => ['>=' => '1']],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE]
         );
         $this->assertSame(
-            ["id" => "DESC"],
+            ['id' => 'DESC'],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
         );
     }
@@ -125,11 +125,11 @@ abstract class ManyToManyTest extends BaseTest
         );
 
         $this->assertSame(
-            ["id" => [">=" => "1"]],
+            ['id' => ['>=' => '1']],
             $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE]
         );
         $this->assertSame(
-            ["id" => "DESC"],
+            ['id' => 'DESC'],
             $schema['withTable2'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
         );
 

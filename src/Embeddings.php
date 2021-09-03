@@ -30,7 +30,7 @@ final class Embeddings implements GeneratorInterface
 
     /**
      * @param ClassesInterface $locator
-     * @param object<ReaderInterface|DoctrineReader>|null $reader
+     * @param object<DoctrineReader|ReaderInterface>|null $reader
      */
     public function __construct(ClassesInterface $locator, object $reader = null)
     {
@@ -41,6 +41,7 @@ final class Embeddings implements GeneratorInterface
 
     /**
      * @param Registry $registry
+     *
      * @return Registry
      */
     public function run(Registry $registry): Registry

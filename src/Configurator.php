@@ -28,7 +28,7 @@ final class Configurator
     private $inflector;
 
     /**
-     * @param object<ReaderInterface|DoctrineReader> $reader
+     * @param object<DoctrineReader|ReaderInterface> $reader
      */
     public function __construct(object $reader)
     {
@@ -39,6 +39,7 @@ final class Configurator
     /**
      * @param Entity           $ann
      * @param \ReflectionClass $class
+     *
      * @return EntitySchema
      */
     public function initEntity(Entity $ann, \ReflectionClass $class): EntitySchema
@@ -64,6 +65,7 @@ final class Configurator
     /**
      * @param Embeddable       $emb
      * @param \ReflectionClass $class
+     *
      * @return EntitySchema
      */
     public function initEmbedding(Embeddable $emb, \ReflectionClass $class): EntitySchema
@@ -134,9 +136,9 @@ final class Configurator
                 $relation->setType($meta->getType());
 
                 $inverse = $meta->getInverse() ?? $this->reader->firstPropertyMetadata(
-                        $property,
-                        RelationAnnotation\Inverse::class
-                    );
+                    $property,
+                    RelationAnnotation\Inverse::class
+                );
                 if ($inverse !== null) {
                     $relation->setInverse(
                         $inverse->getName(),
@@ -205,6 +207,7 @@ final class Configurator
      * @param Column           $column
      * @param \ReflectionClass $class
      * @param string           $columnPrefix
+     *
      * @return Field
      */
     public function initField(string $name, Column $column, \ReflectionClass $class, string $columnPrefix): Field
@@ -244,6 +247,7 @@ final class Configurator
      *
      * @param string           $name
      * @param \ReflectionClass $class
+     *
      * @return string
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
@@ -268,6 +272,7 @@ final class Configurator
     /**
      * @param mixed            $typecast
      * @param \ReflectionClass $class
+     *
      * @return mixed
      */
     protected function resolveTypecast($typecast, \ReflectionClass $class)

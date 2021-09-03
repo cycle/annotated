@@ -23,7 +23,7 @@ final class MergeIndexes implements GeneratorInterface
     private $reader;
 
     /**
-     * @param object<ReaderInterface|DoctrineReader>|null $reader
+     * @param object<DoctrineReader|ReaderInterface>|null $reader
      */
     public function __construct(object $reader = null)
     {
@@ -32,6 +32,7 @@ final class MergeIndexes implements GeneratorInterface
 
     /**
      * @param Registry $registry
+     *
      * @return Registry
      */
     public function run(Registry $registry): Registry
@@ -141,6 +142,7 @@ final class MergeIndexes implements GeneratorInterface
     /**
      * @param Entity $entity
      * @param array  $columns
+     *
      * @return array
      */
     protected function mapColumns(Entity $entity, array $columns): array
