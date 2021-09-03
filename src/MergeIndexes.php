@@ -77,7 +77,7 @@ final class MergeIndexes implements GeneratorInterface
 
             if ($index instanceof Table\PrimaryKey) {
                 $table->setPrimaryKeys($columns);
-                $entity->setPrimaryKeys($index->getColumns());
+                $entity->setPrimaryColumns($index->getColumns());
             } else {
                 $indexSchema = $table->index($columns);
                 $indexSchema->unique($index->isUnique());

@@ -17,13 +17,13 @@ use Cycle\Annotated\Annotation\Table\PrimaryKey;
  *          "userId": @Column(type="integer", name="user_id"),
  *          "title": @Column(type="string"),
  *      },
- *      primary = @PrimaryKey(columns={"id", "userId"}),
+ *      primary = @PrimaryKey(columns={"id", "user_id"}),
  * )
  */
 #[Entity(role: 'compositePost')]
 #[Column(name: 'id', type: 'primary')]
 #[Column(property: 'userId', type: 'integer', name: 'user_id')]
-#[PrimaryKey(columns: ['id', 'userId'])]
+#[PrimaryKey(columns: ['id', 'user_id'])]
 class CompositePost
 {
     protected $id;
