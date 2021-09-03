@@ -146,6 +146,21 @@ abstract class BaseTest extends TestCase
         return static::$driverCache[static::DRIVER] = $this->driver;
     }
 
+    public function singularReadersProvider(): array
+    {
+        return [
+            'Annotation reader' => [new AnnotationReader()],
+            'Attribute reader' => [new AttributeReader()],
+        ];
+    }
+
+    public function allReadersProvider(): array
+    {
+        return array_merge($this->singularReadersProvider(), [
+            'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])],
+        ]);
+    }
+
     /**
      * @return Database
      */
@@ -198,20 +213,5 @@ abstract class BaseTest extends TestCase
         if (null !== $this->logger) {
             $this->logger->hide();
         }
-    }
-
-    public function singularReadersProvider(): array
-    {
-        return [
-            'Annotation reader' => [new AnnotationReader()],
-            'Attribute reader' => [new AttributeReader()],
-        ];
-    }
-
-    public function allReadersProvider(): array
-    {
-        return array_merge($this->singularReadersProvider(), [
-            'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])],
-        ]);
     }
 }
