@@ -29,6 +29,7 @@ final class Inverse
 
     /**
      * @Enum({"eager", "lazy", "promise"}
+     *
      * @var string
      */
     private $load;

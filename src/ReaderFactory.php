@@ -13,7 +13,7 @@ use Spiral\Attributes\ReaderInterface;
 final class ReaderFactory
 {
     /**
-     * @param object<ReaderInterface|DoctrineReader>|null $reader
+     * @param object<DoctrineReader|ReaderInterface>|null $reader
      *
      * @return ReaderInterface
      */

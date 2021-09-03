@@ -48,11 +48,11 @@ abstract class HasManyTest extends BaseTest
         $this->assertSame(Relation::HAS_MANY, $schema['simple'][Schema::RELATIONS]['many'][Relation::TYPE]);
         $this->assertSame('withTable', $schema['simple'][Schema::RELATIONS]['many'][Relation::TARGET]);
         $this->assertSame(
-            ["id" => [">=" => 1]],
+            ['id' => ['>=' => 1]],
             $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE]
         );
         $this->assertSame(
-            ["id" => "DESC"],
+            ['id' => 'DESC'],
             $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY]
         );
     }

@@ -33,7 +33,7 @@ abstract class InverseTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
@@ -69,7 +69,7 @@ abstract class InverseTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
@@ -105,7 +105,7 @@ abstract class InverseTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
@@ -141,7 +141,7 @@ abstract class InverseTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures5'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
@@ -181,7 +181,7 @@ abstract class InverseTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures2'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();

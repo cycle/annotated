@@ -14,12 +14,14 @@ abstract class Relation implements RelationInterface
 
     /**
      * @Required()
+     *
      * @var string
      */
     protected $target;
 
     /**
      * @Enum({"eager", "lazy", "promise"}
+     *
      * @var string
      */
     protected $load;

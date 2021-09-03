@@ -10,10 +10,10 @@ use Cycle\Annotated\Annotation\Entity;
 /**
  * @Entity(role="tagContext")
  */
-#[Entity(role: "tagContext")]
+#[Entity(role: 'tagContext')]
 class Context
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 }

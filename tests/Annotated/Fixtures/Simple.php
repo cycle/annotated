@@ -20,6 +20,7 @@ class Simple implements LabelledInterface
 {
     /**
      * @Column(type="primary", default="xx")
+     *
      * @var int
      */
     #[Column(type: 'primary', default: 'xx')]
@@ -27,27 +28,29 @@ class Simple implements LabelledInterface
 
     /**
      * @HasOne(target="Complete")
+     *
      * @var Complete
      */
-    #[HasOne(target: "Complete")]
+    #[HasOne(target: 'Complete')]
     protected $one;
 
     /**
      * @HasMany(target="WithTable", where={"id": {">=": 1}}, orderBy={"id": "DESC"})
-     * @var WithTable[]|Collection
+     *
+     * @var Collection|WithTable[]
      */
-    #[HasMany(target: "WithTable", where: ["id" => [">=" => 1]], orderBy: ["id" => "DESC"])]
+    #[HasMany(target: 'WithTable', where: ['id' => ['>=' => 1]], orderBy: ['id' => 'DESC'])]
     protected $many;
 
     /**
      * @RefersTo(target="Simple", fkAction="NO ACTION")
      */
-     #[RefersTo(target: "Simple", fkAction: "NO ACTION")]
+    #[RefersTo(target: 'Simple', fkAction: 'NO ACTION')]
     protected $parent;
 
     /**
      * @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false)
      */
-     #[MorphedHasMany(target: "Label", outerKey: "owner_id", morphKey: "owner_role", indexCreate: false)]
+    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false)]
     protected $labels;
 }

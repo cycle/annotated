@@ -24,7 +24,6 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class BaseTest extends TestCase
 {
-
     // currently active driver
     public const DRIVER = null;
     // tests configuration
@@ -87,11 +86,11 @@ abstract class BaseTest extends TestCase
         $this->orm = new ORM(new Factory(
             $this->dbal,
             RelationConfig::getDefault()
-        ));
+        ), new \Cycle\ORM\Schema([]));
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $this->locator = $tokenizer->classLocator();
@@ -112,7 +111,8 @@ abstract class BaseTest extends TestCase
      * Calculates missing parameters for typecasting.
      *
      * @param SchemaInterface $schema
-     * @return ORM|\Cycle\ORM\ORMInterface
+     *
+     * @return \Cycle\ORM\ORMInterface|ORM
      */
     public function withSchema(SchemaInterface $schema)
     {
@@ -135,9 +135,9 @@ abstract class BaseTest extends TestCase
 
             $this->driver = new $class([
                 'connection' => $config['conn'],
-                'username'   => $config['user'],
-                'password'   => $config['pass'],
-                'options'    => []
+                'username' => $config['user'],
+                'password' => $config['pass'],
+                'options' => [],
             ]);
         }
 
@@ -185,7 +185,7 @@ abstract class BaseTest extends TestCase
      */
     protected function enableProfiling(): void
     {
-        if (!is_null($this->logger)) {
+        if (null !== $this->logger) {
             $this->logger->display();
         }
     }
@@ -195,7 +195,7 @@ abstract class BaseTest extends TestCase
      */
     protected function disableProfiling(): void
     {
-        if (!is_null($this->logger)) {
+        if (null !== $this->logger) {
             $this->logger->hide();
         }
     }

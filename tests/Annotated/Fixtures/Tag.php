@@ -15,10 +15,10 @@ use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
 class Tag
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @MorphedHasOne(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false) */
-    #[MorphedHasOne(target: "Label", outerKey: "owner_id", morphKey: "owner_role", indexCreate: false)]
+    #[MorphedHasOne(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false)]
     protected $label;
 }
