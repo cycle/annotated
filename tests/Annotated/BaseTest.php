@@ -87,7 +87,7 @@ abstract class BaseTest extends TestCase
         $this->orm = new ORM(new Factory(
             $this->dbal,
             RelationConfig::getDefault()
-        ));
+        ), new \Cycle\ORM\Schema([]));
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures'],
