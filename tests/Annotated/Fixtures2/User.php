@@ -16,11 +16,11 @@ use Cycle\Annotated\Annotation\Relation\Inverse;
 class User implements MarkedInterface
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @HasOne(target="Simple", inverse=@Inverse(as="user", type="belongsTo")) */
-    #[HasOne(target: "Simple")]
-    #[Inverse(as: "user", type: "belongsTo")]
+    #[HasOne(target: 'Simple')]
+    #[Inverse(as: 'user', type: 'belongsTo')]
     protected $simple;
 }

@@ -32,7 +32,7 @@ abstract class EmbeddedTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures6'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
@@ -66,7 +66,7 @@ abstract class EmbeddedTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../Fixtures7'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();

@@ -27,6 +27,6 @@ use Cycle\Annotated\Annotation\Table\Index;
 class OrderedIdx
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 }

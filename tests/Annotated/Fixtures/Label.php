@@ -15,14 +15,14 @@ use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
 class Label
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @Column(type="text") */
-    #[Column(type: "text")]
+    #[Column(type: 'text')]
     protected $text;
 
     /** @BelongsToMorphed(target="LabelledInterface", indexCreate=false) */
-    #[BelongsToMorphed(target: "LabelledInterface", indexCreate: false)]
+    #[BelongsToMorphed(target: 'LabelledInterface', indexCreate: false)]
     protected $owner;
 }

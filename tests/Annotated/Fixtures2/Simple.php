@@ -14,6 +14,6 @@ use Cycle\Annotated\Annotation\Entity;
 class Simple implements MarkedInterface
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 }

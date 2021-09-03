@@ -14,6 +14,6 @@ use Cycle\Annotated\Annotation\Entity;
 class Child extends Simple
 {
     /** @Column(type="string") */
-    #[Column(type: "string")]
+    #[Column(type: 'string')]
     protected $name;
 }

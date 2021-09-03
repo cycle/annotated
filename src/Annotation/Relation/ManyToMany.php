@@ -61,24 +61,28 @@ final class ManyToMany extends Relation
 
     /**
      * @var string
+     *
      * @deprecated
      */
     protected $though;
 
     /**
      * @var string
+     *
      * @deprecated
      */
     protected $thoughInnerKey;
 
     /**
      * @var string
+     *
      * @deprecated
      */
     protected $thoughOuterKey;
 
     /**
      * @var array
+     *
      * @deprecated
      */
     protected $thoughWhere;
@@ -100,6 +104,7 @@ final class ManyToMany extends Relation
 
     /**
      * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+     *
      * @var string
      */
     protected $fkAction;

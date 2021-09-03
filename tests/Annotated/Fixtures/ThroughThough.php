@@ -17,10 +17,10 @@ use Cycle\Annotated\Annotation\Relation\ManyToMany;
 class ThroughThough
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @ManyToMany(target="Tag", through="Label", though="Tag\Context", throughInnerKey={"withTable_id"}, throughOuterKey="tag_id") */
-    #[ManyToMany(target: "Tag", through: "Label", though: "Tag\Context", throughInnerKey: "withTable_id", throughOuterKey: ["tag_id"])]
+    #[ManyToMany(target: 'Tag', through: 'Label', though: "Tag\Context", throughInnerKey: 'withTable_id', throughOuterKey: ['tag_id'])]
     protected $tags;
 }

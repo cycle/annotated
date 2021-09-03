@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\Embedded;
 class User
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @Embedded(target=Address::class) */

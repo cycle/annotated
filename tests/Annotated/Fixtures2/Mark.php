@@ -16,11 +16,11 @@ use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
 class Mark
 {
     /** @Column(type="primary") */
-    #[Column(type: "primary")]
+    #[Column(type: 'primary')]
     protected $id;
 
     /** @BelongsToMorphed(target="MarkedInterface", inverse=@Inverse(as="mark", type="morphedHasOne")) */
-    #[BelongsToMorphed(target: "MarkedInterface")]
-    #[Inverse(as: "mark", type: "morphedHasOne")]
+    #[BelongsToMorphed(target: 'MarkedInterface')]
+    #[Inverse(as: 'mark', type: 'morphedHasOne')]
     protected $owner;
 }
