@@ -150,6 +150,28 @@ abstract class TableTest extends BaseTest
     }
 
     /**
+     * @dataProvider singularReadersProvider
+     */
+    public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
+    {
+        $this->expectException(\Cycle\Annotated\Exception\AnnotationException::class);
+        $this->expectErrorMessage('Invalid index definition for `compositePost`. Column list can\'t be empty.');
+
+        $r = new Registry($this->dbal);
+
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/Fixtures13'],
+            'exclude' => [],
+        ]));
+        $locator = $tokenizer->classLocator();
+
+        (new Entities($locator, $reader))->run($r);
+        (new MergeColumns($reader))->run($r);
+        (new RenderTables())->run($r);
+        (new MergeIndexes($reader))->run($r);
+    }
+
+    /**
      * @dataProvider allReadersProvider
      */
     public function testIndexes(ReaderInterface $reader): void

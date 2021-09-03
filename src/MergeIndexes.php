@@ -66,7 +66,6 @@ final class MergeIndexes implements GeneratorInterface
     public function renderIndexes(AbstractTable $table, Entity $entity, array $indexes): void
     {
         foreach ($indexes as $index) {
-            // TODO cover with tests
             if ($index->getColumns() === []) {
                 throw new AnnotationException(
                     "Invalid index definition for `{$entity->getRole()}`. Column list can't be empty."
