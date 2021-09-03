@@ -6,6 +6,7 @@ namespace Cycle\Annotated\Tests\Fixtures13;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Annotation\Table\PrimaryKey;
 
 /**
