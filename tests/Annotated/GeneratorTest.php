@@ -69,7 +69,7 @@ abstract class GeneratorTest extends BaseTest
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures10'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
 
@@ -84,7 +84,6 @@ abstract class GeneratorTest extends BaseTest
         $schema = $r->getTableSchema($r->getEntity('MergedMeta'));
         $this->assertTrue($schema->hasColumn('name'));
         $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
-
     }
 
     /**

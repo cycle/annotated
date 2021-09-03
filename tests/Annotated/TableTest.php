@@ -8,14 +8,12 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
-use Cycle\Annotated\MergePrimaryKey;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Attributes\AnnotationReader;
-use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -52,7 +50,7 @@ abstract class TableTest extends BaseTest
     public function testColumnWithDifferentColumnNameAndProperty(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        $schema = (new Compiler)->compile(
+        $schema = (new Compiler())->compile(
             $r,
             [
                 new Entities($this->locator, $reader),
@@ -71,7 +69,7 @@ abstract class TableTest extends BaseTest
     public function testColumnWithoutColumnName(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        $schema = (new Compiler)->compile(
+        $schema = (new Compiler())->compile(
             $r,
             [
                 new Entities($this->locator, $reader),
@@ -89,11 +87,11 @@ abstract class TableTest extends BaseTest
         $reader = new AnnotationReader();
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures9'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
         $r = new Registry($this->dbal);
-        $schema = (new Compiler)->compile($r, [
+        $schema = (new Compiler())->compile($r, [
             new Entities($locator, $reader),
             new MergeColumns($reader),
             new RenderTables(),
@@ -109,7 +107,7 @@ abstract class TableTest extends BaseTest
         $reader = new AnnotationReader();
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures11'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
         $r = new Registry($this->dbal);
@@ -120,7 +118,7 @@ abstract class TableTest extends BaseTest
             . '"property" field of the metadata class has already been set to "name2".'
         );
 
-        (new Compiler)->compile($r, [
+        (new Compiler())->compile($r, [
             new Entities($locator, $reader),
             new MergeColumns($reader),
             new RenderTables(),
@@ -136,7 +134,7 @@ abstract class TableTest extends BaseTest
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures12'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
 
@@ -182,7 +180,7 @@ abstract class TableTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures9'],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
