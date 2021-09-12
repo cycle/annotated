@@ -19,6 +19,6 @@ class Some
     protected $id;
 
     /** @HasOne(target="Article", innerKey="id") */
-    #[HasOne(target: 'Article', innerKey: "id")]
+    #[HasOne(target: 'Article', innerKey: 'id')]
     protected $article;
 }
