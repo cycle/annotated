@@ -12,8 +12,8 @@ final class BelongsTo
         string $target,
         bool $cascade = true,
         bool $nullable = false,
-        string $innerKey = '{relationName}_{outerKey}',
-        string $outerKey = null,
+        array|string $innerKey = '{relationName}_{outerKey}',
+        array|string $outerKey = null,
         bool $fkCreate = true,
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         string $fkAction = 'CASCADE',

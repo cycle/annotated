@@ -16,8 +16,8 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("target", type="string", required=true),
  *      @Attribute("cascade", type="bool"),
  *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="string"),
- *      @Attribute("outerKey", type="string"),
+ *      @Attribute("innerKey", type="array<string>"),
+ *      @Attribute("outerKey", type="array<string>"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
  *      @Attribute("indexCreate", type="bool"),
@@ -49,10 +49,8 @@ final class RefersTo extends Relation
 
     /**
      * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
-     *
-     * @var string
      */
-    protected $fkAction;
+    protected ?string $fkAction = null;
 
     /** @var bool */
     protected $indexCreate;

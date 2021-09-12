@@ -16,8 +16,8 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("target", type="string", required=true),
  *      @Attribute("cascade", type="bool"),
  *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="string"),
- *      @Attribute("outerKey", type="string"),
+ *      @Attribute("innerKey", type="array<string>"),
+ *      @Attribute("outerKey", type="array<string>"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
  *      @Attribute("indexCreate", type="bool"),
@@ -38,11 +38,9 @@ final class HasOne extends Relation
     /** @var bool */
     protected $nullable;
 
-    /** @var string */
-    protected $innerKey;
+    protected array|string $innerKey;
 
-    /** @var string */
-    protected $outerKey;
+    protected array|string $outerKey;
 
     /** @var bool */
     protected $fkCreate;
@@ -52,8 +50,7 @@ final class HasOne extends Relation
      *
      * @var string
      */
-    protected $fkAction;
+    protected ?string $fkAction = null;
 
-    /** @var bool */
-    protected $indexCreate;
+    protected ?bool $indexCreate = null;
 }

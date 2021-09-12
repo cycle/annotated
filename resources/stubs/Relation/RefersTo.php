@@ -12,8 +12,8 @@ final class RefersTo
         string $target,
         bool $cascade = true,
         bool $nullable = false,
-        string $innerKey = null,
-        string $outerKey = '{parentRole}_{innerKey}',
+        array|string $innerKey = null,
+        array|string $outerKey = '{parentRole}_{innerKey}',
         bool $fkCreate = true,
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         string $fkAction = 'SET NULL',

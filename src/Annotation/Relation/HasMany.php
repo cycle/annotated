@@ -15,8 +15,8 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("target", type="string", required=true),
  *      @Attribute("cascade", type="bool"),
  *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="string"),
- *      @Attribute("outerKey", type="string"),
+ *      @Attribute("innerKey", type="array<string>"),
+ *      @Attribute("outerKey", type="array<string>"),
  *      @Attribute("where", type="array"),
  *      @Attribute("orderBy", type="array"),
  *      @Attribute("fkCreate", type="bool"),
@@ -39,11 +39,9 @@ final class HasMany extends Relation
     /** @var bool */
     protected $nullable;
 
-    /** @var string */
-    protected $innerKey;
+    protected array|string $innerKey;
 
-    /** @var string */
-    protected $outerKey;
+    protected array|string $outerKey;
 
     /** @var array */
     protected $where;
@@ -56,10 +54,8 @@ final class HasMany extends Relation
 
     /**
      * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
-     *
-     * @var string
      */
-    protected $fkAction;
+    protected ?string $fkAction = null;
 
     /** @var bool */
     protected $indexCreate;

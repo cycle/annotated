@@ -27,43 +27,22 @@ final class Entities implements GeneratorInterface
     public const TABLE_NAMING_SINGULAR = 2;
     public const TABLE_NAMING_NONE = 3;
 
-    /** @var ClassesInterface */
-    private $locator;
+    private ReaderInterface $reader;
 
-    /** @var ReaderInterface */
-    private $reader;
+    private Configurator $generator;
 
-    /** @var Configurator */
-    private $generator;
+    private Inflector $inflector;
 
-    /** @var int */
-    private $tableNaming;
-
-    /** @var Inflector */
-    private $inflector;
-
-    /**
-     * @param ClassesInterface $locator
-     * @param object<DoctrineReader|ReaderInterface>|null $reader
-     * @param int $tableNaming
-     */
     public function __construct(
-        ClassesInterface $locator,
-        object $reader = null,
-        int $tableNaming = self::TABLE_NAMING_PLURAL
+        private ClassesInterface $locator,
+        DoctrineReader|ReaderInterface $reader = null,
+        private int $tableNaming = self::TABLE_NAMING_PLURAL
     ) {
-        $this->locator = $locator;
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
-        $this->tableNaming = $tableNaming;
         $this->inflector = (new InflectorFactory())->build();
     }
 
-    /**
-     * @param Registry $registry
-     *
-     * @return Registry
-     */
     public function run(Registry $registry): Registry
     {
         /** @var EntitySchema[] $children */
@@ -107,18 +86,13 @@ final class Entities implements GeneratorInterface
         }
 
         foreach ($children as $e) {
-            $registry->registerChild($registry->getEntity($this->findParent($registry, $e->getClass())), $e);
+            $registry->registerChild($registry->getEntity($this->findParent($e->getClass())), $e);
         }
 
         return $this->normalizeNames($registry);
     }
 
-    /**
-     * @param Registry $registry
-     *
-     * @return Registry
-     */
-    protected function normalizeNames(Registry $registry): Registry
+    private function normalizeNames(Registry $registry): Registry
     {
         // resolve all the relation target names into roles
         foreach ($this->locator->getClasses() as $class) {
@@ -155,13 +129,13 @@ final class Entities implements GeneratorInterface
 
                     if ($r->getOptions()->has('throughInnerKey')) {
                         if ($throughInnerKey = (array)$r->getOptions()->get('throughInnerKey')) {
-                            $r->getOptions()->set('throughInnerKey', $throughInnerKey[0]);
+                            $r->getOptions()->set('throughInnerKey', $throughInnerKey);
                         }
                     }
 
                     if ($r->getOptions()->has('throughOuterKey')) {
                         if ($throughOuterKey = (array)$r->getOptions()->get('throughOuterKey')) {
-                            $r->getOptions()->set('throughOuterKey', $throughOuterKey[0]);
+                            $r->getOptions()->set('throughOuterKey', $throughOuterKey);
                         }
                     }
                 } catch (RegistryException $ex) {
@@ -181,15 +155,9 @@ final class Entities implements GeneratorInterface
         return $registry;
     }
 
-    /**
-     * @param Registry $registry
-     * @param string   $name
-     *
-     * @return string|null
-     */
-    protected function resolveTarget(Registry $registry, string $name): ?string
+    private function resolveTarget(Registry $registry, string $name): ?string
     {
-        if (null === $name || interface_exists($name, true)) {
+        if (interface_exists($name, true)) {
             // do not resolve interfaces
             return $name;
         }
@@ -208,52 +176,36 @@ final class Entities implements GeneratorInterface
         return $registry->getEntity($name)->getRole();
     }
 
-    /**
-     * @param string $role
-     *
-     * @return string
-     */
-    protected function tableName(string $role): string
+    private function tableName(string $role): string
     {
         $table = $this->inflector->tableize($role);
 
-        switch ($this->tableNaming) {
-            case self::TABLE_NAMING_PLURAL:
-                return $this->inflector->pluralize($this->inflector->tableize($role));
+        return match ($this->tableNaming) {
+            self::TABLE_NAMING_PLURAL => $this->inflector->pluralize($this->inflector->tableize($role)),
+            self::TABLE_NAMING_SINGULAR => $this->inflector->singularize($this->inflector->tableize($role)),
+            default => $table,
+        };
+    }
 
-            case self::TABLE_NAMING_SINGULAR:
-                return $this->inflector->singularize($this->inflector->tableize($role));
-
-            default:
-                return $table;
-        }
+    private function hasParent(Registry $registry, string $class): bool
+    {
+        return $this->findParent($class) !== null;
     }
 
     /**
-     * @param Registry $registry
-     * @param string   $class
+     * @param class-string   $class
      *
-     * @return bool
+     * @return class-string|null
      */
-    protected function hasParent(Registry $registry, string $class): bool
+    private function findParent(string $class): ?string
     {
-        return $this->findParent($registry, $class) !== null;
-    }
-
-    /**
-     * @param Registry $registry
-     * @param string   $class
-     *
-     * @return string|null
-     */
-    protected function findParent(Registry $registry, string $class): ?string
-    {
+        /** @var class-string[] $parents */
         $parents = class_parents($class);
 
         foreach (array_reverse($parents) as $parent) {
             try {
                 $class = new \ReflectionClass($parent);
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 continue;
             }
 

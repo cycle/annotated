@@ -135,7 +135,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame(CompleteMapper::class, $r->getEntity('eComplete')->getMapper());
         $this->assertSame(CompleteRepository::class, $r->getEntity('eComplete')->getRepository());
         $this->assertSame(TestSource::class, $r->getEntity('eComplete')->getSource());
-        $this->assertSame(SomeConstrain::class, $r->getEntity('eComplete')->getConstrain());
+        $this->assertSame(SomeConstrain::class, $r->getEntity('eComplete')->getScope());
 
         $this->assertTrue($r->hasTable($r->getEntity('eComplete')));
         $this->assertSame('secondary', $r->getDatabase($r->getEntity('eComplete')));

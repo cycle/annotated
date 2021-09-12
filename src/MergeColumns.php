@@ -18,26 +18,16 @@ use Spiral\Attributes\ReaderInterface;
  */
 final class MergeColumns implements GeneratorInterface
 {
-    /** @var ReaderInterface */
-    private $reader;
+    private ReaderInterface $reader;
 
-    /** @var Configurator */
-    private $generator;
+    private Configurator $generator;
 
-    /**
-     * @param object<DoctrineReader|ReaderInterface>|null $reader
-     */
-    public function __construct(object $reader = null)
+    public function __construct(DoctrineReader|ReaderInterface $reader = null)
     {
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
     }
 
-    /**
-     * @param Registry $registry
-     *
-     * @return Registry
-     */
     public function run(Registry $registry): Registry
     {
         foreach ($registry as $e) {
@@ -51,7 +41,7 @@ final class MergeColumns implements GeneratorInterface
             $this->copy($e, $e->getMapper());
             $this->copy($e, $e->getRepository());
             $this->copy($e, $e->getSource());
-            $this->copy($e, $e->getConstrain());
+            $this->copy($e, $e->getScope());
 
             foreach ($registry->getChildren($e) as $child) {
                 $this->copy($e, $child->getClass());
@@ -62,10 +52,9 @@ final class MergeColumns implements GeneratorInterface
     }
 
     /**
-     * @param EntitySchema $e
-     * @param string|null  $class
+     * @param class-string|null  $class
      */
-    protected function copy(EntitySchema $e, ?string $class): void
+    private function copy(EntitySchema $e, ?string $class): void
     {
         if ($class === null) {
             return;
@@ -73,7 +62,7 @@ final class MergeColumns implements GeneratorInterface
 
         try {
             $class = new \ReflectionClass($class);
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return;
         }
 

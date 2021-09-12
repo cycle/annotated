@@ -16,8 +16,8 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("target", type="string", required=true),
  *      @Attribute("cascade", type="bool"),
  *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="string"),
- *      @Attribute("outerKey", type="string"),
+ *      @Attribute("innerKey", type="array<string>"),
+ *      @Attribute("outerKey", type="array<string>"),
  *      @Attribute("where", type="array"),
  *      @Attribute("orderBy", type="array"),
  *      @Attribute("though", type="string"),
@@ -47,67 +47,49 @@ final class ManyToMany extends Relation
     /** @var bool */
     protected $nullable;
 
-    /** @var string */
-    protected $innerKey;
+    protected array|string $innerKey;
 
-    /** @var string */
-    protected $outerKey;
+    protected array|string $outerKey;
 
-    /** @var array */
-    protected $where;
+    protected array $where = [];
 
-    /** @var array */
-    protected $orderBy;
+    protected array $orderBy = [];
 
     /**
-     * @var string
-     *
      * @deprecated
      */
-    protected $though;
+    protected ?string $though = null;
 
     /**
-     * @var string
-     *
      * @deprecated
      */
-    protected $thoughInnerKey;
+    protected array|string $thoughInnerKey;
 
     /**
-     * @var string
-     *
      * @deprecated
      */
-    protected $thoughOuterKey;
+    protected array|string $thoughOuterKey;
 
     /**
-     * @var array
-     *
      * @deprecated
      */
-    protected $thoughWhere;
+    protected array $thoughWhere = [];
 
-    /** @var string */
-    protected $through;
+    protected ?string $through = null;
 
-    /** @var array */
-    protected $throughInnerKey;
+    protected array|string $throughInnerKey;
 
-    /** @var array */
-    protected $throughOuterKey;
+    protected array|string $throughOuterKey;
 
-    /** @var array */
-    protected $throughWhere;
+    protected array $throughWhere = [];
 
     /** @var bool */
     protected $fkCreate;
 
     /**
      * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
-     *
-     * @var string
      */
-    protected $fkAction;
+    protected ?string $fkAction = null;
 
     /** @var bool */
     protected $indexCreate;

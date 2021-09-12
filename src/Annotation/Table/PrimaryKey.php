@@ -18,6 +18,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class PrimaryKey extends Index
 {
+    /**
+     * @param array<string, mixed> $values
+     */
     public function __construct(array $values)
     {
         $values['unique'] = true;

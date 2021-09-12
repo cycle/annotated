@@ -21,27 +21,16 @@ use Spiral\Attributes\ReaderInterface;
 
 final class Configurator
 {
-    /** @var ReaderInterface */
-    private $reader;
+    private ReaderInterface $reader;
 
-    /** @var Inflector */
-    private $inflector;
+    private Inflector $inflector;
 
-    /**
-     * @param object<DoctrineReader|ReaderInterface> $reader
-     */
-    public function __construct(object $reader)
+    public function __construct(DoctrineReader|ReaderInterface $reader)
     {
         $this->reader = ReaderFactory::create($reader);
         $this->inflector = (new InflectorFactory())->build();
     }
 
-    /**
-     * @param Entity           $ann
-     * @param \ReflectionClass $class
-     *
-     * @return EntitySchema
-     */
     public function initEntity(Entity $ann, \ReflectionClass $class): EntitySchema
     {
         $e = new EntitySchema();
@@ -53,7 +42,7 @@ final class Configurator
         $e->setMapper($this->resolveName($ann->getMapper(), $class));
         $e->setRepository($this->resolveName($ann->getRepository(), $class));
         $e->setSource($this->resolveName($ann->getSource(), $class));
-        $e->setConstrain($this->resolveName($ann->getConstrain(), $class));
+        $e->setScope($this->resolveName($ann->getScope(), $class));
 
         if ($ann->isReadonlySchema()) {
             $e->getOptions()->set(SyncTables::READONLY_SCHEMA, true);
@@ -62,12 +51,6 @@ final class Configurator
         return $e;
     }
 
-    /**
-     * @param Embeddable       $emb
-     * @param \ReflectionClass $class
-     *
-     * @return EntitySchema
-     */
     public function initEmbedding(Embeddable $emb, \ReflectionClass $class): EntitySchema
     {
         $e = new EntitySchema();
@@ -81,16 +64,10 @@ final class Configurator
         return $e;
     }
 
-    /**
-     * @param EntitySchema     $entity
-     * @param \ReflectionClass $class
-     * @param string           $columnPrefix
-     */
     public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = ''): void
     {
         foreach ($class->getProperties() as $property) {
             try {
-                /** @var Column $column */
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
             } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
@@ -107,10 +84,6 @@ final class Configurator
         }
     }
 
-    /**
-     * @param EntitySchema     $entity
-     * @param \ReflectionClass $class
-     */
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
         foreach ($class->getProperties() as $property) {
@@ -162,9 +135,7 @@ final class Configurator
     }
 
     /**
-     * @param EntitySchema     $entity
-     * @param Column[]         $columns
-     * @param \ReflectionClass $class
+     * @param Column[] $columns
      */
     public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class): void
     {
@@ -202,19 +173,11 @@ final class Configurator
         }
     }
 
-    /**
-     * @param string           $name
-     * @param Column           $column
-     * @param \ReflectionClass $class
-     * @param string           $columnPrefix
-     *
-     * @return Field
-     */
     public function initField(string $name, Column $column, \ReflectionClass $class, string $columnPrefix): Field
     {
         if ($column->getType() === null) {
             throw new AnnotationException(
-                "Column type definition is required on `{$class->getName()}`.`{$name}`"
+                "Column type definition is required on `{$class->getName()}`.`{$name}`."
             );
         }
 
@@ -244,11 +207,6 @@ final class Configurator
 
     /**
      * Resolve class or role name relative to the current class.
-     *
-     * @param string           $name
-     * @param \ReflectionClass $class
-     *
-     * @return string
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
     {
@@ -269,13 +227,7 @@ final class Configurator
         return $name;
     }
 
-    /**
-     * @param mixed            $typecast
-     * @param \ReflectionClass $class
-     *
-     * @return mixed
-     */
-    protected function resolveTypecast($typecast, \ReflectionClass $class)
+    private function resolveTypecast(mixed $typecast, \ReflectionClass $class): mixed
     {
         if (is_string($typecast) && strpos($typecast, '::') !== false) {
             // short definition

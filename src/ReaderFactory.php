@@ -12,35 +12,23 @@ use Spiral\Attributes\ReaderInterface;
 
 final class ReaderFactory
 {
-    /**
-     * @param object<DoctrineReader|ReaderInterface>|null $reader
-     *
-     * @return ReaderInterface
-     */
-    public static function create(object $reader = null): ReaderInterface
+    public static function create(DoctrineReader|ReaderInterface $reader = null): ReaderInterface
     {
-        switch (true) {
-            case $reader instanceof ReaderInterface:
-                return $reader;
-
-            case $reader instanceof DoctrineReader:
-                return new AnnotationReader($reader);
-
-            case $reader === null:
-                return new SelectiveReader([
-                    new AttributeReader(),
-                    new AnnotationReader(),
-                ]);
-
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'Argument $reader must be an instance of %s or %s, but %s passed.',
-                        ReaderInterface::class,
-                        DoctrineReader::class,
-                        'instance of ' . explode("\0", get_class($reader))[0]
-                    )
-                );
-        }
+        return match (true) {
+            $reader instanceof ReaderInterface => $reader,
+            $reader instanceof DoctrineReader => new AnnotationReader($reader),
+            $reader === null => new SelectiveReader([
+                new AttributeReader(),
+                new AnnotationReader(),
+            ]),
+            default => throw new \InvalidArgumentException(
+                sprintf(
+                    'Argument $reader must be an instance of %s or %s, but %s passed.',
+                    ReaderInterface::class,
+                    DoctrineReader::class,
+                    'instance of ' . explode("\0", get_class($reader))[0]
+                )
+            ),
+        };
     }
 }

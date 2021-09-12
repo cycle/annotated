@@ -10,8 +10,8 @@ final class BelongsToMorphed
         string $target,
         bool $cascade = true,
         bool $nullable = true,
-        string $innerKey = '{relationName}_{outerKey}',
-        string $outerKey = null,
+        array|string $innerKey = '{relationName}_{outerKey}',
+        array|string $outerKey = null,
         string $morphKey = '{relationName}_role',
         int $morphKeyLength = 32,
         bool $indexCreate = true
