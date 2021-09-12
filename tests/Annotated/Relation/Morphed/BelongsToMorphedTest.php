@@ -8,9 +8,10 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Annotated\Tests\Fixtures\Constrain\SomeConstrain;
 use Cycle\Annotated\Tests\Fixtures\LabelledInterface;
 use Cycle\ORM\Relation;
-use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -52,5 +53,7 @@ abstract class BelongsToMorphedTest extends BaseTest
             LabelledInterface::class,
             $schema['label'][Schema::RELATIONS]['owner'][Relation::TARGET]
         );
+
+        $this->assertSame(SomeConstrain::class, $schema['label'][Schema::SCOPE]);
     }
 }
