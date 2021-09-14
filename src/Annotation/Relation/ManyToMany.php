@@ -30,6 +30,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("throughWhere", type="array"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
+ *      @Attribute("fkOnDelete", type="string"),
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  * })

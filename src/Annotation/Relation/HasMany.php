@@ -21,6 +21,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("orderBy", type="array"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
+ *      @Attribute("fkOnDelete", type="string"),
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),

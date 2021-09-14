@@ -19,6 +19,8 @@ final class HasMany
         bool $fkCreate = true,
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         string $fkAction = 'CASCADE',
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        string $fkOnDelete = null,
         bool $indexCreate = true,
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy'

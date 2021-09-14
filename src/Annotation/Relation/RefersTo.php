@@ -20,6 +20,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("outerKey", type="array<string>"),
  *      @Attribute("fkCreate", type="bool"),
  *      @Attribute("fkAction", type="string"),
+ *      @Attribute("fkOnDelete", type="string"),
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
