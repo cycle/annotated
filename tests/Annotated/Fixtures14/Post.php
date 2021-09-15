@@ -13,11 +13,11 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity]
 class Post
 {
-    /** @Column(type="integer", primary=true) */
-    #[Column(type: 'integer', primary: true)]
+    /** @Column(type="integer", primary=true, nullable=true) */
+    #[Column(type: 'integer', primary: true, nullable: true)]
     protected int $id1;
 
-    /** @Column(type="integer", primary=true) */
-    #[Column(type: 'integer', primary: true)]
+    /** @Column(type="integer", primary=true, nullable=true) */
+    #[Column(type: 'integer', primary: true, nullable: true)]
     protected int $id2;
 }

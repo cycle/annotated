@@ -18,12 +18,12 @@ use Cycle\Annotated\Annotation\Relation\ManyToMany;
 #[Entity]
 class Some
 {
-    /** @Column(type="integer", primary=true) */
-    #[Column(type: 'integer', primary: true)]
+    /** @Column(type="integer", primary=true, nullable=true) */
+    #[Column(type: 'integer', primary: true, nullable: true)]
     protected int $id1;
 
-    /** @Column(type="integer", primary=true) */
-    #[Column(type: 'integer', primary: true)]
+    /** @Column(type="integer", primary=true, nullable=true) */
+    #[Column(type: 'integer', primary: true, nullable: true)]
     protected int $id2;
 
     /** @HasOne(target="Article", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}) */
