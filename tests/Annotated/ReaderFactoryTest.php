@@ -34,27 +34,4 @@ class ReaderFactoryTest extends TestCase
 
         $this->assertSame($mergeReader, $reader);
     }
-
-    public function testCreateFromBadObjectValue(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'Argument $reader must be an instance of Spiral\Attributes\ReaderInterface '
-            . 'or Doctrine\Common\Annotations\Reader, but instance of DateTimeImmutable passed.'
-        );
-
-        ReaderFactory::create(new \DateTimeImmutable());
-    }
-
-    public function testCreateFromBadValueAnonymousClass(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'Argument $reader must be an instance of Spiral\Attributes\ReaderInterface '
-            . 'or Doctrine\Common\Annotations\Reader, but instance of class@anonymous passed.'
-        );
-
-        ReaderFactory::create(new class() {
-        });
-    }
 }
