@@ -13,7 +13,7 @@ final class Entity
         string $table = null,
         string $database = null,
         string $source = null,
-        string $constrain = null,
+        string $scope = null,
         /** @var array<Column> */
         array $columns = [],
     ) {

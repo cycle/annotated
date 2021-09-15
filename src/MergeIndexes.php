@@ -19,22 +19,13 @@ use Cycle\Database\Schema\AbstractTable;
  */
 final class MergeIndexes implements GeneratorInterface
 {
-    /** @var ReaderInterface */
-    private $reader;
+    private ReaderInterface $reader;
 
-    /**
-     * @param object<DoctrineReader|ReaderInterface>|null $reader
-     */
-    public function __construct(object $reader = null)
+    public function __construct(DoctrineReader|ReaderInterface $reader = null)
     {
         $this->reader = ReaderFactory::create($reader);
     }
 
-    /**
-     * @param Registry $registry
-     *
-     * @return Registry
-     */
     public function run(Registry $registry): Registry
     {
         foreach ($registry as $e) {
@@ -48,7 +39,7 @@ final class MergeIndexes implements GeneratorInterface
             $this->render($registry->getTableSchema($e), $e, $e->getMapper());
             $this->render($registry->getTableSchema($e), $e, $e->getRepository());
             $this->render($registry->getTableSchema($e), $e, $e->getSource());
-            $this->render($registry->getTableSchema($e), $e, $e->getConstrain());
+            $this->render($registry->getTableSchema($e), $e, $e->getScope());
 
             foreach ($registry->getChildren($e) as $child) {
                 $this->render($registry->getTableSchema($e), $e, $child->getClass());
@@ -59,8 +50,6 @@ final class MergeIndexes implements GeneratorInterface
     }
 
     /**
-     * @param AbstractTable $table
-     * @param Entity        $entity
      * @param Table\Index[] $indexes
      */
     public function renderIndexes(AbstractTable $table, Entity $entity, array $indexes): void
@@ -89,11 +78,9 @@ final class MergeIndexes implements GeneratorInterface
     }
 
     /**
-     * @param AbstractTable $table
-     * @param Entity        $entity
-     * @param string|null   $class
+     * @param class-string|null   $class
      */
-    protected function render(AbstractTable $table, Entity $entity, ?string $class): void
+    private function render(AbstractTable $table, Entity $entity, ?string $class): void
     {
         if ($class === null) {
             return;
@@ -137,10 +124,7 @@ final class MergeIndexes implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
-     * @param array  $columns
-     *
-     * @return array
+     * @return string[]
      */
     protected function mapColumns(Entity $entity, array $columns): array
     {
@@ -149,11 +133,9 @@ final class MergeIndexes implements GeneratorInterface
         foreach ($columns as $expression) {
             [$column, $order] = AbstractIndex::parseColumn($expression);
 
-            if ($entity->getFields()->has($column)) {
-                $mappedName = $entity->getFields()->get($column)->getColumn();
-            } else {
-                $mappedName = $column;
-            }
+            $mappedName = $entity->getFields()->has($column)
+                ? $entity->getFields()->get($column)->getColumn()
+                : $column;
 
             // Re-construct `column ORDER` with mapped column name
             $result[] = $order ? "$mappedName $order" : $mappedName;

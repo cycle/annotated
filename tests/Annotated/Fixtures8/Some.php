@@ -18,7 +18,7 @@ class Some
     #[Column(type: 'primary')]
     protected $id;
 
-    /** @HasOne(target="Article") */
-    #[HasOne(target: 'Article')]
+    /** @HasOne(target="Article", innerKey="id") */
+    #[HasOne(target: 'Article', innerKey: 'id')]
     protected $article;
 }

@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Annotated\Tests\Relation\Morphed;
+namespace Cycle\Annotated\Tests\Relation;
 
+use Cycle\Annotated\Embeddings;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
-use Cycle\Annotated\Tests\Fixtures\Constrain\SomeConstrain;
-use Cycle\Annotated\Tests\Fixtures\LabelledInterface;
-use Cycle\ORM\Relation;
-use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -21,18 +18,28 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
 
-abstract class BelongsToMorphedTest extends BaseTest
+abstract class CompositeKeysTest extends BaseTest
 {
     /**
      * @dataProvider allReadersProvider
      */
-    public function testRelation(ReaderInterface $reader): void
+    public function testRelationToChild(ReaderInterface $reader): void
     {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [dirname(__DIR__) . '/Fixtures14'],
+            'exclude' => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
         $r = new Registry($this->dbal);
 
-        $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator, $reader),
+        (new Compiler())->compile($r, [
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
             new ResetTables(),
             new MergeColumns($reader),
             new GenerateRelations(),
@@ -43,17 +50,6 @@ abstract class BelongsToMorphedTest extends BaseTest
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('owner', $schema['label'][Schema::RELATIONS]);
-        $this->assertSame(
-            Relation::BELONGS_TO_MORPHED,
-            $schema['label'][Schema::RELATIONS]['owner'][Relation::TYPE]
-        );
-
-        $this->assertSame(
-            LabelledInterface::class,
-            $schema['label'][Schema::RELATIONS]['owner'][Relation::TARGET]
-        );
-
-        $this->assertSame(SomeConstrain::class, $schema['label'][Schema::SCOPE]);
+        $this->assertTrue(true, 'No exceptions thrown.');
     }
 }

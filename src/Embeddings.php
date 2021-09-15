@@ -19,36 +19,22 @@ use Spiral\Tokenizer\ClassesInterface;
  */
 final class Embeddings implements GeneratorInterface
 {
-    /** @var ClassesInterface */
-    private $locator;
+    private ReaderInterface $reader;
 
-    /** @var ReaderInterface */
-    private $reader;
+    private Configurator $generator;
 
-    /** @var Configurator */
-    private $generator;
-
-    /**
-     * @param ClassesInterface $locator
-     * @param object<DoctrineReader|ReaderInterface>|null $reader
-     */
-    public function __construct(ClassesInterface $locator, object $reader = null)
-    {
-        $this->locator = $locator;
+    public function __construct(
+        private ClassesInterface $locator,
+        DoctrineReader|ReaderInterface $reader = null
+    ) {
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
     }
 
-    /**
-     * @param Registry $registry
-     *
-     * @return Registry
-     */
     public function run(Registry $registry): Registry
     {
         foreach ($this->locator->getClasses() as $class) {
             try {
-                /** @var Embeddable $em */
                 $em = $this->reader->firstClassMetadata($class, Embeddable::class);
             } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
@@ -71,10 +57,6 @@ final class Embeddings implements GeneratorInterface
         return $registry;
     }
 
-    /**
-     * @param EntitySchema     $entity
-     * @param \ReflectionClass $class
-     */
     public function verifyNoRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
         foreach ($class->getProperties() as $property) {

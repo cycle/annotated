@@ -17,8 +17,8 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("target", type="string", required=true),
  *      @Attribute("cascade", type="bool"),
  *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="string"),
- *      @Attribute("outerKey", type="string"),
+ *      @Attribute("innerKey", type="array<string>"),
+ *      @Attribute("outerKey", type="array<string>"),
  *      @Attribute("morphKey", type="string"),
  *      @Attribute("morphKeyLength", type="int"),
  *      @Attribute("indexCreate", type="bool"),
@@ -44,8 +44,7 @@ final class BelongsToMorphed extends Relation
     /** @var string */
     protected $outerKey;
 
-    /** @var string */
-    protected $morphKey;
+    protected ?string $morphKey = null;
 
     /** @var int */
     protected $morphKeyLength;

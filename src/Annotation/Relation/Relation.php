@@ -14,25 +14,21 @@ abstract class Relation implements RelationInterface
 
     /**
      * @Required()
-     *
-     * @var string
      */
-    protected $target;
+    protected ?string $target = null;
 
     /**
      * @Enum({"eager", "lazy", "promise"}
-     *
-     * @var string
      */
-    protected $load;
+    protected ?string $load = null;
 
     /**
-     * @param array $values
+     * @param array<string, mixed> $values
      */
     public function __construct(array $values)
     {
         foreach ($values as $key => $value) {
-            if ($key == 'fetch') {
+            if ($key === 'fetch') {
                 $key = 'load';
             }
 
@@ -40,24 +36,18 @@ abstract class Relation implements RelationInterface
         }
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return static::TYPE;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTarget(): ?string
     {
         return $this->target;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getOptions(): array
     {

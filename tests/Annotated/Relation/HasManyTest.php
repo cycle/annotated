@@ -9,7 +9,7 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
-use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;

@@ -21,20 +21,17 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class Embeddable
 {
-    /** @var string */
-    private $role;
+    private ?string $role = null;
 
-    /** @var string */
-    private $mapper;
+    private ?string $mapper = null;
 
-    /** @var string */
-    private $columnPrefix = '';
+    private string $columnPrefix = '';
 
-    /** @var array<Column> */
+    /** @var Column[] */
     private $columns = [];
 
     /**
-     * @param array $values
+     * @param array<string, mixed> $values
      */
     public function __construct(array $values)
     {
@@ -43,25 +40,16 @@ final class Embeddable
         }
     }
 
-    /**
-     * @return string|null
-     */
     public function getRole(): ?string
     {
         return $this->role;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMapper(): ?string
     {
         return $this->mapper;
     }
 
-    /**
-     * @return string
-     */
     public function getColumnPrefix(): string
     {
         return $this->columnPrefix;

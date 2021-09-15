@@ -24,33 +24,27 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class Column
 {
-    /** @var bool */
-    private $hasDefault = false;
+    private bool $hasDefault = false;
 
-    /** @var string|null */
-    private $name;
+    private ?string $name = null;
 
-    /** @var string|null */
-    private $property;
+    private ?string $property = null;
 
-    /** @var string */
-    private $type;
+    private ?string $type = null;
 
-    /** @var bool */
-    private $nullable = false;
+    private bool $nullable = false;
 
-    /** @var bool */
-    private $primary = false;
+    private bool $primary = false;
 
-    /** @var mixed */
-    private $default;
+    private mixed $default = null;
 
-    /** @var bool */
-    private $castDefault = false;
+    private bool $castDefault = false;
 
-    /** @var mixed */
-    private $typecast;
+    private mixed $typecast = null;
 
+    /**
+     * @param array<string, mixed> $values
+     */
     public function __construct(array $values)
     {
         if (isset($values['default'])) {
@@ -62,74 +56,47 @@ final class Column
         }
     }
 
-    /**
-     * @return string|null
-     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @return string|null
-     */
     public function getColumn(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @return string|null
-     */
     public function getProperty(): ?string
     {
         return $this->property;
     }
 
-    /**
-     * @return bool
-     */
     public function isNullable(): bool
     {
         return $this->nullable;
     }
 
-    /**
-     * @return bool
-     */
     public function isPrimary(): bool
     {
         return $this->primary;
     }
 
-    /**
-     * @return bool
-     */
     public function hasDefault(): bool
     {
         return $this->hasDefault;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefault()
+    public function getDefault(): mixed
     {
         return $this->default;
     }
 
-    /**
-     * @return bool
-     */
     public function castDefault(): bool
     {
         return $this->castDefault;
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function getTypecast()
+    public function getTypecast(): mixed
     {
         return $this->typecast;
     }

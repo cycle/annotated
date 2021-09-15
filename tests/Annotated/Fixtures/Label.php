@@ -9,9 +9,11 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
 
 /**
- * @Entity()
+ * @Entity(
+ *      scope = "Constrain\SomeConstrain",
+ * )
  */
-#[Entity]
+#[Entity(scope: Constrain\SomeConstrain::class)]
 class Label
 {
     /** @Column(type="primary") */

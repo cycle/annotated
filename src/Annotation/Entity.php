@@ -19,41 +19,37 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("database", type="string"),
  *      @Attribute("source", type="string"),
  *      @Attribute("constrain", type="string"),
+ *      @Attribute("scope", type="string"),
  *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
  * })
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class Entity
 {
-    /** @var string */
-    private $role;
+    private ?string $role = null;
 
-    /** @var string */
-    private $mapper;
+    private ?string $mapper = null;
 
-    /** @var string */
-    private $repository;
+    private ?string $repository = null;
 
-    /** @var string */
-    private $table;
+    private ?string $table = null;
 
-    /** @var bool */
-    private $readonlySchema = false;
+    private bool $readonlySchema = false;
 
-    /** @var string */
-    private $database;
+    private ?string $database = null;
 
-    /** @var string */
-    private $source;
+    private ?string $source = null;
 
-    /** @var string */
-    private $constrain;
+    /** @deprecated Use {@see $scope} instead */
+    private ?string $constrain = null;
 
-    /** @var array<Column> */
-    private $columns = [];
+    private ?string $scope = null;
+
+    /** @var Column[] */
+    private array $columns = [];
 
     /**
-     * @param array $values
+     * @param array<string, mixed> $values
      */
     public function __construct(array $values = [])
     {
@@ -62,68 +58,44 @@ final class Entity
         }
     }
 
-    /**
-     * @return string|null
-     */
     public function getRole(): ?string
     {
         return $this->role;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMapper(): ?string
     {
         return $this->mapper;
     }
 
-    /**
-     * @return string|null
-     */
     public function getRepository(): ?string
     {
         return $this->repository;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTable(): ?string
     {
         return $this->table;
     }
 
-    /**
-     * @return bool
-     */
     public function isReadonlySchema(): bool
     {
         return $this->readonlySchema;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDatabase(): ?string
     {
         return $this->database;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSource(): ?string
     {
         return $this->source;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getConstrain(): ?string
+    public function getScope(): ?string
     {
-        return $this->constrain;
+        return $this->scope ?? $this->constrain;
     }
 
     /**

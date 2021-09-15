@@ -9,7 +9,7 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
 use Cycle\ORM\Relation;
-use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -59,12 +59,12 @@ abstract class ManyToManyTest extends BaseTest
         );
 
         $this->assertSame(
-            'withTable_id',
+            ['withTable_id'],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY]
         );
 
         $this->assertSame(
-            'tag_id',
+            ['tag_id'],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY]
         );
 

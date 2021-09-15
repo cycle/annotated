@@ -23,16 +23,16 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class Table
 {
     /** @var Column[] */
-    private $columns = [];
+    private array $columns = [];
 
     /** @var PrimaryKey|null */
-    private $primary = null;
+    private ?PrimaryKey $primary = null;
 
     /** @var Index[] */
-    private $indexes = [];
+    private array $indexes = [];
 
     /**
-     * @param array $values
+     * @param array<string, mixed> $values
      */
     public function __construct(array $values)
     {

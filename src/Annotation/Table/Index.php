@@ -21,16 +21,14 @@ use Doctrine\Common\Annotations\Annotation\Target;
 class Index
 {
     /** @var string[] */
-    private $columns = [];
+    private array $columns = [];
 
-    /** @var bool */
-    private $unique = false;
+    private bool $unique = false;
 
-    /** @var string */
-    private $name;
+    private ?string $name = null;
 
     /**
-     * @param array $values
+     * @param array<string, mixed> $values
      */
     public function __construct(array $values)
     {
@@ -47,17 +45,11 @@ class Index
         return $this->columns;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIndex(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isUnique(): bool
     {
         return $this->unique;

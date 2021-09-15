@@ -14,19 +14,21 @@ final class ManyToMany
         string $through = null,
         bool $cascade = true,
         bool $nullable = false,
-        string $innerKey = null,
-        string $outerKey = '{parentRole}_{innerKey}',
+        array|string $innerKey = null,
+        array|string $outerKey = '{parentRole}_{innerKey}',
         array $where = [],
         array $orderBy = [],
-        string $thoughInnerKey = '{sourceRole}_{innerKey}',
-        string $thoughOuterKey = '{targetRole}_{outerKey}',
+        array|string $thoughInnerKey = '{sourceRole}_{innerKey}',
+        array|string $thoughOuterKey = '{targetRole}_{outerKey}',
         array $thoughWhere = [],
-        array $throughInnerKey = [],
-        array $throughOuterKey = [],
+        array|string $throughInnerKey = [],
+        array|string $throughOuterKey = [],
         array $throughWhere = [],
         bool $fkCreate = true,
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         string $fkAction = 'SET NULL',
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        string $fkOnDelete = null,
         bool $indexCreate = true,
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy'
