@@ -27,11 +27,11 @@ class Article extends Post
     #[Column(type: 'string')]
     public $title;
 
-    /** @BelongsTo(target="Some", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}) */
-    #[BelongsTo(target: Some::class, innerKey: ['id1', 'id2'], outerKey: ['id1', 'id2'])]
+    /** @BelongsTo(target="Some", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}, fkAction="NO ACTION") */
+    #[BelongsTo(target: Some::class, innerKey: ['id1', 'id2'], outerKey: ['id1', 'id2'], fkAction: 'NO ACTION')]
     protected ?Some $some;
 
-    /** @RefersTo(target="Some", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}) */
-    #[RefersTo(target: Some::class, innerKey: ['field1', 'field2'], outerKey: ['id1', 'id2'])]
+    /** @RefersTo(target="Some", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}, fkAction="NO ACTION") */
+    #[RefersTo(target: Some::class, innerKey: ['field1', 'field2'], outerKey: ['id1', 'id2'], fkAction: 'NO ACTION')]
     protected ?Some $bestSome;
 }
