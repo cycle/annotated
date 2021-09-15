@@ -21,14 +21,6 @@ final class ReaderFactory
                 new AttributeReader(),
                 new AnnotationReader(),
             ]),
-            default => throw new \InvalidArgumentException(
-                sprintf(
-                    'Argument $reader must be an instance of %s or %s, but %s passed.',
-                    ReaderInterface::class,
-                    DoctrineReader::class,
-                    'instance of ' . explode("\0", get_class($reader))[0]
-                )
-            ),
         };
     }
 }

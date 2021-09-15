@@ -13,19 +13,19 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity]
 class Tag
 {
-    /** @Column(type="primary") */
-    #[Column(type: 'primary')]
+    /** @Column(type="integer", primary=true) */
+    #[Column(type: 'integer', primary: true)]
     protected int $id1;
 
-    /** @Column(type="primary") */
-    #[Column(type: 'primary')]
+    /** @Column(type="integer", primary=true) */
+    #[Column(type: 'integer', primary: true)]
     protected int $id2;
 
-    /** @Column(type="primary") */
-    #[Column(type: 'primary')]
+    /** @Column(type="integer", primary=true) */
+    #[Column(type: 'integer', primary: true)]
     protected int $id3;
 
-    /** @Column(type="primary") */
-    #[Column(type: 'primary')]
+    /** @Column(type="integer", primary=true) */
+    #[Column(type: 'integer', primary: true)]
     protected int $id4;
 }

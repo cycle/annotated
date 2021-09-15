@@ -28,6 +28,7 @@ abstract class CompositeKeysTest extends BaseTest
      */
     public function testRelationToChild(ReaderInterface $reader): void
     {
+        $this->logger->display();
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [dirname(__DIR__) . '/Fixtures14'],
             'exclude' => [],
@@ -37,7 +38,7 @@ abstract class CompositeKeysTest extends BaseTest
 
         $r = new Registry($this->dbal);
 
-        $schema = (new Compiler())->compile($r, [
+        (new Compiler())->compile($r, [
             new Embeddings($locator, $reader),
             new Entities($locator, $reader),
             new ResetTables(),
