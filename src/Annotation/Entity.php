@@ -49,6 +49,7 @@ final class Entity
 
     /**
      * @var string
+     *
      * @deprecated
      */
     private $constrain;

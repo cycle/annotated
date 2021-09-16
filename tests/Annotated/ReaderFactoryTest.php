@@ -54,6 +54,7 @@ class ReaderFactoryTest extends TestCase
             . 'or Doctrine\Common\Annotations\Reader, but instance of class@anonymous passed.'
         );
 
-        ReaderFactory::create(new class() {});
+        // phpcs:ignore
+        ReaderFactory::create(new class () {});
     }
 }
