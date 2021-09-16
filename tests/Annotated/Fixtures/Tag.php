@@ -9,9 +9,11 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
 
 /**
- * @Entity()
+ * @Entity(
+ *      scope = "Scope\SomeScope"
+ * )
  */
-#[Entity]
+#[Entity(scope: "Scope\SomeScope")]
 class Tag
 {
     /** @Column(type="primary") */

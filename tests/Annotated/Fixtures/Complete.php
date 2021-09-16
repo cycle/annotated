@@ -14,12 +14,12 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
  *      mapper     = "CompleteMapper",
  *      repository = "Repository/CompleteRepository",
  *      source     = "Source\TestSource",
- *      constrain  = "Constrain\SomeConstrain",
+ *      constrain  = "Scope\SomeScope",
  *      database   = "secondary",
  *      table      = "complete_data"
  * )
  */
-#[Entity(role: "eComplete", mapper: CompleteMapper::class, repository: "Repository/CompleteRepository", source: "Source\TestSource", constrain: "Constrain\SomeConstrain", database: "secondary", table: "complete_data")]
+#[Entity(role: "eComplete", mapper: CompleteMapper::class, repository: "Repository/CompleteRepository", source: "Source\TestSource", constrain: "Scope\SomeScope", database: "secondary", table: "complete_data")]
 class Complete implements LabelledInterface
 {
     /** @Column(type="primary") */

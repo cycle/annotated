@@ -9,10 +9,11 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Complete;
 use Cycle\Annotated\Tests\Fixtures\CompleteMapper;
-use Cycle\Annotated\Tests\Fixtures\Constrain\SomeConstrain;
 use Cycle\Annotated\Tests\Fixtures\Repository\CompleteRepository;
+use Cycle\Annotated\Tests\Fixtures\Scope\SomeScope;
 use Cycle\Annotated\Tests\Fixtures\Simple;
 use Cycle\Annotated\Tests\Fixtures\Source\TestSource;
+use Cycle\Annotated\Tests\Fixtures\Tag;
 use Cycle\Annotated\Tests\Fixtures\WithTable;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
@@ -135,7 +136,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame(CompleteMapper::class, $r->getEntity('eComplete')->getMapper());
         $this->assertSame(CompleteRepository::class, $r->getEntity('eComplete')->getRepository());
         $this->assertSame(TestSource::class, $r->getEntity('eComplete')->getSource());
-        $this->assertSame(SomeConstrain::class, $r->getEntity('eComplete')->getConstrain());
+        $this->assertSame(SomeScope::class, $r->getEntity('eComplete')->getConstrain());
 
         $this->assertTrue($r->hasTable($r->getEntity('eComplete')));
         $this->assertSame('secondary', $r->getDatabase($r->getEntity('eComplete')));
@@ -150,5 +151,19 @@ abstract class GeneratorTest extends BaseTest
         );
 
         $this->assertFalse($r->getEntity('eComplete')->getFields()->has('ignored'));
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testTagScope(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $reader))->run($r);
+
+        $this->assertTrue($r->hasEntity(Tag::class));
+        $this->assertTrue($r->hasEntity('tag'));
+
+        $this->assertSame(SomeScope::class, $r->getEntity('tag')->getConstrain());
     }
 }
