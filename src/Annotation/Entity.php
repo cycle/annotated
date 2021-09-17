@@ -19,6 +19,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("database", type="string"),
  *      @Attribute("source", type="string"),
  *      @Attribute("constrain", type="string"),
+ *      @Attribute("scope", type="string"),
  *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
  * })
  */
@@ -46,8 +47,15 @@ final class Entity
     /** @var string */
     private $source;
 
-    /** @var string */
+    /**
+     * @var string
+     *
+     * @deprecated
+     */
     private $constrain;
+
+    /** @var string */
+    private $scope;
 
     /** @var array<Column> */
     private $columns = [];
@@ -123,7 +131,7 @@ final class Entity
      */
     public function getConstrain(): ?string
     {
-        return $this->constrain;
+        return $this->constrain ?? $this->scope;
     }
 
     /**
