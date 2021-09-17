@@ -8,6 +8,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Database\Schema\AbstractTable;
 use Cycle\ORM\Relation;
 use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
@@ -19,9 +20,59 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
+
+use function PHPUnit\Framework\assertCount;
 
 abstract class ManyToManyTest extends BaseTest
 {
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testPivotPrimaryKeys(ReaderInterface $reader): void
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [dirname(__DIR__) . '/Fixtures15'],
+            'exclude' => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        // $this->logger->display();
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            $t = new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        // RENDER!
+        $t->getReflector()->run();
+
+        $table = current(array_filter(
+            $t->getReflector()->getTables(),
+            static fn (AbstractTable $t): bool => str_contains($t->getName(), 'context')
+        ));
+        assert($table instanceof AbstractTable);
+
+        // Check MTM relation in the Schema
+        $this->assertSame(Relation::MANY_TO_MANY, $schema['post'][Schema::RELATIONS]['tags'][Relation::TYPE]);
+        $this->assertSame('tag', $schema['post'][Schema::RELATIONS]['tags'][Relation::TARGET]);
+        $this->assertSame(
+            'context',
+            $schema['post'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY]
+        );
+
+        // Check table
+        assertCount(3, $table->getIndexes());
+    }
+
     /**
      * @dataProvider allReadersProvider
      */
