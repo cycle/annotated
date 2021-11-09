@@ -8,7 +8,6 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
-use Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
