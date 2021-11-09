@@ -8,6 +8,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection;
 use Cycle\ORM\Relation;
 use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
@@ -54,6 +55,10 @@ abstract class HasManyTest extends BaseTest
         $this->assertSame(
             ['id' => 'DESC'],
             $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY]
+        );
+        $this->assertSame(
+            BaseCollection::class,
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
         );
     }
 }

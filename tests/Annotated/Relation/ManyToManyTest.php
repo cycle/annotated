@@ -8,6 +8,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\ORM\Relation;
 use Cycle\ORM\SchemaInterface as Schema;
@@ -126,6 +127,10 @@ abstract class ManyToManyTest extends BaseTest
         $this->assertSame(
             ['id' => 'DESC'],
             $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
+        );
+        $this->assertSame(
+            BaseCollection::class,
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
         );
     }
 

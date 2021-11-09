@@ -8,6 +8,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -72,6 +73,11 @@ abstract class MorphedHasManyTest extends BaseTest
                 ->getDriver()
                 ->getSchema('labels')
                 ->hasIndex(['owner_id', 'owner_role'])
+        );
+
+        $this->assertSame(
+            \Doctrine\Common\Collections\Collection::class,
+            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
         );
     }
 }

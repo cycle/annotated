@@ -24,6 +24,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("fkOnDelete", type="string"),
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
+ *      @Attribute("collection", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
  * })
  */
@@ -43,6 +44,8 @@ final class HasMany extends Relation
     protected array|string $innerKey;
 
     protected array|string $outerKey;
+
+    protected ?string $collection = null;
 
     /** @var array */
     protected $where;

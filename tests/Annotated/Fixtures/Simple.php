@@ -10,7 +10,6 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany;
 use Cycle\Annotated\Annotation\Relation\RefersTo;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * @Entity(role="simple")
@@ -35,11 +34,11 @@ class Simple implements LabelledInterface
     protected $one;
 
     /**
-     * @HasMany(target="WithTable", where={"id": {">=": 1}}, orderBy={"id": "DESC"})
+     * @HasMany(target="WithTable", where={"id": {">=": 1}}, orderBy={"id": "DESC"}, collection="Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection")
      *
-     * @var Collection|WithTable[]
+     * @var Collection\BaseCollection|WithTable[]
      */
-    #[HasMany(target: 'WithTable', where: ['id' => ['>=' => 1]], orderBy: ['id' => 'DESC'])]
+    #[HasMany(target: 'WithTable', where: ['id' => ['>=' => 1]], orderBy: ['id' => 'DESC'], collection: Collection\BaseCollection::class)]
     protected $many;
 
     /**
@@ -49,8 +48,8 @@ class Simple implements LabelledInterface
     protected $parent;
 
     /**
-     * @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false)
+     * @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false, collection="Doctrine\Common\Collections\Collection")
      */
-    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false)]
+    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false, collection: \Doctrine\Common\Collections\Collection::class)]
     protected $labels;
 }
