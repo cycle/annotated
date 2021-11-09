@@ -34,11 +34,16 @@ class Simple implements LabelledInterface
     protected $one;
 
     /**
-     * @HasMany(target="WithTable", where={"id": {">=": 1}}, orderBy={"id": "DESC"}, collection="Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection")
+     * @HasMany(
+     *     target="WithTable",
+     *     where={"id": {">=": 1}},
+     *     orderBy={"id": "DESC"},
+     *     collection="Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection"
+     * )
      *
      * @var Collection\BaseCollection|WithTable[]
      */
-    #[HasMany(target: 'WithTable', where: ['id' => ['>=' => 1]], orderBy: ['id' => 'DESC'], collection: Collection\BaseCollection::class)]
+    #[HasMany(target: 'WithTable', where: ['id' => ['>=' => 1]], orderBy: ['id' => 'DESC'], collection: Collection\BaseCollection::class)] // phpcs:ignore
     protected $many;
 
     /**
@@ -48,8 +53,14 @@ class Simple implements LabelledInterface
     protected $parent;
 
     /**
-     * @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false, collection="Doctrine\Common\Collections\Collection")
+     * @MorphedHasMany(
+     *     target="Label",
+     *     outerKey="owner_id",
+     *     morphKey="owner_role",
+     *     indexCreate=false,
+     *     collection="Doctrine\Common\Collections\Collection"
+     * )
      */
-    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false, collection: \Doctrine\Common\Collections\Collection::class)]
+    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false, collection: \Doctrine\Common\Collections\Collection::class)] // phpcs:ignore
     protected $labels;
 }

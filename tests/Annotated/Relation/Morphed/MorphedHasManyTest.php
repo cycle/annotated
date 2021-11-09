@@ -43,7 +43,10 @@ abstract class MorphedHasManyTest extends BaseTest
         ]);
 
         $this->assertArrayHasKey('labels', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::MORPHED_HAS_MANY, $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE]);
+        $this->assertSame(
+            Relation::MORPHED_HAS_MANY,
+            $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE]
+        );
         $this->assertSame('label', $schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET]);
 
         $this->assertArrayHasKey('labels', $schema['withTable'][Schema::RELATIONS]);
@@ -77,7 +80,7 @@ abstract class MorphedHasManyTest extends BaseTest
 
         $this->assertSame(
             \Doctrine\Common\Collections\Collection::class,
-            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
+            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE] // phpcs:ignore
         );
     }
 }
