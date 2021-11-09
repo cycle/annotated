@@ -22,7 +22,24 @@ class Post
     #[Column(type: 'integer', primary: true)]
     protected int $id2;
 
-    /** @ManyToMany(target="Tag", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}, throughInnerKey={"id1", "id2"}, throughOuterKey={"id3", "id4"}, through="Context", indexCreate=false) */
-    #[ManyToMany(target: Tag::class, innerKey: ['id1', 'id2'], outerKey: ['id1', 'id2'], throughInnerKey: ['id1', 'id2'], throughOuterKey: ['id3', 'id4'], through: Context::class, indexCreate: false)]
+    /** @ManyToMany(
+     *     target="Tag",
+     *     innerKey={"id1", "id2"},
+     *     outerKey={"id1", "id2"},
+     *     throughInnerKey={"id1", "id2"},
+     *     throughOuterKey={"id3", "id4"},
+     *     through="Context",
+     *     indexCreate=false
+     * )
+     */
+    #[ManyToMany(
+        target: Tag::class,
+        innerKey: ['id1', 'id2'],
+        outerKey: ['id1', 'id2'],
+        throughInnerKey: ['id1', 'id2'],
+        throughOuterKey: ['id3', 'id4'],
+        through: Context::class,
+        indexCreate: false
+    )]
     protected array $tags = [];
 }
