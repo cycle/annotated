@@ -12,9 +12,9 @@ Example:
 ```php
 /**
  * @Entity(
-*     role="user",
-*     repository="Repository/UserRepository",
-*     typecast="Typecast\AutoTypecaster"
+ *     role="user",
+ *     repository="Repository/UserRepository",
+ *     typecast="Typecast\AutoTypecaster"
  * )
  */
 class User

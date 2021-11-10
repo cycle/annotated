@@ -8,6 +8,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\BaseTest;
+use Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -78,7 +79,7 @@ abstract class MorphedHasManyTest extends BaseTest
         );
 
         $this->assertSame(
-            \Doctrine\Common\Collections\Collection::class,
+            BaseCollection::class,
             $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE] // phpcs:ignore
         );
     }

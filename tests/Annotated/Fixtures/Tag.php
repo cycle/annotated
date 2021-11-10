@@ -11,12 +11,13 @@ use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
 /**
  * @Entity(
  *     typecast={
- *      "Typecast\Typecaster",
- *      "Cycle\Annotated\Tests\Fixtures\Typecast\UuidTypecaster"
+ *      Typecast\Typecaster::class,
+ *      "Cycle\Annotated\Tests\Fixtures\Typecast\UuidTypecaster",
+ *      "foo"
  *     }
  * )
  */
-#[Entity(typecast: [Typecast\Typecaster::class, Typecast\UuidTypecaster::class])]
+#[Entity(typecast: [Typecast\Typecaster::class, Typecast\UuidTypecaster::class, 'foo'])]
 class Tag
 {
     /** @Column(type="primary") */

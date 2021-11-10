@@ -47,6 +47,7 @@ abstract class TypecastTest extends BaseTest
             [
                 Fixtures\Typecast\Typecaster::class,
                 Fixtures\Typecast\UuidTypecaster::class,
+                'foo'
             ],
             $schema['tag'][Schema::TYPECAST_HANDLER]
         );

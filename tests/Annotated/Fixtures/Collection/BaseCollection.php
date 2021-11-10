@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Fixtures\Collection;
 
-class BaseCollection extends \Doctrine\Common\Collections\Collection
+class BaseCollection
 {
 
 }

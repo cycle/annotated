@@ -112,7 +112,7 @@ final class Entity
     public function getTypecast(): array|string|null
     {
         if (is_array($this->typecast) && count($this->typecast) === 1) {
-            return $this->typecast[0];
+            return reset($this->typecast);
         }
 
         return $this->typecast;
