@@ -46,7 +46,7 @@ final class Configurator
 
         $typecast = $ann->getTypecast();
         if (is_array($typecast)) {
-            $typecast = array_map(fn(string $value): string => $this->resolveName($value, $class), $typecast);
+            $typecast = array_map(fn (string $value): string => $this->resolveName($value, $class), $typecast);
         } else {
             $typecast = $this->resolveName($typecast, $class);
         }
@@ -130,7 +130,7 @@ final class Configurator
                 }
 
                 foreach ($meta->getOptions() as $option => $value) {
-                    $value = match($option) {
+                    $value = match ($option) {
                         'collection' => $this->resolveName($value, $class),
                         'though', 'through' => $this->resolveName($value, $class),
                         default => $value

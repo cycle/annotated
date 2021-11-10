@@ -6,5 +6,5 @@ namespace Cycle\Annotated\Tests\Driver\Postgres;
 
 class TypecastTest extends \Cycle\Annotated\Tests\TypecastTest
 {
-    const DRIVER = "postgres";
+    public const DRIVER = 'postgres';
 }
