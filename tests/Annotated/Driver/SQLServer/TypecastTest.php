@@ -6,5 +6,5 @@ namespace Cycle\Annotated\Tests\Driver\SQLServer;
 
 class TypecastTest extends \Cycle\Annotated\Tests\TypecastTest
 {
-    const DRIVER = "sqlserver";
+    public const DRIVER = 'sqlserver';
 }

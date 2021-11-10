@@ -6,5 +6,5 @@ namespace Cycle\Annotated\Tests\Driver\MySQL;
 
 class TypecastTest extends \Cycle\Annotated\Tests\TypecastTest
 {
-    const DRIVER = "mysql";
+    public const DRIVER = 'mysql';
 }

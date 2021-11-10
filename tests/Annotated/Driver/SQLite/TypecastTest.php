@@ -6,5 +6,5 @@ namespace Cycle\Annotated\Tests\Driver\SQLite;
 
 class TypecastTest extends \Cycle\Annotated\Tests\TypecastTest
 {
-    const DRIVER = "sqlite";
+    public const DRIVER = 'sqlite';
 }

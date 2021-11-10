@@ -1,16 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests;
 
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
-use Cycle\Schema\Generator\GenerateRelations;
-use Cycle\Schema\Generator\GenerateTypecast;
-use Cycle\Schema\Generator\RenderRelations;
-use Cycle\Schema\Generator\RenderTables;
-use Cycle\Schema\Generator\ResetTables;
-use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
@@ -30,10 +25,10 @@ abstract class TypecastTest extends BaseTest
             new MergeColumns($reader),
         ]);
 
-       $this->assertSame(
-           Fixtures\Typecast\Typecaster::class,
-           $schema['simple'][Schema::TYPECAST_HANDLER]
-       );
+        $this->assertSame(
+            Fixtures\Typecast\Typecaster::class,
+            $schema['simple'][Schema::TYPECAST_HANDLER]
+        );
     }
 
     /**
@@ -51,7 +46,7 @@ abstract class TypecastTest extends BaseTest
         $this->assertSame(
             [
                 Fixtures\Typecast\Typecaster::class,
-                Fixtures\Typecast\UuidTypecaster::class
+                Fixtures\Typecast\UuidTypecaster::class,
             ],
             $schema['tag'][Schema::TYPECAST_HANDLER]
         );
