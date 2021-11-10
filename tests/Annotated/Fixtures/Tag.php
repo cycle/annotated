@@ -9,9 +9,14 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
 
 /**
- * @Entity()
+ * @Entity(
+ *     typecast={
+ *      "Typecast\Typecaster",
+ *      "Cycle\Annotated\Tests\Fixtures\Typecast\UuidTypecaster"
+ *     }
+ * )
  */
-#[Entity]
+#[Entity(typecast: [Typecast\Typecaster::class, Typecast\UuidTypecaster::class])]
 class Tag
 {
     /** @Column(type="primary") */

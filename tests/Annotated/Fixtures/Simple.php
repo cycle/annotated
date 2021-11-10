@@ -12,9 +12,12 @@ use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany;
 use Cycle\Annotated\Annotation\Relation\RefersTo;
 
 /**
- * @Entity(role="simple")
+ * @Entity(
+ *     role="simple",
+ *     typecast="Cycle\Annotated\Tests\Fixtures\Typecast\Typecaster"
+ * )
  */
-#[Entity]
+#[Entity(typecast: Typecast\Typecaster::class)]
 class Simple implements LabelledInterface
 {
     /**
@@ -38,7 +41,7 @@ class Simple implements LabelledInterface
      *     target="WithTable",
      *     where={"id": {">=": 1}},
      *     orderBy={"id": "DESC"},
-     *     collection="Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection"
+     *     collection="Collection\BaseCollection"
      * )
      *
      * @var Collection\BaseCollection|WithTable[]
@@ -58,9 +61,9 @@ class Simple implements LabelledInterface
      *     outerKey="owner_id",
      *     morphKey="owner_role",
      *     indexCreate=false,
-     *     collection="Doctrine\Common\Collections\Collection"
+     *     collection="Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection"
      * )
      */
-    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false, collection: \Doctrine\Common\Collections\Collection::class)] // phpcs:ignore
+    #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false, collection: Collection\BaseCollection::class)] // phpcs:ignore
     protected $labels;
 }

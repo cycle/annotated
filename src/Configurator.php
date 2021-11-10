@@ -44,6 +44,15 @@ final class Configurator
         $e->setSource($this->resolveName($ann->getSource(), $class));
         $e->setScope($this->resolveName($ann->getScope(), $class));
 
+        $typecast = $ann->getTypecast();
+        if (is_array($typecast)) {
+            $typecast = array_map(fn(string $value): string => $this->resolveName($value, $class), $typecast);
+        } else {
+            $typecast = $this->resolveName($typecast, $class);
+        }
+
+        $e->setTypecast($typecast);
+
         if ($ann->isReadonlySchema()) {
             $e->getOptions()->set(SyncTables::READONLY_SCHEMA, true);
         }
@@ -121,9 +130,11 @@ final class Configurator
                 }
 
                 foreach ($meta->getOptions() as $option => $value) {
-                    if ($option === 'though' || $option === 'through') {
-                        $value = $this->resolveName($value, $class);
-                    }
+                    $value = match($option) {
+                        'collection' => $this->resolveName($value, $class),
+                        'though', 'through' => $this->resolveName($value, $class),
+                        default => $value
+                    };
 
                     $relation->getOptions()->set($option, $value);
                 }
