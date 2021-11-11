@@ -24,6 +24,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
  *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
+ *      @Attribute("collection", type="string"),
  * })
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
@@ -56,4 +57,6 @@ final class MorphedHasMany extends Relation
 
     /** @var bool */
     protected $indexCreate;
+
+    protected ?string $collection = null;
 }

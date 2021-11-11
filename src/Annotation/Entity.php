@@ -20,6 +20,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *      @Attribute("source", type="string"),
  *      @Attribute("constrain", type="string"),
  *      @Attribute("scope", type="string"),
+ *      @Attribute("typecast", type="array<string>"),
  *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
  * })
  */
@@ -39,6 +40,8 @@ final class Entity
     private ?string $database = null;
 
     private ?string $source = null;
+
+    private array|string|null $typecast = null;
 
     /** @deprecated Use {@see $scope} instead */
     private ?string $constrain = null;
@@ -104,5 +107,14 @@ final class Entity
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    public function getTypecast(): array|string|null
+    {
+        if (is_array($this->typecast) && count($this->typecast) === 1) {
+            return reset($this->typecast);
+        }
+
+        return $this->typecast;
     }
 }

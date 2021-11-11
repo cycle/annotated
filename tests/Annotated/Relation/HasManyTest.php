@@ -55,5 +55,9 @@ abstract class HasManyTest extends BaseTest
             ['id' => 'DESC'],
             $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY]
         );
+        $this->assertSame(
+            'bar',
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
+        );
     }
 }

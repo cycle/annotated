@@ -33,6 +33,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  *      @Attribute("fkOnDelete", type="string"),
  *      @Attribute("indexCreate", type="bool"),
  *      @Attribute("load", type="string"),
+ *      @Attribute("collection", type="string"),
  * })
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
@@ -55,6 +56,8 @@ final class ManyToMany extends Relation
     protected array $where = [];
 
     protected array $orderBy = [];
+
+    protected ?string $collection = null;
 
     /**
      * @deprecated

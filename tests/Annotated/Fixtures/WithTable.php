@@ -32,8 +32,17 @@ class WithTable implements LabelledInterface
     #[Column(type: 'primary')]
     protected $id;
 
-    /** @ManyToMany(target="Tag", through="Tag/Context", throughInnerKey={"withTable_id"}, throughOuterKey="tag_id", where={"id": {">=": "1"}}, orderBy={"id": "DESC"}) */
-    #[ManyToMany(target: 'Tag', through: 'Tag/Context', throughInnerKey: 'withTable_id', throughOuterKey: ['tag_id'], where: ['id' => ['>=' => '1']], orderBy: ['id' => 'DESC'])] // phpcs:ignore
+    /** @ManyToMany(
+     *     target="Tag",
+     *     through="Tag/Context",
+     *     throughInnerKey={"withTable_id"},
+     *     throughOuterKey="tag_id",
+     *     where={"id": {">=": "1"}},
+     *     orderBy={"id": "DESC"},
+     *     collection="Cycle\Annotated\Tests\Fixtures\Collection\BaseCollection"
+     * )
+     */
+    #[ManyToMany(target: 'Tag', through: 'Tag/Context', throughInnerKey: 'withTable_id', throughOuterKey: ['tag_id'], where: ['id' => ['>=' => '1']], orderBy: ['id' => 'DESC'], collection: Collection\BaseCollection::class)] // phpcs:ignore
     protected $tags;
 
     /** @MorphedHasMany(target="Label", outerKey="owner_id", morphKey="owner_role", indexCreate=false) */

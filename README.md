@@ -6,9 +6,16 @@
 
 Example:
 --------
+
+#### Annotation definition
+
 ```php
 /**
- * @Entity(repository = "Repository/UserRepository")
+ * @Entity(
+ *     role="user",
+ *     repository="Repository/UserRepository",
+ *     typecast="Typecast\AutoTypecaster"
+ * )
  */
 class User
 {
@@ -21,7 +28,29 @@ class User
     /** @HasMany(target=Post::class, load="lazy") */
     protected $posts;
    
-    /** @ManyToMany(target=Tag::class, through=TagMap::class, load="lazy") */
+    /** @ManyToMany(target=Tag::class, through=TagMap::class, load="lazy", collection="Collection\BaseCollection") */
+    protected $tags;
+    
+    ...
+}
+```
+
+#### Attribute definition
+
+```php
+#[Entity(role: "user", repository: Repository/UserRepository::class, typecast: Typecast\Typecaster::class)]
+class User
+{
+    #[Column(type: 'primary')]
+    protected $id;
+    
+    #[HasOne(target: Profile::class, load: "eager")]
+    protected $profile;
+    
+    #[HasMany(target: Post::class, load: "lazy")]
+    protected $posts;
+   
+    #[ManyToMany(target: Tag::class, through: TagMap::class, load: "lazy", collection: Collection\BaseCollection::class)]
     protected $tags;
     
     ...
