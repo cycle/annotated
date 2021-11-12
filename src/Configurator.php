@@ -13,6 +13,7 @@ use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
+use Cycle\Schema\SchemaModifierInterface;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
@@ -97,15 +98,13 @@ final class Configurator
     {
         foreach ($class->getProperties() as $property) {
             try {
-                $metadata = $this->reader->getPropertyMetadata($property);
+                $metadata = $this->reader->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
             } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
             foreach ($metadata as $meta) {
-                if (!$meta instanceof RelationAnnotation\RelationInterface) {
-                    continue;
-                }
+                assert($meta instanceof RelationAnnotation\RelationInterface);
 
                 if ($meta->getTarget() === null) {
                     throw new AnnotationException(
@@ -142,6 +141,22 @@ final class Configurator
                 // need relation definition
                 $entity->getRelations()->set($property->getName(), $relation);
             }
+        }
+    }
+
+    public function initModifiers(EntitySchema $entity, \ReflectionClass $class): void
+    {
+        try {
+            $metadata = $this->reader->getClassMetadata($class, SchemaModifierInterface::class);
+        } catch (Exception $e) {
+            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        foreach ($metadata as $meta) {
+            assert($meta instanceof SchemaModifierInterface);
+
+            // need relation definition
+            $entity->addSchemaModifier($meta);
         }
     }
 

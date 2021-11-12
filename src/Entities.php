@@ -67,6 +67,9 @@ final class Entities implements GeneratorInterface
             // relations
             $this->generator->initRelations($e, $class);
 
+            // schema modifiers
+            $this->generator->initModifiers($e, $class);
+
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $ann->getColumns(), $class);
 
