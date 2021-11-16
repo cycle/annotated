@@ -63,7 +63,7 @@ class TableInheritance implements GeneratorInterface
         foreach ($found as $entity) {
             if ($entity->getInheritance() instanceof SingleTableInheritanceSchema) {
                 $allowedEntities = \array_map(
-                    fn(string $role) => $registry->getEntity($role)->getClass(),
+                    fn (string $role) => $registry->getEntity($role)->getClass(),
                     $entity->getInheritance()->getChildren()
                 );
                 $this->removeStiExtraFields($entity, $allowedEntities);
@@ -117,10 +117,12 @@ class TableInheritance implements GeneratorInterface
             }
 
             return $parent;
-        } elseif ($inheritance instanceof Inheritance\JoinedTable) {
+        }
+        if ($inheritance instanceof Inheritance\JoinedTable) {
             $entity->setInheritance(
                 new JoinedTableInheritanceSchema(
-                    $parent, $inheritance->getOuterKey()
+                    $parent,
+                    $inheritance->getOuterKey()
                 )
             );
 

@@ -25,6 +25,7 @@ class EntityUtils
 
     /**
      * @param class-string $class
+     *
      * @return class-string|null
      */
     public function findParent(string $class, bool $root = true): ?string
