@@ -8,7 +8,7 @@
   "require": {
     "php": ">=8.0",
     "spiral/tokenizer": "^2.7",
-    "cycle/schema-builder": "dev-feature/table-inheritance",
+    "cycle/schema-builder": "2.0.x-dev",
     "doctrine/annotations": "^1.7",
     "spiral/attributes": "^2.7",
     "vimeo/psalm": "^4.10"

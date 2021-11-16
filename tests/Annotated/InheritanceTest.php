@@ -72,8 +72,9 @@ class InheritanceTest extends BaseTest
         ], $schema['person'][SchemaInterface::CHILDREN]);
         $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
         $this->assertSame([
-            'id' => 'id',
+            'foo_id' => 'id',
             'name' => 'name',
+            'type' => 'type',
             'salary' => 'salary',
             'bar' => 'bar',
             //'bonus' => 'bonus', // JTI
@@ -97,7 +98,7 @@ class InheritanceTest extends BaseTest
         $this->assertSame('employee', $schema['executive'][SchemaInterface::PARENT]);
         $this->assertSame('foo_id', $schema['executive'][SchemaInterface::PARENT_KEY]);
         $this->assertSame(
-            ['bonus' => 'bonus', 'id' => 'id', 'hidden' => 'hidden'],
+            ['bonus' => 'bonus', 'foo_id' => 'id', 'hidden' => 'hidden'],
             $schema['executive'][SchemaInterface::COLUMNS]
         );
 
@@ -108,8 +109,9 @@ class InheritanceTest extends BaseTest
         $this->assertEmpty($schema['beaver'][SchemaInterface::CHILDREN] ?? null);
         $this->assertSame([
             'teethAmount' => 'teeth_amount',
-            'id' => 'id',
+            'foo_id' => 'id',
             'name' => 'name',
+            'type' => 'type',
             'hidden' => 'hidden',
         ], $schema['beaver'][SchemaInterface::COLUMNS]);
     }

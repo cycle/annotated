@@ -108,7 +108,7 @@ class TableInheritance implements GeneratorInterface
                 $entity->getRole()
             );
 
-            $entity->setStiParent($parent->getClass());
+            $entity->markAsChildOfSingleTableInheritance($parent->getClass());
 
             // Root STI may have a discriminator annotation
             /** @var Inheritance\DiscriminatorColumn $annotation */

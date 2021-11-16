@@ -16,11 +16,15 @@ use Cycle\Annotated\Annotation\Inheritance\DiscriminatorColumn;
 #[DiscriminatorColumn(name: 'type')]
 class Person
 {
-    /** @Column(type="primary") */
-    #[Column(type: 'primary', primary: true)]
-    protected int $id;
+    /** @Column(type="primary", name="id") */
+    #[Column(type: 'primary', name: 'id')]
+    protected int $foo_id;
 
     /** @Column(type="string") */
     #[Column(type: 'string')]
     protected string $name;
+
+    /** @Column(type="string") */
+    #[Column(type: 'string')]
+    protected string $type;
 }
