@@ -6,6 +6,7 @@ namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Exception\RegistryException;
 use Cycle\Schema\Exception\RelationException;
@@ -28,10 +29,9 @@ final class Entities implements GeneratorInterface
     public const TABLE_NAMING_NONE = 3;
 
     private ReaderInterface $reader;
-
     private Configurator $generator;
-
     private Inflector $inflector;
+    private EntityUtils $utils;
 
     public function __construct(
         private ClassesInterface $locator,
@@ -41,6 +41,7 @@ final class Entities implements GeneratorInterface
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
         $this->inflector = (new InflectorFactory())->build();
+        $this->utils = new EntityUtils($this->reader);
     }
 
     public function run(Registry $registry): Registry
@@ -73,7 +74,7 @@ final class Entities implements GeneratorInterface
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $ann->getColumns(), $class);
 
-            if ($this->hasParent($registry, $e->getClass())) {
+            if ($this->utils->hasParent($e->getClass())) {
                 $children[] = $e;
                 continue;
             }
@@ -89,7 +90,7 @@ final class Entities implements GeneratorInterface
         }
 
         foreach ($children as $e) {
-            $registry->registerChild($registry->getEntity($this->findParent($e->getClass())), $e);
+            $registry->registerChild($registry->getEntity($this->utils->findParent($e->getClass())), $e);
         }
 
         return $this->normalizeNames($registry);
@@ -188,40 +189,5 @@ final class Entities implements GeneratorInterface
             self::TABLE_NAMING_SINGULAR => $this->inflector->singularize($this->inflector->tableize($role)),
             default => $table,
         };
-    }
-
-    private function hasParent(Registry $registry, string $class): bool
-    {
-        return $this->findParent($class) !== null;
-    }
-
-    /**
-     * @param class-string   $class
-     *
-     * @return class-string|null
-     */
-    private function findParent(string $class): ?string
-    {
-        /** @var class-string[] $parents */
-        $parents = class_parents($class);
-
-        foreach (array_reverse($parents) as $parent) {
-            try {
-                $class = new \ReflectionClass($parent);
-            } catch (\ReflectionException) {
-                continue;
-            }
-
-            if ($class->getDocComment() === false) {
-                continue;
-            }
-
-            $ann = $this->reader->firstClassMetadata($class, Entity::class);
-            if ($ann !== null) {
-                return $parent;
-            }
-        }
-
-        return null;
     }
 }

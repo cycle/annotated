@@ -87,10 +87,9 @@ final class Configurator
                 continue;
             }
 
-            $entity->getFields()->set(
-                $property->getName(),
-                $this->initField($property->getName(), $column, $class, $columnPrefix)
-            );
+            $field = $this->initField($property->getName(), $column, $class, $columnPrefix);
+            $field->setEntityClass($property->getDeclaringClass()->getName());
+            $entity->getFields()->set($property->getName(), $field);
         }
     }
 
@@ -192,10 +191,9 @@ final class Configurator
                 );
             }
 
-            $entity->getFields()->set(
-                $propertyName,
-                $this->initField($columnName, $column, $class, '')
-            );
+            $field = $this->initField($columnName, $column, $class, '');
+            $field->setEntityClass($entity->getClass());
+            $entity->getFields()->set($propertyName, $field);
         }
     }
 
