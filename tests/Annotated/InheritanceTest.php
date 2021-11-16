@@ -6,7 +6,6 @@ namespace Cycle\Annotated\Tests;
 
 use Cycle\Annotated\Embeddings;
 use Cycle\Annotated\Entities;
-use Cycle\Annotated\Exception\TableInheritanceException;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\TableInheritance;
