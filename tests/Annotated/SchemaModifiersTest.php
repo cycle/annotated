@@ -11,7 +11,6 @@ use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Child;
 use Cycle\Annotated\Tests\Fixtures17\MapperSegmentSchemaModifier;
 use Cycle\Annotated\Tests\Fixtures17\ParentSegmentSchemaModifier;
-use Cycle\Annotated\Tests\Fixtures17\SchemaModifier;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;

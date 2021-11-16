@@ -6,5 +6,5 @@ namespace Cycle\Annotated\Tests\Driver\MySQL;
 
 class SchemaModifiersTest extends \Cycle\Annotated\Tests\SchemaModifiersTest
 {
-    const DRIVER = 'mysql';
+    public const DRIVER = 'mysql';
 }
