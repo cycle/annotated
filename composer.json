@@ -11,7 +11,8 @@
     "cycle/schema-builder": "2.0.x-dev",
     "doctrine/annotations": "^1.7",
     "spiral/attributes": "^2.7",
-    "vimeo/psalm": "^4.10"
+    "vimeo/psalm": "^4.10",
+    "doctrine/inflector": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
