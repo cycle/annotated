@@ -24,7 +24,6 @@ class JoinedTable extends Inheritance
         parent::__construct('joined');
     }
 
-
     public function getOuterKey(): ?string
     {
         return $this->outerKey;
