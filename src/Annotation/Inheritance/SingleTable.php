@@ -21,7 +21,6 @@ class SingleTable extends Inheritance
         parent::__construct('single');
     }
 
-
     public function getValue(): ?string
     {
         return $this->value;

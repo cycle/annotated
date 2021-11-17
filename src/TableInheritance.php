@@ -132,7 +132,9 @@ class TableInheritance implements GeneratorInterface
 
     /**
      * @template T
+     *
      * @param class-string<T> $name
+     *
      * @return T|null
      */
     private function parseMetadata(EntitySchema $entity, string $name): ?object
