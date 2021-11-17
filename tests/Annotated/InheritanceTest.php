@@ -47,7 +47,7 @@ class InheritanceTest extends BaseTest
         $schema = (new Compiler())->compile($r, [
             new Embeddings($locator, $reader),
             new Entities($locator, $reader),
-            new TableInheritance($locator, $reader),
+            new TableInheritance($reader),
             new ResetTables(),
             new MergeColumns($reader),
             new GenerateRelations(),
