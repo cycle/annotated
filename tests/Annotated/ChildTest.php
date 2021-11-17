@@ -27,27 +27,27 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class ChildTest extends BaseTest
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
-    public function testSimpleSchema(ReaderInterface $reader): void
-    {
-        $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
-
-        $this->assertTrue($r->hasEntity(Simple::class));
-        $this->assertTrue($r->hasEntity('simple'));
-
-        $this->assertTrue($r->getEntity('simple')->getFields()->has('id'));
-
-        $this->assertTrue($r->getEntity('simple')->getFields()->has('name'));
-        $this->assertTrue($r->getEntity('simple')->getFields()->has('email'));
-
-        $schema = (new Compiler())->compile($r);
-
-        $this->assertSame([Schema::ROLE => 'simple'], $schema[Child::class]);
-        $this->assertSame([Schema::ROLE => 'simple'], $schema[Third::class]);
-    }
+    //  /**
+    //   * @dataProvider allReadersProvider
+    //   */
+    // public function testSimpleSchema(ReaderInterface $reader): void
+    // {
+    //     $r = new Registry($this->dbal);
+    //     (new Entities($this->locator, $reader))->run($r);
+    //
+    //     $this->assertTrue($r->hasEntity(Simple::class));
+    //     $this->assertTrue($r->hasEntity('simple'));
+    //
+    //     $this->assertTrue($r->getEntity('simple')->getFields()->has('id'));
+    //
+    //     $this->assertTrue($r->getEntity('simple')->getFields()->has('name'));
+    //     $this->assertTrue($r->getEntity('simple')->getFields()->has('email'));
+    //
+    //     $schema = (new Compiler())->compile($r);
+    //
+    //     $this->assertSame([Schema::ROLE => 'simple'], $schema[Child::class]);
+    //     $this->assertSame([Schema::ROLE => 'simple'], $schema[Third::class]);
+    // }
 
     /**
      * @dataProvider allReadersProvider

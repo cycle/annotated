@@ -4,8 +4,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cycle/annotated/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cycle/annotated/?branch=master)
 [![Codecov](https://codecov.io/gh/cycle/annotated/graph/badge.svg)](https://codecov.io/gh/cycle/annotated)
 
-Example:
---------
+## Simple example:
 
 #### Annotation definition
 
@@ -54,6 +53,45 @@ class User
     protected $tags;
     
     ...
+}
+```
+
+## STI/JTI example:
+
+```php
+#[Entity]
+#[DiscriminatorColumn(name: 'type')]
+class Person
+{
+    #[Column(type: 'primary', primary: true)]
+    protected int $id;
+
+    #[Column(type: 'string')]
+    protected string $name;
+}
+
+#[Entity]
+#[InheritanceSingleTable]
+class Employee extends Person
+{
+    #[Column(type: 'int')]
+    protected int $salary;
+}
+
+#[Entity]
+#[InheritanceSingleTable(value: 'foo_customer')]
+class Customer extends Person
+{
+    #[Column(type: 'json')]
+    protected array $preferences;
+}
+
+#[Entity]
+#[InheritanceJoinedTable(outerKey: 'foo_id')]
+class Executive extends Employee
+{
+    #[Column(type: 'int')]
+    protected int $bonus;
 }
 ```
 
