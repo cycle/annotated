@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Utils;
 
 use Cycle\Annotated\Annotation\Entity;
-use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Spiral\Attributes\ReaderInterface;
 
+/**
+ * @internal
+ */
 class EntityUtils
 {
-    public function __construct(
-        private DoctrineReader|ReaderInterface $reader
-    ) {
+    public function __construct(private ReaderInterface $reader)
+    {
     }
 
     /**

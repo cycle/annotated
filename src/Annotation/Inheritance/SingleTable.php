@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Inheritance;
 
 use Cycle\Annotated\Annotation\Inheritance;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target("CLASS")
- * @Attributes({
- *      @Attribute("value", type="string")
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class SingleTable extends Inheritance
 {
-    protected string $type = 'single';
+    public function __construct()
+    {
+        parent::__construct('single');
+    }
 
     protected ?string $value = null;
 

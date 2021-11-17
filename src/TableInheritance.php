@@ -14,7 +14,6 @@ use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Tokenizer\ClassesInterface;
 
 class TableInheritance implements GeneratorInterface
 {
@@ -22,7 +21,6 @@ class TableInheritance implements GeneratorInterface
     private EntityUtils $utils;
 
     public function __construct(
-        private ClassesInterface $locator,
         DoctrineReader|ReaderInterface $reader = null
     ) {
         $this->reader = ReaderFactory::create($reader);
@@ -40,7 +38,7 @@ class TableInheritance implements GeneratorInterface
 
             foreach ($children as $child) {
                 /** @var Inheritance $annotation */
-                if ($annotation = $this->parseAnnotation($child, Inheritance::class)) {
+                if ($annotation = $this->parseMetadata($child, Inheritance::class)) {
                     // Child entities always have parent entity
                     $parent = $this->findParent(
                         $registry,
@@ -63,7 +61,7 @@ class TableInheritance implements GeneratorInterface
         foreach ($found as $entity) {
             if ($entity->getInheritance() instanceof SingleTableInheritanceSchema) {
                 $allowedEntities = \array_map(
-                    fn (string $role) => $registry->getEntity($role)->getClass(),
+                    static fn (string $role) => $registry->getEntity($role)->getClass(),
                     $entity->getInheritance()->getChildren()
                 );
                 $this->removeStiExtraFields($entity, $allowedEntities);
@@ -78,13 +76,13 @@ class TableInheritance implements GeneratorInterface
     private function findParent(Registry $registry, string $role): ?EntitySchema
     {
         foreach ($registry as $entity) {
-            if ($entity->getRole() == $role || $entity->getClass() === $role) {
+            if ($entity->getRole() === $role || $entity->getClass() === $role) {
                 return $entity;
             }
 
             $children = $registry->getChildren($entity);
             foreach ($children as $child) {
-                if ($child->getRole() == $role || $child->getClass() === $role) {
+                if ($child->getRole() === $role || $child->getClass() === $role) {
                     return $child;
                 }
             }
@@ -112,7 +110,7 @@ class TableInheritance implements GeneratorInterface
 
             // Root STI may have a discriminator annotation
             /** @var Inheritance\DiscriminatorColumn $annotation */
-            if ($annotation = $this->parseAnnotation($parent, Inheritance\DiscriminatorColumn::class)) {
+            if ($annotation = $this->parseMetadata($parent, Inheritance\DiscriminatorColumn::class)) {
                 $parent->getInheritance()->setDiscriminator($annotation->getName());
             }
 
@@ -129,13 +127,19 @@ class TableInheritance implements GeneratorInterface
             return $entity;
         }
         // Custom table inheritance types developers can handle in their own generators
+        return null;
     }
 
-    private function parseAnnotation(EntitySchema $entity, string $name): ?object
+    /**
+     * @param class-string $name
+     */
+    private function parseMetadata(EntitySchema $entity, string $name): ?Inheritance
     {
         try {
-            /** @var Inheritance $ann */
-            return $this->reader->firstClassMetadata(new \ReflectionClass($entity->getClass()), $name);
+            $class = $entity->getClass();
+            assert($class !== null);
+            /** @var Inheritance|null */
+            return $this->reader->firstClassMetadata(new \ReflectionClass($class), $name);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
