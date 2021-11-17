@@ -66,12 +66,12 @@ class InheritanceTest extends BaseTest
 
         // Person
         $this->assertCount(2, $schema['person'][SchemaInterface::CHILDREN]);
-        $this->assertSame([
+        $this->assertEquals([
             'employee' => 'employee',
             'foo_customer' => 'customer',
         ], $schema['person'][SchemaInterface::CHILDREN]);
         $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
-        $this->assertSame([
+        $this->assertEquals([
             'foo_id' => 'id',
             'name' => 'name',
             'type' => 'type',

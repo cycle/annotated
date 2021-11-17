@@ -131,14 +131,15 @@ class TableInheritance implements GeneratorInterface
     }
 
     /**
-     * @param class-string $name
+     * @template T
+     * @param class-string<T> $name
+     * @return T|null
      */
-    private function parseMetadata(EntitySchema $entity, string $name): ?Inheritance
+    private function parseMetadata(EntitySchema $entity, string $name): ?object
     {
         try {
             $class = $entity->getClass();
             assert($class !== null);
-            /** @var Inheritance|null */
             return $this->reader->firstClassMetadata(new \ReflectionClass($class), $name);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);

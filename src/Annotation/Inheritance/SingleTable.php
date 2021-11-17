@@ -15,12 +15,12 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class SingleTable extends Inheritance
 {
-    public function __construct()
-    {
+    public function __construct(
+        protected ?string $value = null
+    ) {
         parent::__construct('single');
     }
 
-    protected ?string $value = null;
 
     public function getValue(): ?string
     {
