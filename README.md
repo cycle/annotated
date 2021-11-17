@@ -98,7 +98,7 @@ class Employee extends Person
 }
 
 #[Entity]
-#[InheritanceSingleTable(value: 'foo_customer')] // Discriminator value
+#[InheritanceSingleTable(value: 'foo_customer')]
 class Customer extends Person
 {
     #[Column(type: 'json')]
@@ -235,11 +235,9 @@ use App\SchemaModifiers\MapperSegmentSchemaModifier;
 #[MapperSegmentSchemaModifier(class: SuperMapper::class)]
 class Post
 {
-    /** @Column(type="integer", primary=true) */
     #[Column(type: 'integer', primary: true)]
     protected int $id;
 
-    /** @Column(type="string") */
     #[Column(type: 'string')]
     protected string $name;
 }
