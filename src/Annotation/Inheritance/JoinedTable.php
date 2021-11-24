@@ -9,17 +9,14 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * @Annotation
- * @NamedArgumentConstructor()
+ * @NamedArgumentConstructor
  * @Target("CLASS")
- * @Attributes({
- *      @Attribute("outerKey", type="string")
- * })
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class JoinedTable extends Inheritance
 {
     public function __construct(
-        protected ?string $outerKey = null
+        private ?string $outerKey = null
     ) {
         parent::__construct('joined');
     }

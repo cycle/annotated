@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Required;
+
 abstract class Inheritance
 {
     public function __construct(
-        protected string $type
+        /** @Required() */
+        private string $type
     ) {
     }
 

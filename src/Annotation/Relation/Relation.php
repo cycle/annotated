@@ -5,35 +5,26 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
-use Doctrine\Common\Annotations\Annotation\Required;
+use JetBrains\PhpStorm\ExpectedValues;
 
 abstract class Relation implements RelationInterface
 {
     // relation type
     protected const TYPE = '';
 
-    /**
-     * @Required()
-     */
-    protected ?string $target = null;
-
-    /**
-     * @Enum({"eager", "lazy", "promise"}
-     */
-    protected ?string $load = null;
-
-    /**
-     * @param array<string, mixed> $values
-     */
-    public function __construct(array $values)
-    {
-        foreach ($values as $key => $value) {
-            if ($key === 'fetch') {
-                $key = 'load';
-            }
-
-            $this->$key = $value;
-        }
+    public function __construct(
+        /**
+         * @var non-empty-string|null
+         */
+        protected ?string $target,
+        /**
+         * @Enum({"eager", "lazy", "promise"})
+         *
+         * @var non-empty-string|null
+         */
+        #[ExpectedValues(values: ['lazy', 'eager'])]
+        protected string $load = 'lazy',
+    ) {
     }
 
     public function getType(): string
@@ -46,9 +37,11 @@ abstract class Relation implements RelationInterface
         return $this->target;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
+    public function getLoad(): ?string
+    {
+        return $this->load;
+    }
+
     public function getOptions(): array
     {
         $options = get_object_vars($this);

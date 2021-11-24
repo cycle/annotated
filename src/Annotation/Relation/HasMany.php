@@ -5,62 +5,43 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\Annotated\Annotation\Relation\Traits\InverseTrait;
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("PROPERTY")
- * @Attributes({
- *      @Attribute("target", type="string", required=true),
- *      @Attribute("cascade", type="bool"),
- *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="array<string>"),
- *      @Attribute("outerKey", type="array<string>"),
- *      @Attribute("where", type="array"),
- *      @Attribute("orderBy", type="array"),
- *      @Attribute("fkCreate", type="bool"),
- *      @Attribute("fkAction", type="string"),
- *      @Attribute("fkOnDelete", type="string"),
- *      @Attribute("indexCreate", type="bool"),
- *      @Attribute("load", type="string"),
- *      @Attribute("collection", type="string"),
- *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class HasMany extends Relation
 {
     use InverseTrait;
 
     protected const TYPE = 'hasMany';
 
-    /** @var bool */
-    protected $cascade;
+    public function __construct(
+        string $target,
+        protected array|string|null $innerKey = null,
+        protected array|string|null $outerKey = null,
+        protected bool $cascade = true,
+        protected bool $nullable = false,
+        protected array $where = [],
+        protected array $orderBy = [],
+        protected bool $fkCreate = true,
+        /** @Enum({"NO ACTION", "CASCADE", "SET NULL"}) */
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        protected ?string $fkAction = 'CASCADE',
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        protected ?string $fkOnDelete = null,
+        protected bool $indexCreate = true,
+        protected ?string $collection = null,
+        #[ExpectedValues(values: ['lazy', 'eager'])]
+        string $load = 'lazy',
+        ?Inverse $inverse = null,
+    ) {
+        $this->inverse = $inverse;
 
-    /** @var bool */
-    protected $nullable;
-
-    protected array|string $innerKey;
-
-    protected array|string $outerKey;
-
-    protected ?string $collection = null;
-
-    /** @var array */
-    protected $where;
-
-    /** @var array */
-    protected $orderBy;
-
-    /** @var bool */
-    protected $fkCreate;
-
-    /**
-     * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
-     */
-    protected ?string $fkAction = null;
-
-    /** @var bool */
-    protected $indexCreate;
+        parent::__construct($target, $load);
+    }
 }

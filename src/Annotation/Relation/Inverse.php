@@ -5,80 +5,43 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\ORM\Relation;
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Enum;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"PROPERTY", "ANNOTATION"})
- * @Attributes({
- *      @Attribute("as", type="string", required=true),
- *      @Attribute("type", type="string", required=true),
- *      @Attribute("load", type="string"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Inverse
 {
-    /** @var string */
-    private $as;
-
-    /** @var string */
-    private $type;
-
-    /**
-     * @Enum({"eager", "lazy", "promise"}
-     *
-     * @var string
-     */
-    private $load;
-
-    /**
-     * @param array $values
-     */
-    public function __construct(array $values)
-    {
-        foreach ($values as $key => $value) {
-            if ($key == 'fetch') {
-                $key = 'load';
-            }
-
-            $this->$key = $value;
-        }
+    public function __construct(
+        private string $as,
+        private string $type,
+        /** @Enum({"eager", "lazy", "promise"} */
+        #[ExpectedValues(values: ['eager', 'lazy', 'promise'])]
+        private string|int|null $load = null,
+    ) {
     }
 
-    /**
-     * @return string|null
-     */
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->as;
     }
 
-    /**
-     * @return int|null
-     */
     public function getLoadMethod(): ?int
     {
-        switch ($this->load) {
-            case 'eager':
-            case Relation::LOAD_EAGER:
-                return Relation::LOAD_EAGER;
-            case 'promise':
-            case 'lazy':
-            case Relation::LOAD_PROMISE:
-                return Relation::LOAD_PROMISE;
-            default:
-                return null;
-        }
+        return match ($this->load) {
+            'eager', Relation::LOAD_EAGER => Relation::LOAD_EAGER,
+            'promise', 'lazy', Relation::LOAD_PROMISE => Relation::LOAD_PROMISE,
+            default => null
+        };
     }
 }

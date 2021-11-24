@@ -4,40 +4,26 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("CLASS")
- * @Attributes({
- *      @Attribute("role", type="string"),
- *      @Attribute("mapper", type="string"),
- *      @Attribute("columnPrefix", type="string"),
- *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Embeddable
 {
-    private ?string $role = null;
-
-    private ?string $mapper = null;
-
-    private string $columnPrefix = '';
-
-    /** @var Column[] */
-    private $columns = [];
-
-    /**
-     * @param array<string, mixed> $values
-     */
-    public function __construct(array $values)
-    {
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct(
+        /**  @var non-empty-string|null */
+        private ?string $role = null,
+        /** @var class-string|null */
+        private ?string $mapper = null,
+        private string $columnPrefix = '',
+        /** @var Column[] */
+        private array $columns = [],
+    ) {
     }
 
     public function getRole(): ?string
@@ -55,9 +41,6 @@ final class Embeddable
         return $this->columnPrefix;
     }
 
-    /**
-     * @return Column[]
-     */
     public function getColumns(): array
     {
         return $this->columns;

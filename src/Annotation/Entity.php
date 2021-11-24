@@ -4,61 +4,38 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("CLASS")
- * @Attributes({
- *      @Attribute("role", type="string"),
- *      @Attribute("mapper", type="string"),
- *      @Attribute("repository", type="string"),
- *      @Attribute("table", type="string"),
- *      @Attribute("database", type="string"),
- *      @Attribute("source", type="string"),
- *      @Attribute("constrain", type="string"),
- *      @Attribute("scope", type="string"),
- *      @Attribute("typecast", type="array<string>"),
- *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Entity
 {
-    private ?string $role = null;
-
-    private ?string $mapper = null;
-
-    private ?string $repository = null;
-
-    private ?string $table = null;
-
-    private bool $readonlySchema = false;
-
-    private ?string $database = null;
-
-    private ?string $source = null;
-
-    private array|string|null $typecast = null;
-
-    /** @deprecated Use {@see $scope} instead */
-    private ?string $constrain = null;
-
-    private ?string $scope = null;
-
-    /** @var Column[] */
-    private array $columns = [];
-
-    /**
-     * @param array<string, mixed> $values
-     */
-    public function __construct(array $values = [])
-    {
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct(
+        /**  @var non-empty-string|null */
+        private ?string $role = null,
+        /** @var class-string|null */
+        private ?string $mapper = null,
+        /** @var class-string|null */
+        private ?string $repository = null,
+        /**  @var non-empty-string|null */
+        private ?string $table = null,
+        private bool $readonlySchema = false,
+        /**  @var non-empty-string|null */
+        private ?string $database = null,
+        private ?string $source = null,
+        /**  @var non-empty-string|non-empty-string[]|null */
+        private array|string|null $typecast = null,
+        /** @deprecated Use {@see $scope} instead */
+        private ?string $constrain = null,
+        private ?string $scope = null,
+        /** @var Column[] */
+        private array $columns = [],
+    ) {
     }
 
     public function getRole(): ?string
@@ -101,9 +78,6 @@ final class Entity
         return $this->scope ?? $this->constrain;
     }
 
-    /**
-     * @return Column[]
-     */
     public function getColumns(): array
     {
         return $this->columns;
