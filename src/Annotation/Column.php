@@ -21,6 +21,7 @@ final class Column
     public function __construct(
         /**
          * @var non-empty-string|null
+         *
          * @see \Cycle\Database\Schema\AbstractColumn::$mapping
          */
         #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean', 'integer', 'tinyInteger', 'bigInteger',
