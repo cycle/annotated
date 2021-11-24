@@ -26,7 +26,7 @@ final class BelongsToMorphed extends Relation
     public function __construct(
         string $target,
         protected bool $cascade = true,
-        protected bool $nullable = false,
+        protected bool $nullable = true,
         protected array|string|null $innerKey = null,
         protected array|string|null $outerKey = null,
         protected string $morphKey = '{relationName}_role',
