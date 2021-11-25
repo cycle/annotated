@@ -21,49 +21,37 @@ final class RefersTo extends Relation
 
     protected const TYPE = 'refersTo';
 
+    /**
+     * @param non-empty-string $target
+     * @param bool $cascade Automatically save related data with parent entity.
+     * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
+     * @param array|non-empty-string|null $innerKey Inner key in parent entity.
+     * @param array|non-empty-string|null $outerKey Outer key name. Defaults to {parentRole}_{innerKey}.
+     * @param bool $fkCreate Set to true to automatically create FK on outerKey.
+     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
+     *        Defaults to {@see $fkAction}.
+     * @param bool $indexCreate Create an index on outerKey.
+     * @param non-empty-string $load Relation load approach.
+     */
     public function __construct(
         string $target,
-        /**
-         * Automatically save related data with parent entity.
-         */
         protected bool $cascade = true,
-        /**
-         * Defines if the relation can be nullable (child can have no parent).
-         */
         protected bool $nullable = false,
-        /**
-         * Inner key in parent entity.
-         */
         protected array|string|null $innerKey = null,
-        /**
-         * Outer key name. Defaults to {parentRole}_{innerKey}.
-         */
         protected array|string|null $outerKey = null,
-        /**
-         * Set to true to automatically create FK on outerKey.
-         */
         protected bool $fkCreate = true,
         /**
-         * FK onDelete and onUpdate action.
-         *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkAction = 'CASCADE',
         /**
-         * FK onDelete action. It has higher priority than {@see $fkAction}. Defaults to {@see $fkAction}.
-         *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkOnDelete = null,
-        /**
-         * Create an index on outerKey.
-         */
         protected bool $indexCreate = true,
-        /**
-         * Relation load approach.
-         */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null

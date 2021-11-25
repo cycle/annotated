@@ -24,7 +24,7 @@ final class BelongsToMorphed extends Relation
     protected const TYPE = 'belongsToMorphed';
 
     /**
-     * @param non-empty-string|null $target
+     * @param non-empty-string $target
      * @param bool $cascade Automatically save related data with source entity.
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
      * @param array|string|null $innerKey Inner key in source entity. Defaults to `{relationName}_{outerKey}`.

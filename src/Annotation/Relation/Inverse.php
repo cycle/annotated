@@ -17,24 +17,22 @@ use JetBrains\PhpStorm\ExpectedValues;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Inverse
 {
+    /**
+     * @param non-empty-string $as Columns name that will represent relation
+     * @param non-empty-string $type Relation type.
+     * @param null|non-empty-string|int $load Relation load approach.
+     */
     public function __construct(
-        /**
-         * Columns name that will represent relation
-         */
         private string $as,
         /**
-         * Relation type.
-         *
          * @Enum({"hasOne", "belongsTo", "embedded", "hasMany", "manyToMany", "refersTo"}
          */
         #[ExpectedValues(values: ['hasOne', 'belongsTo', 'embedded', 'hasMany', 'manyToMany', 'refersTo'])]
         private string $type,
         /**
-         * Relation load approach.
-         *
          * @Enum({"eager", "lazy", "promise"}
          */
-        #[ExpectedValues(values: ['eager', 'lazy', 'promise'])]
+        #[ExpectedValues(values: ['eager', 'lazy', 'promise', Relation::LOAD_EAGER, Relation::LOAD_PROMISE])]
         private string|int|null $load = null,
     ) {
     }

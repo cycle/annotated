@@ -22,39 +22,27 @@ final class MorphedHasOne extends Relation
 
     protected const TYPE = 'morphedHasOne';
 
+    /**
+     * @param non-empty-string $target
+     * @param bool $cascade Automatically save related data with parent entity.
+     * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
+     * @param null|array|string $innerKey Inner key in parent entity. Defaults to the primary key.
+     * @param null|array|string $outerKey Outer key name. Defaults to `{parentRole}_{innerKey}`.
+     * @param string $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
+     * @param int $morphKeyLength The length of morph key.
+     * @param bool $indexCreate Create an index on morphKey and innerKey.
+     * @param non-empty-string $load Relation load approach.
+     * @param null|Inverse $inverse
+     */
     public function __construct(
         string $target,
-        /**
-         * Automatically save related data with parent entity.
-         */
         protected bool $cascade = true,
-        /**
-         * Defines if the relation can be nullable (child can have no parent).
-         */
         protected bool $nullable = false,
-        /**
-         * Inner key in parent entity. Defaults to the primary key.
-         */
         protected array|string|null $innerKey = null,
-        /**
-         * Outer key name. Defaults to `{parentRole}_{innerKey}`.
-         */
         protected array|string|null $outerKey = null,
-        /**
-         * Name of key to store related entity role. Defaults to `{relationName}_role`.
-         */
         protected string $morphKey = '{relationName}_role',
-        /**
-         * The length of morph key.
-         */
         protected int $morphKeyLength = 32,
-        /**
-         * Create an index on morphKey and innerKey.
-         */
         protected bool $indexCreate = true,
-        /**
-         * Relation load approach.
-         */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null,

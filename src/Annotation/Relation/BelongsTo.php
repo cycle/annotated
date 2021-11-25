@@ -21,49 +21,38 @@ final class BelongsTo extends Relation
 
     protected const TYPE = 'belongsTo';
 
+    /**
+     * @param non-empty-string $target
+     * @param null|array|non-empty-string $innerKey Inner key in source entity. Defaults to {relationName}_{outerKey}.
+     * @param null|array|non-empty-string $outerKey Outer key in the related entity. Defaults to the primary key.
+     * @param bool $cascade Automatically save related data with source entity.
+     * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
+     * @param bool $fkCreate Set to true to automatically create FK on innerKey.
+     * @param non-empty-string $fkAction FK onDelete and onUpdate action.
+     * @param null|non-empty-string $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
+     *        Defaults to {@see $fkAction}.
+     * @param bool $indexCreate Create an index on innerKey.
+     * @param non-empty-string $load Relation load approach.
+     */
     public function __construct(
         string $target,
-        /**
-         * Inner key in source entity. Defaults to {relationName}_{outerKey}.
-         */
         protected array|string|null $innerKey = null,
-        /**
-         * Outer key in the related entity. Defaults to the primary key.
-         */
         protected array|string|null $outerKey = null,
-        /**
-         * Automatically save related data with source entity.
-         */
         protected bool $cascade = true,
-        /**
-         * Defines if the relation can be nullable (child can have no parent).
-         */
         protected bool $nullable = false,
-        /**
-         * Set to true to automatically create FK on innerKey.
-         */
         protected bool $fkCreate = true,
         /**
-         * FK onDelete and onUpdate action.
-         *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected string $fkAction = 'CASCADE',
         /**
-         * FK onDelete action. It has higher priority than {@see $fkAction}. Defaults to {@see $fkAction}.
-         *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkOnDelete = null,
-        /**
-         * Create an index on innerKey.
-         */
         protected bool $indexCreate = true,
-        /**
-         * Relation load approach.
-         */
+
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null

@@ -17,18 +17,12 @@ final class Embedded extends Relation
 {
     protected const TYPE = 'embedded';
 
+    /**
+     * @param non-empty-string $target Entity to embed.
+     * @param non-empty-string $load Relation load approach.
+     */
     public function __construct(
-        /**
-         * Entity to embed.
-         *
-         * @var non-empty-string
-         */
         string $target,
-        /**
-         * Relation load approach.
-         *
-         * @var non-empty-string
-         */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'eager'
     ) {
