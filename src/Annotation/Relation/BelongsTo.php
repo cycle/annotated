@@ -23,13 +23,13 @@ final class BelongsTo extends Relation
 
     /**
      * @param non-empty-string $target
-     * @param null|array|non-empty-string $innerKey Inner key in source entity. Defaults to {relationName}_{outerKey}.
-     * @param null|array|non-empty-string $outerKey Outer key in the related entity. Defaults to the primary key.
+     * @param array|non-empty-string|null $innerKey Inner key in source entity. Defaults to {relationName}_{outerKey}.
+     * @param array|non-empty-string|null $outerKey Outer key in the related entity. Defaults to the primary key.
      * @param bool $cascade Automatically save related data with source entity.
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
      * @param bool $fkCreate Set to true to automatically create FK on innerKey.
      * @param non-empty-string $fkAction FK onDelete and onUpdate action.
-     * @param null|non-empty-string $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
+     * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create an index on innerKey.
      * @param non-empty-string $load Relation load approach.
@@ -52,7 +52,6 @@ final class BelongsTo extends Relation
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkOnDelete = null,
         protected bool $indexCreate = true,
-
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null

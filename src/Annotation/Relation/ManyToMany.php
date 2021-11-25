@@ -33,7 +33,7 @@ final class ManyToMany extends Relation
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
      * @param array $where Where conditions applied to a related entity.
      * @param array $orderBy Additional sorting rules.
-     * @param non-empty-string|class-string|null $through Pivot entity.
+     * @param class-string|non-empty-string|null $through Pivot entity.
      * @param array $throughWhere Where conditions applied to `through` entity.
      * @param bool $fkCreate Set to true to automatically create FK on thoughInnerKey and thoughOuterKey.
      * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.

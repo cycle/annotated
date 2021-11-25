@@ -26,15 +26,15 @@ final class MorphedHasMany extends Relation
      * @param non-empty-string $target
      * @param bool $cascade Automatically save related data with parent entity.
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
-     * @param null|array|string $innerKey Inner key in parent entity. Defaults to the primary key.
-     * @param null|array|string $outerKey Outer key name. Defaults to `{parentRole}_{innerKey}`.
+     * @param array|string|null $innerKey Inner key in parent entity. Defaults to the primary key.
+     * @param array|string|null $outerKey Outer key name. Defaults to `{parentRole}_{innerKey}`.
      * @param string $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
      * @param int $morphKeyLength The length of morph key.
      * @param array $where Additional where condition to be applied for the relation.
      * @param bool $indexCreate Create an index on morphKey and innerKey.
-     * @param null|string $collection Collection that will contain loaded entities.
+     * @param string|null $collection Collection that will contain loaded entities.
      * @param non-empty-string $load Relation load approach.
-     * @param null|Inverse $inverse
+     * @param Inverse|null $inverse
      */
     public function __construct(
         string $target,

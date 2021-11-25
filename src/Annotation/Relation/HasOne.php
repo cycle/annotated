@@ -23,13 +23,13 @@ final class HasOne extends Relation
 
     /**
      * @param non-empty-string $target
-     * @param null|array|non-empty-string $innerKey Inner key in parent entity. Defaults to primary key.
-     * @param null|array|non-empty-string $outerKey Outer key name. Defaults to {parentRole}_{innerKey}.
+     * @param array|non-empty-string|null $innerKey Inner key in parent entity. Defaults to primary key.
+     * @param array|non-empty-string|null $outerKey Outer key name. Defaults to {parentRole}_{innerKey}.
      * @param bool $cascade Automatically save related data with parent entity.
      * @param bool $nullable Defines if relation can be nullable (child can have no parent).
      * @param bool $fkCreate Set to true to automatically create FK on outerKey.
-     * @param null|non-empty-string $fkAction FK onDelete and onUpdate action.
-     * @param null|non-empty-string $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
+     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create index on outerKey.
      * @param non-empty-string $load Relation load approach.

@@ -20,7 +20,7 @@ final class Inverse
     /**
      * @param non-empty-string $as Columns name that will represent relation
      * @param non-empty-string $type Relation type.
-     * @param null|non-empty-string|int $load Relation load approach.
+     * @param int|non-empty-string|null $load Relation load approach.
      */
     public function __construct(
         private string $as,
