@@ -23,6 +23,7 @@ final class Column
 
     public function __construct(
         /**
+         * Column type.
          * @var non-empty-string|null
          *
          * @see \Cycle\Database\Schema\AbstractColumn::$mapping
@@ -32,13 +33,32 @@ final class Column
             'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
         ])]
         private string $type,
-        /**  @var non-empty-string|null */
+        /**
+         * Column name. Defaults to the property name.
+         * @var non-empty-string|null
+         */
         private ?string $name = null,
-        /**  @var non-empty-string|null */
+        /**
+         * Property that belongs to column. For virtual columns.
+         * @var non-empty-string|null
+         */
         private ?string $property = null,
+        /**
+         * Explicitly set column as a primary key. Defaults to false
+         */
         private bool $primary = false,
+        /**
+         * Set column as nullable. Defaults to false
+         */
         private bool $nullable = false,
+        /**
+         * Default column value. Defaults to none
+         */
         private mixed $default = null,
+        /**
+         * Column typecast function. Defaults to one of (int|float|bool|datetime) based on column type
+         * @var non-empty-string|null
+         */
         private mixed $typecast = null,
         private bool $castDefault = false,
     ) {

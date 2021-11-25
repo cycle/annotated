@@ -19,7 +19,6 @@ abstract class Relation implements RelationInterface
         protected ?string $target,
         /**
          * @Enum({"eager", "lazy", "promise"})
-         *
          * @var non-empty-string|null
          */
         #[ExpectedValues(values: ['lazy', 'eager'])]

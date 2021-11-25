@@ -16,12 +16,24 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class Embeddable
 {
     public function __construct(
-        /**  @var non-empty-string|null */
+        /**
+         * Entity role. Defaults to the lowercase class name without a namespace
+         * @var non-empty-string|null
+         */
         private ?string $role = null,
-        /** @var class-string|null */
+        /**
+         * Mapper class name. Defaults to Cycle\ORM\Mapper\Mapper
+         * @var class-string|null
+         */
         private ?string $mapper = null,
+        /**
+         * Сustom prefix for rmbeddable entity columns
+         */
         private string $columnPrefix = '',
-        /** @var Column[] */
+        /**
+         * Embedded entity columns.
+         * @var Column[]
+         */
         private array $columns = [],
     ) {
     }

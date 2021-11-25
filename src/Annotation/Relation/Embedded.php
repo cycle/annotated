@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
@@ -16,7 +17,19 @@ final class Embedded extends Relation
 {
     protected const TYPE = 'embedded';
 
-    public function __construct(?string $target = null, string $load = 'eager')
+    public function __construct(
+        /**
+         * Entity to embed.
+         * @var non-empty-string
+         */
+        string $target,
+        /**
+         * Relation load approach. Defaults to eager
+         * @var non-empty-string
+         */
+        #[ExpectedValues(values: ['lazy', 'eager'])]
+        string $load = 'eager'
+    )
     {
         parent::__construct($target, $load);
     }

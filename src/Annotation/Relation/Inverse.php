@@ -18,9 +18,20 @@ use JetBrains\PhpStorm\ExpectedValues;
 final class Inverse
 {
     public function __construct(
+        /**
+         * Columns name that will represent relation
+         */
         private string $as,
+        /**
+         * Relation type
+         * @Enum({"hasOne", "belongsTo", "embedded", "hasMany", "manyToMany", "refersTo"}
+         */
+        #[ExpectedValues(values: ['hasOne', 'belongsTo', 'embedded', 'hasMany', 'manyToMany', 'refersTo'])]
         private string $type,
-        /** @Enum({"eager", "lazy", "promise"} */
+        /**
+         * Relation load approach. Defaults to `lazy`
+         * @Enum({"eager", "lazy", "promise"}
+         */
         #[ExpectedValues(values: ['eager', 'lazy', 'promise'])]
         private string|int|null $load = null,
     ) {
