@@ -23,7 +23,9 @@ class AnnotationRequiredArgumentsException extends AnnotationException
                 implode('`, `', $requiredArguments),
                 $property->getDeclaringClass()->getName(),
                 $property->getName()
-            ), $e->getCode(), $e
+            ),
+            $e->getCode(),
+            $e
         );
     }
 }
