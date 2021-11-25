@@ -45,7 +45,6 @@ final class ManyToMany extends Relation
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null,
-
         /** @deprecated */
         protected ?string $though = null,
         /** @deprecated */

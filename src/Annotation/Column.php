@@ -13,7 +13,10 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @NamedArgumentConstructor
  * @Target({"PROPERTY", "ANNOTATION", "CLASS"})
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
+#[
+    \Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE),
+    NamedArgumentConstructor
+]
 final class Column
 {
     private bool $hasDefault = false;
