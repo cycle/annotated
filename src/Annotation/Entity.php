@@ -18,21 +18,25 @@ final class Entity
     public function __construct(
         /**
          * Entity role. Defaults to the lowercase class name without a namespace
+         *
          * @var non-empty-string|null
          */
         private ?string $role = null,
         /**
          * Mapper class name. Defaults to Cycle\ORM\Mapper\Mapper
+         *
          * @var class-string|null
          */
         private ?string $mapper = null,
         /**
          * Repository class to represent read operations for an entity. Defaults to Cycle\ORM\Select\Repository
+         *
          * @var class-string|null
          */
         private ?string $repository = null,
         /**
          * Entity source table. Defaults to plural form of entity role
+         *
          * @var non-empty-string|null
          */
         private ?string $table = null,
@@ -42,11 +46,13 @@ final class Entity
         private bool $readonlySchema = false,
         /**
          * Database name. Defaults to null (default database)
+         *
          * @var non-empty-string|null
          */
         private ?string $database = null,
         /**
          * Entity source class (internal). Defaults to Cycle\ORM\Select\Source
+         *
          * @var class-string|null
          */
         private ?string $source = null,
@@ -54,11 +60,13 @@ final class Entity
         private array|string|null $typecast = null,
         /**
          * Class name of constraint to be applied to every entity query. Defaults to null
+         *
          * @var class-string|null
          */
         private ?string $scope = null,
         /**
          * Entity columns.
+         *
          * @var Column[]
          */
         private array $columns = [],

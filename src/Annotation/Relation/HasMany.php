@@ -52,12 +52,14 @@ final class HasMany extends Relation
         protected bool $fkCreate = true,
         /**
          * FK onDelete and onUpdate action. Defaults to CASCADE
+         *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkAction = 'CASCADE',
         /**
          * FK onDelete action. It has higher priority than {$fkAction}. Defaults to @see {$fkAction}
+         *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]

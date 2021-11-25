@@ -20,17 +20,18 @@ final class Embedded extends Relation
     public function __construct(
         /**
          * Entity to embed.
+         *
          * @var non-empty-string
          */
         string $target,
         /**
          * Relation load approach. Defaults to eager
+         *
          * @var non-empty-string
          */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'eager'
-    )
-    {
+    ) {
         parent::__construct($target, $load);
     }
 

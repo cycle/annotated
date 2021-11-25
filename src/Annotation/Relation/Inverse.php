@@ -24,12 +24,14 @@ final class Inverse
         private string $as,
         /**
          * Relation type
+         *
          * @Enum({"hasOne", "belongsTo", "embedded", "hasMany", "manyToMany", "refersTo"}
          */
         #[ExpectedValues(values: ['hasOne', 'belongsTo', 'embedded', 'hasMany', 'manyToMany', 'refersTo'])]
         private string $type,
         /**
          * Relation load approach. Defaults to `lazy`
+         *
          * @Enum({"eager", "lazy", "promise"}
          */
         #[ExpectedValues(values: ['eager', 'lazy', 'promise'])]
