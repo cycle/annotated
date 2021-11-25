@@ -9,14 +9,14 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * @Annotation
- * @NamedArgumentConstructor()
+ * @NamedArgumentConstructor
  * @Target("CLASS")
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class SingleTable extends Inheritance
 {
     public function __construct(
-        protected ?string $value = null
+        private ?string $value = null
     ) {
         parent::__construct('single');
     }

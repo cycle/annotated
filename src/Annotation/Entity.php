@@ -4,61 +4,44 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("CLASS")
- * @Attributes({
- *      @Attribute("role", type="string"),
- *      @Attribute("mapper", type="string"),
- *      @Attribute("repository", type="string"),
- *      @Attribute("table", type="string"),
- *      @Attribute("database", type="string"),
- *      @Attribute("source", type="string"),
- *      @Attribute("constrain", type="string"),
- *      @Attribute("scope", type="string"),
- *      @Attribute("typecast", type="array<string>"),
- *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Entity
 {
-    private ?string $role = null;
-
-    private ?string $mapper = null;
-
-    private ?string $repository = null;
-
-    private ?string $table = null;
-
-    private bool $readonlySchema = false;
-
-    private ?string $database = null;
-
-    private ?string $source = null;
-
-    private array|string|null $typecast = null;
-
-    /** @deprecated Use {@see $scope} instead */
-    private ?string $constrain = null;
-
-    private ?string $scope = null;
-
-    /** @var Column[] */
-    private array $columns = [];
-
     /**
-     * @param array<string, mixed> $values
+     * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
+     * @param class-string|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}
+     * @param class-string|null $repository Repository class to represent read operations for an entity.
+     *        Defaults to {@see \Cycle\ORM\Select\Repository}
+     * @param non-empty-string|null $table Entity source table. Defaults to plural form of entity role.
+     * @param bool $readonlySchema Set to true to disable schema synchronization for the assigned table.
+     * @param non-empty-string|null $database Database name. Defaults to null (default database).
+     * @param class-string|null $source Entity source class (internal). Defaults to {@see \Cycle\ORM\Select\Source}
+     * @param non-empty-string|non-empty-string[]|null $typecast
+     * @param class-string|null $scope Class name of constraint to be applied to every entity query.
+     * @param Column[] $columns Entity columns.
      */
-    public function __construct(array $values = [])
-    {
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct(
+        private ?string $role = null,
+        private ?string $mapper = null,
+        private ?string $repository = null,
+        private ?string $table = null,
+        private bool $readonlySchema = false,
+        private ?string $database = null,
+        private ?string $source = null,
+        private array|string|null $typecast = null,
+        private ?string $scope = null,
+        private array $columns = [],
+        /** @deprecated Use {@see $scope} instead */
+        private ?string $constrain = null,
+    ) {
     }
 
     public function getRole(): ?string
@@ -101,9 +84,6 @@ final class Entity
         return $this->scope ?? $this->constrain;
     }
 
-    /**
-     * @return Column[]
-     */
     public function getColumns(): array
     {
         return $this->columns;

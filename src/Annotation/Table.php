@@ -6,44 +6,29 @@ namespace Cycle\Annotated\Annotation;
 
 use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\Annotated\Annotation\Table\PrimaryKey;
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"CLASS", "ANNOTATION"})
- * @Attributes({
- *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
- *      @Attribute("primary", type="Cycle\Annotated\Annotation\Table\PrimaryKey"),
- *      @Attribute("indexes", type="array<Cycle\Annotated\Annotation\Table\Index>"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Table
 {
-    /** @var Column[] */
-    private array $columns = [];
-
-    /** @var PrimaryKey|null */
-    private ?PrimaryKey $primary = null;
-
-    /** @var Index[] */
-    private array $indexes = [];
-
     /**
-     * @param array<string, mixed> $values
+     * @param Column[] $columns
+     * @param PrimaryKey|null $primary
+     * @param Index[] $indexes
      */
-    public function __construct(array $values)
-    {
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct(
+        private array $columns = [],
+        private ?PrimaryKey $primary = null,
+        private array $indexes = [],
+    ) {
     }
 
-    /**
-     * @return Column[]
-     */
     public function getColumns(): array
     {
         return $this->columns;
@@ -54,9 +39,6 @@ final class Table
         return $this->primary;
     }
 
-    /**
-     * @return Index[]
-     */
     public function getIndexes(): array
     {
         return $this->indexes;

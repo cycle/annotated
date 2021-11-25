@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Table;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("ANNOTATION", "CLASS")
- * @Attributes({
- *      @Attribute("columns", type="array<string>", required=true),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class PrimaryKey extends Index
 {
-    /**
-     * @param array<string, mixed> $values
-     */
-    public function __construct(array $values)
+    public function __construct(array $columns = [])
     {
-        $values['unique'] = true;
-        $values['name'] = 'PK';
-        parent::__construct($values);
+        $unique = true;
+        $name = 'PK';
+
+        parent::__construct(
+            columns: $columns,
+            unique: $unique,
+            name: $name
+        );
     }
 }

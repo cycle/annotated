@@ -5,96 +5,83 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\Annotated\Annotation\Relation\Traits\InverseTrait;
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Enum;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("PROPERTY")
- * @Attributes({
- *      @Attribute("target", type="string", required=true),
- *      @Attribute("cascade", type="bool"),
- *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="array<string>"),
- *      @Attribute("outerKey", type="array<string>"),
- *      @Attribute("where", type="array"),
- *      @Attribute("orderBy", type="array"),
- *      @Attribute("though", type="string"),
- *      @Attribute("thoughInnerKey", type="string"),
- *      @Attribute("thoughOuterKey", type="string"),
- *      @Attribute("thoughWhere", type="array"),
- *      @Attribute("through", type="string"),
- *      @Attribute("throughInnerKey", type="array<string>"),
- *      @Attribute("throughOuterKey", type="array<string>"),
- *      @Attribute("throughWhere", type="array"),
- *      @Attribute("fkCreate", type="bool"),
- *      @Attribute("fkAction", type="string"),
- *      @Attribute("fkOnDelete", type="string"),
- *      @Attribute("indexCreate", type="bool"),
- *      @Attribute("load", type="string"),
- *      @Attribute("collection", type="string"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class ManyToMany extends Relation
 {
     use InverseTrait;
 
     protected const TYPE = 'manyToMany';
 
-    /** @var bool */
-    protected $cascade;
-
-    /** @var bool */
-    protected $nullable;
-
-    protected array|string $innerKey;
-
-    protected array|string $outerKey;
-
-    protected array $where = [];
-
-    protected array $orderBy = [];
-
-    protected ?string $collection = null;
-
     /**
-     * @deprecated
+     * @param non-empty-string $target
+     * @param array|non-empty-string|null $innerKey Inner key name in source entity. Defaults to a primary key.
+     * @param array|non-empty-string|null $outerKey Outer key name in target entity. Defaults to a primary key.
+     * @param array|non-empty-string|null $throughInnerKey Key name connected to the innerKey of source entity.
+     *        Defaults to `{sourceRole}_{innerKey}`.
+     * @param array|non-empty-string|null $throughOuterKey Key name connected to the outerKey of a related entity.
+     *        Defaults to `{targetRole}_{outerKey}`.
+     * @param bool $cascade Automatically save related data with parent entity.
+     * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
+     * @param array $where Where conditions applied to a related entity.
+     * @param array $orderBy Additional sorting rules.
+     * @param class-string|non-empty-string|null $through Pivot entity.
+     * @param array $throughWhere Where conditions applied to `through` entity.
+     * @param bool $fkCreate Set to true to automatically create FK on thoughInnerKey and thoughOuterKey.
+     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
+     *        Defaults to {@see $fkAction}.
+     * @param bool $indexCreate Create index on [thoughInnerKey, thoughOuterKey].
+     * @param non-empty-string|null $collection Collection that will contain loaded entities.
+     * @param non-empty-string $load Relation load approach.
      */
-    protected ?string $though = null;
+    public function __construct(
+        string $target,
+        protected array|string|null $innerKey = null,
+        protected array|string|null $outerKey = null,
+        protected array|string|null $throughInnerKey = null,
+        protected array|string|null $throughOuterKey = null,
+        protected bool $cascade = true,
+        protected bool $nullable = false,
+        protected array $where = [],
+        protected array $orderBy = [],
+        protected ?string $through = null,
+        protected array $throughWhere = [],
+        protected bool $fkCreate = true,
+        /**
+         * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+         */
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        protected ?string $fkAction = 'CASCADE',
+        /**
+         * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+         */
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        protected ?string $fkOnDelete = null,
+        protected bool $indexCreate = true,
+        protected ?string $collection = null,
+        #[ExpectedValues(values: ['lazy', 'eager'])]
+        string $load = 'lazy',
+        ?Inverse $inverse = null,
+        /** @deprecated */
+        protected ?string $though = null,
+        /** @deprecated */
+        protected array|string|null $thoughInnerKey = null,
+        /** @deprecated */
+        protected array|string|null $thoughOuterKey = null,
+        /** @deprecated */
+        protected array|null $thoughWhere = [],
+    ) {
+        $this->inverse = $inverse;
 
-    /**
-     * @deprecated
-     */
-    protected array|string $thoughInnerKey;
-
-    /**
-     * @deprecated
-     */
-    protected array|string $thoughOuterKey;
-
-    /**
-     * @deprecated
-     */
-    protected array $thoughWhere = [];
-
-    protected ?string $through = null;
-
-    protected array|string $throughInnerKey;
-
-    protected array|string $throughOuterKey;
-
-    protected array $throughWhere = [];
-
-    /** @var bool */
-    protected $fkCreate;
-
-    /**
-     * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
-     */
-    protected ?string $fkAction = null;
-
-    /** @var bool */
-    protected $indexCreate;
+        parent::__construct($target, $load);
+    }
 }

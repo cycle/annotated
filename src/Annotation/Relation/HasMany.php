@@ -5,62 +5,64 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Relation;
 
 use Cycle\Annotated\Annotation\Relation\Traits\InverseTrait;
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("PROPERTY")
- * @Attributes({
- *      @Attribute("target", type="string", required=true),
- *      @Attribute("cascade", type="bool"),
- *      @Attribute("nullable", type="bool"),
- *      @Attribute("innerKey", type="array<string>"),
- *      @Attribute("outerKey", type="array<string>"),
- *      @Attribute("where", type="array"),
- *      @Attribute("orderBy", type="array"),
- *      @Attribute("fkCreate", type="bool"),
- *      @Attribute("fkAction", type="string"),
- *      @Attribute("fkOnDelete", type="string"),
- *      @Attribute("indexCreate", type="bool"),
- *      @Attribute("load", type="string"),
- *      @Attribute("collection", type="string"),
- *      @Attribute("inverse", type="Cycle\Annotated\Annotation\Relation\Inverse"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class HasMany extends Relation
 {
     use InverseTrait;
 
     protected const TYPE = 'hasMany';
 
-    /** @var bool */
-    protected $cascade;
-
-    /** @var bool */
-    protected $nullable;
-
-    protected array|string $innerKey;
-
-    protected array|string $outerKey;
-
-    protected ?string $collection = null;
-
-    /** @var array */
-    protected $where;
-
-    /** @var array */
-    protected $orderBy;
-
-    /** @var bool */
-    protected $fkCreate;
-
     /**
-     * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+     * @param non-empty-string $target
+     * @param array|non-empty-string|null $innerKey Inner key in parent entity. Defaults to the primary key.
+     * @param array|non-empty-string|null $outerKey Outer key name. Defaults to {parentRole}_{innerKey}.
+     * @param bool $cascade Automatically save related data with parent entity.
+     * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
+     * @param array $where Additional where condition to be applied for the relation.
+     * @param array $orderBy Additional sorting rules.
+     * @param bool $fkCreate Set to true to automatically create FK on outerKey.
+     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
+     *        Defaults to {@see $fkAction}.
+     * @param bool $indexCreate Create an index on outerKey.
+     * @param non-empty-string|null $collection Collection that will contain loaded entities.
+     * @param non-empty-string $load Relation load approach.
      */
-    protected ?string $fkAction = null;
+    public function __construct(
+        string $target,
+        protected array|string|null $innerKey = null,
+        protected array|string|null $outerKey = null,
+        protected bool $cascade = true,
+        protected bool $nullable = false,
+        protected array $where = [],
+        protected array $orderBy = [],
+        protected bool $fkCreate = true,
+        /**
+         * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+         */
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        protected ?string $fkAction = 'CASCADE',
+        /**
+         * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+         */
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        protected ?string $fkOnDelete = null,
+        protected bool $indexCreate = true,
+        protected ?string $collection = null,
+        #[ExpectedValues(values: ['lazy', 'eager'])]
+        string $load = 'lazy',
+        ?Inverse $inverse = null,
+    ) {
+        $this->inverse = $inverse;
 
-    /** @var bool */
-    protected $indexCreate;
+        parent::__construct($target, $load);
+    }
 }

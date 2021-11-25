@@ -10,6 +10,9 @@ interface RelationInterface
 
     public function getTarget(): ?string;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptions(): array;
 
     public function getInverse(): ?Inverse;

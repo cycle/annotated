@@ -4,42 +4,28 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Table;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("ANNOTATION", "CLASS")
- * @Attributes({
- *      @Attribute("columns", type="array<string>", required=true),
- *      @Attribute("unique", type="bool"),
- *      @Attribute("name", type="string"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
 class Index
 {
-    /** @var string[] */
-    private array $columns = [];
-
-    private bool $unique = false;
-
-    private ?string $name = null;
-
     /**
-     * @param array<string, mixed> $values
+     * @param non-empty-string[] $columns
+     * @param non-empty-string|null $name
      */
-    public function __construct(array $values)
-    {
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct(
+        private array $columns,
+        private bool $unique = false,
+        private ?string $name = null,
+    ) {
     }
 
-    /**
-     * @return string[]
-     */
     public function getColumns(): array
     {
         return $this->columns;

@@ -4,55 +4,50 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"PROPERTY", "ANNOTATION", "CLASS"})
- * @Attributes({
- *      @Attribute("type", type="string", required=true),
- *      @Attribute("name", type="string"),
- *      @Attribute("property", type="string"),
- *      @Attribute("primary", type="bool"),
- *      @Attribute("nullable", type="bool"),
- *      @Attribute("default", type="mixed"),
- *      @Attribute("typecast", type="mixed"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[
+    \Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE),
+    NamedArgumentConstructor
+]
 final class Column
 {
     private bool $hasDefault = false;
 
-    private ?string $name = null;
-
-    private ?string $property = null;
-
-    private ?string $type = null;
-
-    private bool $nullable = false;
-
-    private bool $primary = false;
-
-    private mixed $default = null;
-
-    private bool $castDefault = false;
-
-    private mixed $typecast = null;
-
     /**
-     * @param array<string, mixed> $values
+     * @param non-empty-string $type Column type. {@see \Cycle\Database\Schema\AbstractColumn::$mapping}
+     * @param non-empty-string|null $name Column name. Defaults to the property name.
+     * @param non-empty-string|null $property Property that belongs to column. For virtual columns.
+     * @param bool $primary Explicitly set column as a primary key.
+     * @param bool $nullable Set column as nullable.
+     * @param mixed|null $default Default column value.
+     * @param non-empty-string|null $typecast Column typecast function.
+     *        Defaults to one of (int|float|bool|datetime) based on column type
+     * @param bool $castDefault
      */
-    public function __construct(array $values)
-    {
-        if (isset($values['default'])) {
+    public function __construct(
+        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean', 'integer', 'tinyInteger', 'bigInteger',
+            'string', 'text', 'tinyText', 'longText', 'double', 'float', 'decimal', 'datetime', 'date', 'time',
+            'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
+        ])]
+        private string $type,
+        private ?string $name = null,
+        private ?string $property = null,
+        private bool $primary = false,
+        private bool $nullable = false,
+        private mixed $default = null,
+        private mixed $typecast = null,
+        private bool $castDefault = false,
+    ) {
+        if ($default !== null) {
             $this->hasDefault = true;
-        }
-
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
         }
     }
 

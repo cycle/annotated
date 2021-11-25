@@ -13,7 +13,7 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity]
 class User
 {
-    /** @Column() */
+    /** @Column */
     #[Column]
     protected $id;
 }

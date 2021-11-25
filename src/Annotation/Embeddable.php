@@ -4,40 +4,29 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("CLASS")
- * @Attributes({
- *      @Attribute("role", type="string"),
- *      @Attribute("mapper", type="string"),
- *      @Attribute("columnPrefix", type="string"),
- *      @Attribute("columns", type="array<Cycle\Annotated\Annotation\Column>"),
- * })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Embeddable
 {
-    private ?string $role = null;
-
-    private ?string $mapper = null;
-
-    private string $columnPrefix = '';
-
-    /** @var Column[] */
-    private $columns = [];
-
     /**
-     * @param array<string, mixed> $values
+     * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
+     * @param class-string|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}.
+     * @param string $columnPrefix Custom prefix for embeddable entity columns.
+     * @param Column[] $columns Embedded entity columns.
      */
-    public function __construct(array $values)
-    {
-        foreach ($values as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct(
+        private ?string $role = null,
+        private ?string $mapper = null,
+        private string $columnPrefix = '',
+        private array $columns = [],
+    ) {
     }
 
     public function getRole(): ?string
@@ -55,9 +44,6 @@ final class Embeddable
         return $this->columnPrefix;
     }
 
-    /**
-     * @return Column[]
-     */
     public function getColumns(): array
     {
         return $this->columns;
