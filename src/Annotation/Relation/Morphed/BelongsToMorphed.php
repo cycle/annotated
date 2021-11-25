@@ -27,8 +27,8 @@ final class BelongsToMorphed extends Relation
      * @param non-empty-string|null $target
      * @param bool $cascade Automatically save related data with source entity.
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
-     * @param null|array|string $innerKey Inner key in source entity. Defaults to `{relationName}_{outerKey}`.
-     * @param null|array|string $outerKey Outer key in the related entity. Defaults to primary key.
+     * @param array|string|null $innerKey Inner key in source entity. Defaults to `{relationName}_{outerKey}`.
+     * @param array|string|null $outerKey Outer key in the related entity. Defaults to primary key.
      * @param string $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
      * @param int $morphKeyLength The length of morph key.
      * @param bool $indexCreate Create an index on morphKey and innerKey.
