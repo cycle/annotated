@@ -17,12 +17,14 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Table
 {
+    /**
+     * @param Column[] $columns
+     * @param PrimaryKey|null $primary
+     * @param Index[] $indexes
+     */
     public function __construct(
-        /** @var Column[] */
         private array $columns = [],
-        /** @var PrimaryKey|null */
         private ?PrimaryKey $primary = null,
-        /** @var Index[] */
         private array $indexes = [],
     ) {
     }

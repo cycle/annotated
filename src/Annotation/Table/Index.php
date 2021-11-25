@@ -15,11 +15,13 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
 class Index
 {
+    /**
+     * @param non-empty-string[] $columns
+     * @param non-empty-string|null $name
+     */
     public function __construct(
-        /** @var non-empty-string[] */
         private array $columns,
         private bool $unique = false,
-        /** @var non-empty-string|null */
         private ?string $name = null,
     ) {
     }

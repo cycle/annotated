@@ -23,39 +23,26 @@ final class BelongsToMorphed extends Relation
 
     protected const TYPE = 'belongsToMorphed';
 
+    /**
+     * @param non-empty-string|null $target
+     * @param bool $cascade Automatically save related data with source entity.
+     * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
+     * @param null|array|string $innerKey Inner key in source entity. Defaults to `{relationName}_{outerKey}`.
+     * @param null|array|string $outerKey Outer key in the related entity. Defaults to primary key.
+     * @param string $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
+     * @param int $morphKeyLength The length of morph key.
+     * @param bool $indexCreate Create an index on morphKey and innerKey.
+     * @param non-empty-string $load Relation load approach.
+     */
     public function __construct(
         string $target,
-        /**
-         * Automatically save related data with source entity. Defaults to `true`
-         */
         protected bool $cascade = true,
-        /**
-         * Defines if the relation can be nullable (child can have no parent). Defaults to `true`
-         */
         protected bool $nullable = true,
-        /**
-         * Inner key in source entity. Defaults to `{relationName}_{outerKey}`
-         */
         protected array|string|null $innerKey = null,
-        /**
-         * Outer key in the related entity. Defaults to primary key
-         */
         protected array|string|null $outerKey = null,
-        /**
-         * Name of key to store related entity role. Defaults to `{relationName}_role`
-         */
         protected string $morphKey = '{relationName}_role',
-        /**
-         * The length of morph key. Defaults to 32
-         */
         protected int $morphKeyLength = 32,
-        /**
-         * Create an index on morphKey and innerKey. Defaults to `true`
-         */
         protected bool $indexCreate = true,
-        /**
-         * Relation load approach. Defaults to `lazy`
-         */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null

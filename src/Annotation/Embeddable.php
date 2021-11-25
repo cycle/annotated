@@ -15,28 +15,16 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Embeddable
 {
+    /**
+     * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
+     * @param class-string|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}.
+     * @param string $columnPrefix Custom prefix for embeddable entity columns.
+     * @param Column[] $columns Embedded entity columns.
+     */
     public function __construct(
-        /**
-         * Entity role. Defaults to the lowercase class name without a namespace
-         *
-         * @var non-empty-string|null
-         */
         private ?string $role = null,
-        /**
-         * Mapper class name. Defaults to Cycle\ORM\Mapper\Mapper
-         *
-         * @var class-string|null
-         */
         private ?string $mapper = null,
-        /**
-         * Сustom prefix for rmbeddable entity columns
-         */
         private string $columnPrefix = '',
-        /**
-         * Embedded entity columns.
-         *
-         * @var Column[]
-         */
         private array $columns = [],
     ) {
     }

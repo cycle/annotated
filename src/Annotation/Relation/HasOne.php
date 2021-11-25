@@ -24,45 +24,45 @@ final class HasOne extends Relation
     public function __construct(
         string $target,
         /**
-         * Inner key in parent entity. Defaults to primary key
+         * Inner key in parent entity. Defaults to primary key.
          */
         protected array|string|null $innerKey = null,
         /**
-         * Outer key name. Defaults to {parentRole}_{innerKey}
+         * Outer key name. Defaults to {parentRole}_{innerKey}.
          */
         protected array|string|null $outerKey = null,
         /**
-         * Automatically save related data with parent entity. Defaults to true
+         * Automatically save related data with parent entity.
          */
         protected bool $cascade = true,
         /**
-         * Defines if relation can be nullable (child can have no parent). Defaults to false
+         * Defines if relation can be nullable (child can have no parent).
          */
         protected bool $nullable = false,
         /**
-         * Set to true to automatically create FK on outerKey. Defaults to true
+         * Set to true to automatically create FK on outerKey.
          */
         protected bool $fkCreate = true,
         /**
-         * FK onDelete and onUpdate action. Defaults to CASCADE
+         * FK onDelete and onUpdate action.
          *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkAction = 'CASCADE',
         /**
-         * FK onDelete action. It has higher priority than {$fkAction}. Defaults to @see {$fkAction}
+         * FK onDelete action. It has higher priority than {@see $fkAction}. Defaults to {@see $fkAction}.
          *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkOnDelete = null,
         /**
-         * Create index on outerKey. Defaults to true
+         * Create index on outerKey.
          */
         protected bool $indexCreate = true,
         /**
-         * Relation load approach. Defaults to lazy
+         * Relation load approach.
          */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',

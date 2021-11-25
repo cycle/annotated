@@ -12,15 +12,14 @@ abstract class Relation implements RelationInterface
     // relation type
     protected const TYPE = '';
 
+    /**
+     * @param non-empty-string|null $target
+     * @param non-empty-string $load
+     */
     public function __construct(
-        /**
-         * @var non-empty-string|null
-         */
         protected ?string $target,
         /**
          * @Enum({"eager", "lazy", "promise"})
-         *
-         * @var non-empty-string|null
          */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         protected string $load = 'lazy',

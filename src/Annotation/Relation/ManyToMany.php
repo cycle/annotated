@@ -24,75 +24,75 @@ final class ManyToMany extends Relation
     public function __construct(
         string $target,
         /**
-         * Inner key name in source entity. Defaults to a primary key
+         * Inner key name in source entity. Defaults to a primary key.
          */
         protected array|string|null $innerKey = null,
         /**
-         * Outer key name in target entity. Defaults to a primary key
+         * Outer key name in target entity. Defaults to a primary key.
          */
         protected array|string|null $outerKey = null,
         /**
-         * Key name connected to the innerKey of source entity. Defaults to `{sourceRole}_{innerKey}`
+         * Key name connected to the innerKey of source entity. Defaults to `{sourceRole}_{innerKey}`.
          */
         protected array|string|null $throughInnerKey = null,
         /***
-         * Key name connected to the outerKey of a related entity. Defaults to `{targetRole}_{outerKey}`
+         * Key name connected to the outerKey of a related entity. Defaults to `{targetRole}_{outerKey}`.
          */
         protected array|string|null $throughOuterKey = null,
         /**
-         * Automatically save related data with parent entity. Defaults to `false`
+         * Automatically save related data with parent entity.
          */
         protected bool $cascade = true,
         /**
-         * Defines if the relation can be nullable (child can have no parent). Defaults to false
+         * Defines if the relation can be nullable (child can have no parent).
          */
         protected bool $nullable = false,
         /**
-         * Where conditions applied to a related entity
+         * Where conditions applied to a related entity.
          */
         protected array $where = [],
         /**
-         * Additional sorting rules
+         * Additional sorting rules.
          */
         protected array $orderBy = [],
         /**
-         * Pivot entity
+         * Pivot entity.
          *
          * @var class-string|null
          */
         protected ?string $through = null,
         /**
-         * Where conditions applied to `through` entity
+         * Where conditions applied to `through` entity.
          */
         protected array $throughWhere = [],
         /**
-         * Set to true to automatically create FK on thoughInnerKey and thoughOuterKey. Defaults to true
+         * Set to true to automatically create FK on thoughInnerKey and thoughOuterKey.
          */
         protected bool $fkCreate = true,
         /**
-         * FK onDelete and onUpdate action. Defaults to CASCADE
+         * FK onDelete and onUpdate action.
          *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkAction = 'CASCADE',
         /**
-         * FK onDelete action. It has higher priority than {$fkAction}. Defaults to @see {$fkAction}
+         * FK onDelete action. It has higher priority than {@see $fkAction}. Defaults to {@see $fkAction}.
          *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkOnDelete = null,
         /**
-         * Create index on [thoughInnerKey, thoughOuterKey]. Defaults to true
+         * Create index on [thoughInnerKey, thoughOuterKey].
          */
         protected bool $indexCreate = true,
         /**
-         * Collection that will contain loaded entities. Defaults to `array`
+         * Collection that will contain loaded entities.
          */
         protected ?string $collection = null,
         /**
-         * Relation load approach. Defaults to lazy
+         * Relation load approach.
          */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',

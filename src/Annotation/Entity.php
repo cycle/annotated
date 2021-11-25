@@ -15,60 +15,29 @@ use Doctrine\Common\Annotations\Annotation\Target;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Entity
 {
+    /**
+     * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
+     * @param class-string|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}
+     * @param class-string|null $repository Repository class to represent read operations for an entity.
+     *        Defaults to {@see \Cycle\ORM\Select\Repository}
+     * @param non-empty-string|null $table Entity source table. Defaults to plural form of entity role.
+     * @param bool $readonlySchema Set to true to disable schema synchronization for the assigned table.
+     * @param non-empty-string|null $database Database name. Defaults to null (default database).
+     * @param class-string|null $source Entity source class (internal). Defaults to {@see \Cycle\ORM\Select\Source}
+     * @param non-empty-string|non-empty-string[]|null $typecast
+     * @param class-string|null $scope Class name of constraint to be applied to every entity query.
+     * @param Column[] $columns Entity columns.
+     */
     public function __construct(
-        /**
-         * Entity role. Defaults to the lowercase class name without a namespace
-         *
-         * @var non-empty-string|null
-         */
         private ?string $role = null,
-        /**
-         * Mapper class name. Defaults to Cycle\ORM\Mapper\Mapper
-         *
-         * @var class-string|null
-         */
         private ?string $mapper = null,
-        /**
-         * Repository class to represent read operations for an entity. Defaults to Cycle\ORM\Select\Repository
-         *
-         * @var class-string|null
-         */
         private ?string $repository = null,
-        /**
-         * Entity source table. Defaults to plural form of entity role
-         *
-         * @var non-empty-string|null
-         */
         private ?string $table = null,
-        /**
-         * Set to true to disable schema synchronization for the assigned table. Defaults to false
-         */
         private bool $readonlySchema = false,
-        /**
-         * Database name. Defaults to null (default database)
-         *
-         * @var non-empty-string|null
-         */
         private ?string $database = null,
-        /**
-         * Entity source class (internal). Defaults to Cycle\ORM\Select\Source
-         *
-         * @var class-string|null
-         */
         private ?string $source = null,
-        /**  @var non-empty-string|non-empty-string[]|null */
         private array|string|null $typecast = null,
-        /**
-         * Class name of constraint to be applied to every entity query. Defaults to null
-         *
-         * @var class-string|null
-         */
         private ?string $scope = null,
-        /**
-         * Entity columns.
-         *
-         * @var Column[]
-         */
         private array $columns = [],
         /** @deprecated Use {@see $scope} instead */
         private ?string $constrain = null,

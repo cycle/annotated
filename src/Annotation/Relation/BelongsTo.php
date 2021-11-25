@@ -24,45 +24,45 @@ final class BelongsTo extends Relation
     public function __construct(
         string $target,
         /**
-         * Inner key in source entity. Defaults to {relationName}_{outerKey}
+         * Inner key in source entity. Defaults to {relationName}_{outerKey}.
          */
         protected array|string|null $innerKey = null,
         /**
-         * Outer key in the related entity. Defaults to the primary key
+         * Outer key in the related entity. Defaults to the primary key.
          */
         protected array|string|null $outerKey = null,
         /**
-         * Automatically save related data with source entity. Defaults to true
+         * Automatically save related data with source entity.
          */
         protected bool $cascade = true,
         /**
-         * Defines if the relation can be nullable (child can have no parent). Defaults to false
+         * Defines if the relation can be nullable (child can have no parent).
          */
         protected bool $nullable = false,
         /**
-         * Set to true to automatically create FK on innerKey. Defaults to true
+         * Set to true to automatically create FK on innerKey.
          */
         protected bool $fkCreate = true,
         /**
-         * FK onDelete and onUpdate action. Defaults to CASCADE
+         * FK onDelete and onUpdate action.
          *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected string $fkAction = 'CASCADE',
         /**
-         * FK onDelete action. It has higher priority than {$fkAction}. Defaults to @see {$fkAction}
+         * FK onDelete action. It has higher priority than {@see $fkAction}. Defaults to {@see $fkAction}.
          *
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         protected ?string $fkOnDelete = null,
         /**
-         * Create an index on innerKey. Defaults to true
+         * Create an index on innerKey.
          */
         protected bool $indexCreate = true,
         /**
-         * Relation load approach. Defaults to lazy
+         * Relation load approach.
          */
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',

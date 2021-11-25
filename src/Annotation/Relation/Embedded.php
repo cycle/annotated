@@ -25,7 +25,7 @@ final class Embedded extends Relation
          */
         string $target,
         /**
-         * Relation load approach. Defaults to eager
+         * Relation load approach.
          *
          * @var non-empty-string
          */
