@@ -28,7 +28,7 @@ final class Column
             'string', 'text', 'tinyText', 'longText', 'double', 'float', 'decimal', 'datetime', 'date', 'time',
             'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
         ])]
-        private ?string $type = null,
+        private string $type,
         /**  @var non-empty-string|null */
         private ?string $name = null,
         /**  @var non-empty-string|null */

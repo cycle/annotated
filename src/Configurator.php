@@ -9,6 +9,8 @@ use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
+use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
@@ -81,6 +83,10 @@ final class Configurator
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
             } catch (Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            } catch (\ArgumentCountError $e) {
+                throw AnnotationRequiredArgumentsException::createFor($property, Column::class, $e);
+            } catch (\TypeError $e) {
+                throw AnnotationWrongTypeArgumentException::createFor($property, $e);
             }
 
             if ($column === null) {
@@ -187,7 +193,7 @@ final class Configurator
 
             if ($column->getType() === null) {
                 throw new AnnotationException(
-                    "Column type definition is required on `{$entity->getClass()}`"
+                    "Column type definition is required on `{$entity->getClass()}`.`{$columnName}`"
                 );
             }
 
@@ -199,12 +205,6 @@ final class Configurator
 
     public function initField(string $name, Column $column, \ReflectionClass $class, string $columnPrefix): Field
     {
-        if ($column->getType() === null) {
-            throw new AnnotationException(
-                "Column type definition is required on `{$class->getName()}`.`{$name}`."
-            );
-        }
-
         $field = new Field();
 
         $field->setType($column->getType());

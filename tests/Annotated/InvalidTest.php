@@ -57,9 +57,10 @@ abstract class InvalidTest extends BaseTest
     /**
      * @dataProvider allReadersProvider
      */
-    public function testInvalidColumn(ReaderInterface $reader): void
+    public function testNotDefinedColumnTypeShouldThrowAnException(ReaderInterface $reader): void
     {
         $this->expectException(AnnotationException::class);
+        $this->expectErrorMessage('Some of required arguments [`type`] is missed on `Cycle\Annotated\Tests\Fixtures4\User.id.`');
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/Fixtures4'],
