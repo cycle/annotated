@@ -33,7 +33,7 @@ abstract class SchemaModifiersTest extends BaseTest
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__.'/../../../Fixtures/Fixtures17'],
+                'directories' => [__DIR__ . '/../../../Fixtures/Fixtures17'],
                 'exclude' => [],
             ])
         );

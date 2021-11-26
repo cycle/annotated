@@ -89,7 +89,7 @@ abstract class BaseTest extends TestCase
         ), new \Cycle\ORM\Schema([]));
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures1'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures1'],
             'exclude' => [],
         ]));
 

@@ -29,7 +29,7 @@ abstract class CompositeKeysTest extends BaseTest
     public function testRelationToChild(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [dirname(__DIR__).'/../../../Fixtures/Fixtures14'],
+            'directories' => [dirname(__DIR__) . '/../../../Fixtures/Fixtures14'],
             'exclude' => [],
         ]));
 

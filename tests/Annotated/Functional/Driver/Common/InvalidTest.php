@@ -30,7 +30,7 @@ abstract class InvalidTest extends BaseTest
     public function testInvalidRelation(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures3'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures3'],
             'exclude' => [],
         ]));
 
@@ -65,7 +65,7 @@ abstract class InvalidTest extends BaseTest
         );
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures4'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures4'],
             'exclude' => [],
         ]));
 

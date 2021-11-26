@@ -32,7 +32,7 @@ abstract class InverseTest extends BaseTest
     public function testBelongsToOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures2'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures2'],
             'exclude' => [],
         ]));
 
@@ -68,7 +68,7 @@ abstract class InverseTest extends BaseTest
     public function testBelongsToMany(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures2'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures2'],
             'exclude' => [],
         ]));
 
@@ -104,7 +104,7 @@ abstract class InverseTest extends BaseTest
     public function testHasOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures2'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures2'],
             'exclude' => [],
         ]));
 
@@ -140,7 +140,7 @@ abstract class InverseTest extends BaseTest
     public function testHasOneInverseLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures5'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures5'],
             'exclude' => [],
         ]));
 
@@ -180,7 +180,7 @@ abstract class InverseTest extends BaseTest
     public function testBelongsTo(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures2'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures2'],
             'exclude' => [],
         ]));
 

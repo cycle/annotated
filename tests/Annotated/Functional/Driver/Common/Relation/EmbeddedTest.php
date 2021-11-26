@@ -31,7 +31,7 @@ abstract class EmbeddedTest extends BaseTest
     public function testRelation(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures6'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures6'],
             'exclude' => [],
         ]));
 
@@ -65,7 +65,7 @@ abstract class EmbeddedTest extends BaseTest
     public function testRelationLazyLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures7'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures7'],
             'exclude' => [],
         ]));
 

@@ -55,7 +55,7 @@ abstract class ChildTest extends BaseTest
     public function testRelationToChild(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures8'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures8'],
             'exclude' => [],
         ]));
 
