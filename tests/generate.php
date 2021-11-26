@@ -12,63 +12,108 @@ ini_set('display_errors', '1');
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $tokenizer = new Tokenizer\Tokenizer(new Tokenizer\Config\TokenizerConfig([
+    'directories' => [__DIR__ . '/Annotated/Functional/Driver/Common'],
+    'exclude' => [],
+]));
+
+
+$tokenizer = new Tokenizer\Tokenizer(new Tokenizer\Config\TokenizerConfig([
     'directories' => [__DIR__],
     'exclude' => [],
 ]));
 
 $databases = [
     'sqlite' => [
-        'namespace' => 'Cycle\Annotated\Tests\Driver\SQLite',
-        'directory' => __DIR__ . '/Annotated/Driver/SQLite/',
+        'namespace' => 'Cycle\Annotated\Tests\Functional\Driver\SQLite',
+        'directory' => __DIR__ . '/Annotated/Functional/Driver/SQLite/',
     ],
     'mysql' => [
-        'namespace' => 'Cycle\Annotated\Tests\Driver\MySQL',
-        'directory' => __DIR__ . '/Annotated/Driver/MySQL/',
+        'namespace' => 'Cycle\Annotated\Tests\Functional\Driver\MySQL',
+        'directory' => __DIR__ . '/Annotated/Functional/Driver/MySQL/',
     ],
     'postgres' => [
-        'namespace' => 'Cycle\Annotated\Tests\Driver\Postgres',
-        'directory' => __DIR__ . '/Annotated/Driver/Postgres/',
+        'namespace' => 'Cycle\Annotated\Tests\Functional\Driver\Postgres',
+        'directory' => __DIR__ . '/Annotated/Functional/Driver/Postgres/',
     ],
     'sqlserver' => [
-        'namespace' => 'Cycle\Annotated\Tests\Driver\SQLServer',
-        'directory' => __DIR__ . '/Annotated/Driver/SQLServer/',
+        'namespace' => 'Cycle\Annotated\Tests\Functional\Driver\SQLServer',
+        'directory' => __DIR__ . '/Annotated/Functional/Driver/SQLServer/',
     ],
 ];
 
 echo "Generating test classes for all database types...\n";
 
-$classes = $tokenizer->classLocator()->getClasses(\Cycle\Annotated\Tests\BaseTest::class);
+$classes = $tokenizer->classLocator()->getClasses(\Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest::class);
 
 foreach ($classes as $class) {
-    if (!$class->isAbstract() || $class->getName() == \Cycle\Annotated\Tests\BaseTest::class) {
+    foreach ($class->getMethods() as $method) {
+        if ($method->isAbstract()) {
+            echo "Skip class {$class->getName()} with abstract methods.\n";
+            continue 2;
+        }
+    }
+
+    if (
+        !$class->isAbstract()
+        // Has abstract methods
+        || $class->getName() == \Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest::class
+    ) {
         continue;
     }
 
     echo "Found {$class->getName()}\n";
+
+    $path = str_replace(
+        [str_replace('\\', '/', __DIR__), 'Annotated/Functional/Driver/Common/'],
+        '',
+        str_replace('\\', '/', $class->getFileName())
+    );
+
+    $path = ltrim($path, '/');
+
     foreach ($databases as $driver => $details) {
-        $filename = sprintf('%s/%s.php', $details['directory'], $class->getShortName());
+        $filename = sprintf('%s%s', $details['directory'], $path);
+        $dir = pathinfo($filename, PATHINFO_DIRNAME);
+
+        $namespace = str_replace(
+            'Cycle\\Annotated\\Tests\\Functional\\Driver\\Common',
+            $details['namespace'],
+            $class->getNamespaceName()
+        );
+
+        if (!is_dir($dir)) {
+            mkdir($dir, recursive: true);
+        }
 
         file_put_contents(
             $filename,
             sprintf(
-                '<?php
+                <<<PHP
+<?php
 
 declare(strict_types=1);
 
 namespace %s;
 
-class %s extends \%s
+// phpcs:ignore
+use %s as CommonClass;
+
+/**
+ * @group driver
+ * @group driver-%s
+ */
+class %s extends CommonClass
 {
-    const DRIVER = "%s";
-}',
-                $details['namespace'],
-                $class->getShortName(),
+    public const DRIVER = '%s';
+}
+
+PHP,
+                $namespace,
                 $class->getName(),
+                $driver,
+                $class->getShortName(),
                 $driver
             )
         );
     }
 }
-
-// helper to validate the selection results
-// file_put_contents('out.php', '<?php ' . var_export($selector->fetchData(), true));
