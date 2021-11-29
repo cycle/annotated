@@ -16,12 +16,6 @@ $tokenizer = new Tokenizer\Tokenizer(new Tokenizer\Config\TokenizerConfig([
     'exclude' => [],
 ]));
 
-
-$tokenizer = new Tokenizer\Tokenizer(new Tokenizer\Config\TokenizerConfig([
-    'directories' => [__DIR__],
-    'exclude' => [],
-]));
-
 $databases = [
     'sqlite' => [
         'namespace' => 'Cycle\Annotated\Tests\Functional\Driver\SQLite',

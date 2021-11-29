@@ -103,7 +103,7 @@ class TableInheritance implements GeneratorInterface
 
             $parent->getInheritance()->addChild(
                 $inheritance->getValue() ?? $entity->getRole(),
-                $entity->getRole()
+                $entity->getClass()
             );
 
             $entity->markAsChildOfSingleTableInheritance($parent->getClass());

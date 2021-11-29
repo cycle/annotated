@@ -22,9 +22,24 @@ class Person
 
     /** @Column(type="string") */
     #[Column(type: 'string')]
-    protected string $name;
+    public string $name;
 
     /** @Column(type="string") */
     #[Column(type: 'string')]
     protected string $type;
+
+    public function getFooId(): int
+    {
+        return $this->foo_id;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

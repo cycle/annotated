@@ -65,8 +65,8 @@ abstract class InheritanceTest extends BaseTest
         // Person
         $this->assertCount(2, $schema['person'][SchemaInterface::CHILDREN]);
         $this->assertEquals([
-            'employee' => 'employee',
-            'foo_customer' => 'customer',
+            'employee' => Employee::class,
+            'foo_customer' => Customer::class,
         ], $schema['person'][SchemaInterface::CHILDREN]);
         $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
         $this->assertEquals([
