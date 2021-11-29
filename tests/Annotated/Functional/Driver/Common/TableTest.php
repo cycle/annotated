@@ -86,7 +86,7 @@ abstract class TableTest extends BaseTest
     {
         $reader = new AnnotationReader();
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures9'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures9'],
             'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
@@ -106,7 +106,7 @@ abstract class TableTest extends BaseTest
     {
         $reader = new AnnotationReader();
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures11'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures11'],
             'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
@@ -133,7 +133,7 @@ abstract class TableTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures12'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures12'],
             'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
@@ -160,7 +160,7 @@ abstract class TableTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures13'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures13'],
             'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();
@@ -201,7 +201,7 @@ abstract class TableTest extends BaseTest
     public function testOrderedIndexes(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures9'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures9'],
             'exclude' => [],
         ]));
 

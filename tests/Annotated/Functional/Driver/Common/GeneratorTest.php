@@ -68,7 +68,7 @@ abstract class GeneratorTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../Fixtures/Fixtures10'],
+            'directories' => [__DIR__ . '/../../../Fixtures/Fixtures10'],
             'exclude' => [],
         ]));
         $locator = $tokenizer->classLocator();

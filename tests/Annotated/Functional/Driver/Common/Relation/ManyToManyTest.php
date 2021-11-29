@@ -34,7 +34,7 @@ abstract class ManyToManyTest extends BaseTest
     public function testPivotPrimaryKeys(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__.'/../../../../Fixtures/Fixtures15'],
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures15'],
             'exclude' => [],
         ]));
 
