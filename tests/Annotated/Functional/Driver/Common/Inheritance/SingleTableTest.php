@@ -53,7 +53,7 @@ abstract class SingleTableTest extends BaseTest
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__.'/../../../../Fixtures/Fixtures16'],
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
                 'exclude' => [],
             ])
         );
