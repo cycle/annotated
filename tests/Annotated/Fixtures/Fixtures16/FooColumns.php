@@ -10,5 +10,5 @@ trait FooColumns
 {
     /** @Column(type="string") */
     #[Column(type: 'string')]
-    protected string $bar;
+    public string $bar;
 }

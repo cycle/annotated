@@ -20,5 +20,10 @@ class Employee extends Person
 
     /** @Column(type="int") */
     #[Column(type: 'int')]
-    protected int $salary;
+    public int $salary;
+
+    public function getSalary(): int
+    {
+        return $this->salary;
+    }
 }

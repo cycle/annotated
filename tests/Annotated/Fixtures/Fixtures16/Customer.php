@@ -16,7 +16,12 @@ use Cycle\Annotated\Annotation\Inheritance\SingleTable as InheritanceSingleTable
 #[InheritanceSingleTable(value: 'foo_customer')]
 class Customer extends Person
 {
-    /** @Column(type="json") */
-    #[Column(type: 'json')]
-    protected array $preferences;
+    /** @Column(type="string") */
+    #[Column(type: 'string')]
+    public string $preferences;
+
+    public function getPreferences(): string
+    {
+        return $this->preferences;
+    }
 }
