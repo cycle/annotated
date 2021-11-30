@@ -59,7 +59,7 @@ abstract class ChildTest extends BaseTest
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [$dir],
-            'exclude'     => [],
+            'exclude' => [],
         ]));
 
         $locator = $tokenizer->classLocator();
