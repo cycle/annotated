@@ -21,6 +21,9 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -50,12 +53,12 @@ abstract class ChildTest extends BaseTest
     }
 
     /**
-     * @dataProvider allReadersProvider
+     * @dataProvider readerToChildProvider
      */
-    public function testRelationToChild(ReaderInterface $reader): void
+    public function testRelationToChild(ReaderInterface $reader, string $dir): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__ . '/Fixtures8'],
+            'directories' => [$dir],
             'exclude' => [],
         ]));
 
@@ -80,5 +83,43 @@ abstract class ChildTest extends BaseTest
         $this->assertSame(Relation::HAS_ONE, $schema['some'][Schema::RELATIONS]['article'][Relation::TYPE]);
 
         $this->assertSame('post', $schema['some'][Schema::RELATIONS]['article'][Relation::TARGET]);
+    }
+
+    public function readerToChildProvider(): iterable
+    {
+        yield 'Annotation reader - Annotation' => [
+            new AnnotationReader(),
+            __DIR__ . '/Fixtures8/Annotation',
+        ];
+
+        yield 'Annotation reader - Both' => [
+            new AnnotationReader(),
+            __DIR__ . '/Fixtures8/Both',
+        ];
+
+        yield 'Attribute reader - Attribute' => [
+            new AttributeReader(),
+            __DIR__ . '/Fixtures8/Attribute',
+        ];
+
+        yield 'Attribute reader - Both' => [
+            new AttributeReader(),
+            __DIR__ . '/Fixtures8/Both',
+        ];
+
+        yield 'Selective reader - Annotation' => [
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
+            __DIR__ . '/Fixtures8/Annotation',
+        ];
+
+        yield 'Selective reader - Attribute' => [
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
+            __DIR__ . '/Fixtures8/Attribute',
+        ];
+
+        yield 'Selective reader - Both' => [
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
+            __DIR__ . '/Fixtures8/Both',
+        ];
     }
 }
