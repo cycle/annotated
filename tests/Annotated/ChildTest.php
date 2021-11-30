@@ -89,37 +89,37 @@ abstract class ChildTest extends BaseTest
     {
         yield 'Annotation reader - Annotation' => [
             new AnnotationReader(),
-            __DIR__ . '/Fixtures8/Annotation'
+            __DIR__ . '/Fixtures8/Annotation',
         ];
 
         yield 'Annotation reader - Both' => [
             new AnnotationReader(),
-            __DIR__ . '/Fixtures8/Both'
+            __DIR__ . '/Fixtures8/Both',
         ];
 
         yield 'Attribute reader - Attribute' => [
             new AttributeReader(),
-            __DIR__ . '/Fixtures8/Attribute'
+            __DIR__ . '/Fixtures8/Attribute',
         ];
 
         yield 'Attribute reader - Both' => [
             new AttributeReader(),
-            __DIR__ . '/Fixtures8/Both'
+            __DIR__ . '/Fixtures8/Both',
         ];
 
         yield 'Selective reader - Annotation' => [
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            __DIR__ . '/Fixtures8/Annotation'
+            __DIR__ . '/Fixtures8/Annotation',
         ];
 
         yield 'Selective reader - Attribute' => [
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            __DIR__ . '/Fixtures8/Attribute'
+            __DIR__ . '/Fixtures8/Attribute',
         ];
 
         yield 'Selective reader - Both' => [
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            __DIR__ . '/Fixtures8/Both'
+            __DIR__ . '/Fixtures8/Both',
         ];
     }
 }
