@@ -48,7 +48,7 @@ abstract class JoinedTableTest extends BaseTest
             'id' => 'primary',
             'bonus' => 'float',
             'proxy' => 'string',
-            'hidden' => 'string'
+            'hidden' => 'string',
         ]);
     }
 
@@ -59,7 +59,7 @@ abstract class JoinedTableTest extends BaseTest
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__.'/../../../../Fixtures/Fixtures16'],
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
                 'exclude' => [],
             ])
         );

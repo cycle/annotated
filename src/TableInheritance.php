@@ -53,7 +53,7 @@ class TableInheritance implements GeneratorInterface
                         }
 
                         $childClass = $parent->getClass();
-                    } while($this->parseMetadata($parent, Inheritance::class) !== null);
+                    } while ($this->parseMetadata($parent, Inheritance::class) !== null);
 
                     if ($entity = $this->initInheritance($annotation, $child, $parent)) {
                         $found[] = $entity;
