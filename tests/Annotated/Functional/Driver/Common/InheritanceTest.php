@@ -34,8 +34,8 @@ abstract class InheritanceTest extends BaseTest
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__.'/../../../Fixtures/Fixtures16'],
-                'exclude' => [__DIR__.'/Fixtures16/CatWithoutParent.php'],
+                'directories' => [__DIR__ . '/../../../Fixtures/Fixtures16'],
+                'exclude' => [__DIR__ . '/Fixtures16/CatWithoutParent.php'],
             ])
         );
 
@@ -80,7 +80,7 @@ abstract class InheritanceTest extends BaseTest
             'bar' => 'bar',
             // 'bonus' => 'bonus', // JTI
             'preferences' => 'preferences',
-            'stocks' => 'stocks'
+            'stocks' => 'stocks',
             // 'teethAmount' => 'teeth_amount', // Not child
         ], $schema['person'][SchemaInterface::COLUMNS]);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT] ?? null);
