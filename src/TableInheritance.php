@@ -64,6 +64,12 @@ class TableInheritance implements GeneratorInterface
                 // Every child will be handled according its table inheritance type
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
+
+                    $registry->linkTable(
+                        $child,
+                        $child->getDatabase(),
+                        $child->getTableName(),
+                    );
                 }
             }
         }
