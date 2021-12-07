@@ -45,7 +45,7 @@ abstract class JoinedTableTest extends BaseTest
         ]);
 
         $this->makeTable('executives', [
-            'id' => 'primary',
+            'id' => 'int',
             'bonus' => 'float',
             'proxy' => 'string',
             'hidden' => 'string',
