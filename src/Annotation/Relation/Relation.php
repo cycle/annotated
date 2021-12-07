@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
-use Doctrine\Common\Annotations\Annotation\Enum;
-use JetBrains\PhpStorm\ExpectedValues;
-
 abstract class Relation implements RelationInterface
 {
     // relation type
@@ -18,10 +15,6 @@ abstract class Relation implements RelationInterface
      */
     public function __construct(
         protected ?string $target,
-        /**
-         * @Enum({"eager", "lazy", "promise"})
-         */
-        #[ExpectedValues(values: ['lazy', 'eager'])]
         protected string $load = 'lazy',
     ) {
     }
