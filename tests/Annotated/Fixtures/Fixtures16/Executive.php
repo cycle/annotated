@@ -20,5 +20,5 @@ class Executive extends ExecutiveProxy
 
     /** @Column(type="int") */
     #[Column(type: 'int')]
-    protected int $bonus;
+    public int $bonus;
 }

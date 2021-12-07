@@ -12,6 +12,7 @@ use Cycle\Annotated\TableInheritance;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Customer;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Employee;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Person;
+use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
 use Cycle\ORM\Schema;
@@ -43,6 +44,7 @@ abstract class SingleTableTest extends BaseTest
             'salary' => 'float',
             'preferences' => 'string',
             'bar' => 'string',
+            'stocks' => 'int',
         ]);
     }
 
@@ -96,10 +98,16 @@ abstract class SingleTableTest extends BaseTest
         $customer->name = 'baz';
         $customer->preferences = 'private';
 
+        $ceo = new Ceo();
+        $ceo->name = 'ceo';
+        $ceo->stocks = 1000;
+        $ceo->salary = 150000;
+
         $t->persist($employee);
         $t->persist($employee1);
         $t->persist($person);
         $t->persist($customer);
+        $t->persist($ceo);
 
         $t->run();
 
@@ -126,5 +134,12 @@ abstract class SingleTableTest extends BaseTest
         $this->assertSame('baz', $loadedCustomer->name);
         $this->assertSame('private', $loadedCustomer->preferences);
         $this->assertFalse(isset($loadedCustomer->salary));
+
+        $this->assertNotNull($ceo->getFooId());
+        $loadedCeo = $this->orm->getRepository(Ceo::class)->findByPK($ceo->getFooId());
+        $this->assertInstanceOf(Ceo::class, $loadedCeo);
+        $this->assertSame('ceo', $loadedCeo->name);
+        $this->assertSame(150000, $loadedCeo->salary);
+        $this->assertSame(1000, $loadedCeo->stocks);
     }
 }

@@ -26,7 +26,7 @@ class Person
 
     /** @Column(type="string") */
     #[Column(type: 'string')]
-    protected string $type;
+    public string $type;
 
     public function getFooId(): int
     {

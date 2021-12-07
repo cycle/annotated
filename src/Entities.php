@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Inheritance;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
@@ -52,6 +53,7 @@ final class Entities implements GeneratorInterface
             try {
                 /** @var Entity $ann */
                 $ann = $this->reader->firstClassMetadata($class, Entity::class);
+                $inheritanceAnn = $this->reader->firstClassMetadata($class, Inheritance::class);
             } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
@@ -76,7 +78,9 @@ final class Entities implements GeneratorInterface
 
             if ($this->utils->hasParent($e->getClass())) {
                 $children[] = $e;
-                continue;
+                if (! $inheritanceAnn instanceof Inheritance\JoinedTable) {
+                    continue;
+                }
             }
 
             // register entity (OR find parent)
@@ -100,7 +104,7 @@ final class Entities implements GeneratorInterface
     {
         // resolve all the relation target names into roles
         foreach ($this->locator->getClasses() as $class) {
-            if (!$registry->hasEntity($class->getName())) {
+            if (! $registry->hasEntity($class->getName())) {
                 continue;
             }
 
@@ -166,7 +170,7 @@ final class Entities implements GeneratorInterface
             return $name;
         }
 
-        if (!$registry->hasEntity($name)) {
+        if (! $registry->hasEntity($name)) {
             // point all relations to the parent
             foreach ($registry as $entity) {
                 foreach ($registry->getChildren($entity) as $child) {
