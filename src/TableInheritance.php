@@ -177,6 +177,12 @@ class TableInheritance implements GeneratorInterface
 
             if (!$field->isPrimary()) {
                 $entity->getFields()->remove($name);
+            } else {
+                if ($field->getType() === 'primary') {
+                    $field->setType('integer')->setPrimary(true);
+                } else if($field->getType() === 'bigPrimary') {
+                    $field->setType('bigInteger')->setPrimary(true);
+                }
             }
         }
     }

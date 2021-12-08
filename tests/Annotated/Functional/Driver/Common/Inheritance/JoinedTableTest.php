@@ -34,22 +34,29 @@ abstract class JoinedTableTest extends BaseTest
     {
         parent::setUp();
 
-        $this->makeTable('people', [
-            'id' => 'primary',
-            'type' => 'string',
-            'name' => 'string',
-            'salary' => 'float',
-            'preferences' => 'string',
-            'bar' => 'string',
-            'stocks' => 'int',
-        ]);
+        $this->makeTable(
+            table: 'people',
+            columns: [
+                'id' => 'primary',
+                'type' => 'string',
+                'name' => 'string',
+                'salary' => 'float',
+                'preferences' => 'string',
+                'bar' => 'string',
+                'stocks' => 'int',
+            ]
+        );
 
-        $this->makeTable('executives', [
-            'id' => 'int',
-            'bonus' => 'float',
-            'proxy' => 'string',
-            'hidden' => 'string',
-        ]);
+        $this->makeTable(
+            table: 'executives',
+            columns: [
+                'id' => 'int',
+                'bonus' => 'float',
+                'proxy' => 'string',
+                'hidden' => 'string',
+            ],
+            pk: ['id']
+        );
     }
 
     /**
@@ -59,7 +66,7 @@ abstract class JoinedTableTest extends BaseTest
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
+                'directories' => [__DIR__.'/../../../../Fixtures/Fixtures16'],
                 'exclude' => [],
             ])
         );
