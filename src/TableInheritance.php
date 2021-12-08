@@ -180,7 +180,7 @@ class TableInheritance implements GeneratorInterface
             } else {
                 if ($field->getType() === 'primary') {
                     $field->setType('integer')->setPrimary(true);
-                } else if($field->getType() === 'bigPrimary') {
+                } elseif ($field->getType() === 'bigPrimary') {
                     $field->setType('bigInteger')->setPrimary(true);
                 }
             }
