@@ -39,11 +39,21 @@ class TableInheritance implements GeneratorInterface
             foreach ($children as $child) {
                 /** @var Inheritance $annotation */
                 if ($annotation = $this->parseMetadata($child, Inheritance::class)) {
+                    $childClass = $child->getClass();
+
                     // Child entities always have parent entity
-                    $parent = $this->findParent(
-                        $registry,
-                        $this->utils->findParent($child->getClass(), false)
-                    );
+                    do {
+                        $parent = $this->findParent(
+                            $registry,
+                            $this->utils->findParent($childClass, false)
+                        );
+
+                        if ($annotation instanceof Inheritance\JoinedTable) {
+                            break;
+                        }
+
+                        $childClass = $parent->getClass();
+                    } while ($this->parseMetadata($parent, Inheritance::class) !== null);
 
                     if ($entity = $this->initInheritance($annotation, $child, $parent)) {
                         $found[] = $entity;
@@ -54,6 +64,12 @@ class TableInheritance implements GeneratorInterface
                 // Every child will be handled according its table inheritance type
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
+
+                    $registry->linkTable(
+                        $child,
+                        $child->getDatabase(),
+                        $child->getTableName(),
+                    );
                 }
             }
         }
@@ -126,6 +142,7 @@ class TableInheritance implements GeneratorInterface
 
             return $entity;
         }
+
         // Custom table inheritance types developers can handle in their own generators
         return null;
     }
@@ -160,6 +177,12 @@ class TableInheritance implements GeneratorInterface
 
             if (!$field->isPrimary()) {
                 $entity->getFields()->remove($name);
+            } else {
+                if ($field->getType() === 'primary') {
+                    $field->setType('integer')->setPrimary(true);
+                } elseif ($field->getType() === 'bigPrimary') {
+                    $field->setType('bigInteger')->setPrimary(true);
+                }
             }
         }
     }

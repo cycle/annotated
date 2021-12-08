@@ -10,5 +10,5 @@ trait ExtraColumns
 {
     /** @Column(type="string") */
     #[Column(type: 'string')]
-    protected string $hidden;
+    public string $hidden;
 }

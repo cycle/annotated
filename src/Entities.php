@@ -13,8 +13,6 @@ use Cycle\Schema\Exception\RelationException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
-use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
@@ -30,18 +28,16 @@ final class Entities implements GeneratorInterface
 
     private ReaderInterface $reader;
     private Configurator $generator;
-    private Inflector $inflector;
     private EntityUtils $utils;
 
     public function __construct(
         private ClassesInterface $locator,
         DoctrineReader|ReaderInterface $reader = null,
-        private int $tableNaming = self::TABLE_NAMING_PLURAL
+        int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
     ) {
         $this->reader = ReaderFactory::create($reader);
-        $this->generator = new Configurator($this->reader);
-        $this->inflector = (new InflectorFactory())->build();
         $this->utils = new EntityUtils($this->reader);
+        $this->generator = new Configurator($this->reader, $tableNamingStrategy);
     }
 
     public function run(Registry $registry): Registry
@@ -81,12 +77,7 @@ final class Entities implements GeneratorInterface
 
             // register entity (OR find parent)
             $registry->register($e);
-
-            $registry->linkTable(
-                $e,
-                $ann->getDatabase(),
-                $ann->getTable() ?? $this->tableName($e->getRole())
-            );
+            $registry->linkTable($e, $e->getDatabase(), $e->getTableName());
         }
 
         foreach ($children as $e) {
@@ -100,7 +91,7 @@ final class Entities implements GeneratorInterface
     {
         // resolve all the relation target names into roles
         foreach ($this->locator->getClasses() as $class) {
-            if (!$registry->hasEntity($class->getName())) {
+            if (! $registry->hasEntity($class->getName())) {
                 continue;
             }
 
@@ -166,7 +157,7 @@ final class Entities implements GeneratorInterface
             return $name;
         }
 
-        if (!$registry->hasEntity($name)) {
+        if (! $registry->hasEntity($name)) {
             // point all relations to the parent
             foreach ($registry as $entity) {
                 foreach ($registry->getChildren($entity) as $child) {
@@ -178,16 +169,5 @@ final class Entities implements GeneratorInterface
         }
 
         return $registry->getEntity($name)->getRole();
-    }
-
-    private function tableName(string $role): string
-    {
-        $table = $this->inflector->tableize($role);
-
-        return match ($this->tableNaming) {
-            self::TABLE_NAMING_PLURAL => $this->inflector->pluralize($this->inflector->tableize($role)),
-            self::TABLE_NAMING_SINGULAR => $this->inflector->singularize($this->inflector->tableize($role)),
-            default => $table,
-        };
     }
 }

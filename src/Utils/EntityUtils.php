@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Utils;
 
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Entities;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -12,8 +14,11 @@ use Spiral\Attributes\ReaderInterface;
  */
 class EntityUtils
 {
+    private \Doctrine\Inflector\Inflector $inflector;
+
     public function __construct(private ReaderInterface $reader)
     {
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**
@@ -54,5 +59,14 @@ class EntityUtils
         }
 
         return null;
+    }
+
+    public function tableName(string $role, int $namingStrategy = Entities::TABLE_NAMING_PLURAL): string
+    {
+        return match ($namingStrategy) {
+            Entities::TABLE_NAMING_PLURAL => $this->inflector->pluralize($this->inflector->tableize($role)),
+            Entities::TABLE_NAMING_SINGULAR => $this->inflector->singularize($this->inflector->tableize($role)),
+            default => $this->inflector->tableize($role),
+        };
     }
 }

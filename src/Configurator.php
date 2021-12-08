@@ -11,6 +11,7 @@ use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
 use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
+use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
@@ -25,13 +26,16 @@ use Spiral\Attributes\ReaderInterface;
 final class Configurator
 {
     private ReaderInterface $reader;
-
     private Inflector $inflector;
+    private EntityUtils $utils;
 
-    public function __construct(DoctrineReader|ReaderInterface $reader)
-    {
+    public function __construct(
+        DoctrineReader|ReaderInterface $reader,
+        private int $tableNamingStrategy = Entities::TABLE_NAMING_PLURAL,
+    ) {
         $this->reader = ReaderFactory::create($reader);
         $this->inflector = (new InflectorFactory())->build();
+        $this->utils = new EntityUtils($this->reader);
     }
 
     public function initEntity(Entity $ann, \ReflectionClass $class): EntitySchema
@@ -46,6 +50,10 @@ final class Configurator
         $e->setRepository($this->resolveName($ann->getRepository(), $class));
         $e->setSource($this->resolveName($ann->getSource(), $class));
         $e->setScope($this->resolveName($ann->getScope(), $class));
+        $e->setDatabase($ann->getDatabase());
+        $e->setTableName(
+            $ann->getTable() ?? $this->utils->tableName($e->getRole(), $this->tableNamingStrategy)
+        );
 
         $typecast = $ann->getTypecast();
         if (is_array($typecast)) {

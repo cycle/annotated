@@ -9,6 +9,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\TableInheritance;
+use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Customer;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Employee;
 use Cycle\ORM\SchemaInterface;
@@ -60,13 +61,15 @@ abstract class InheritanceTest extends BaseTest
         // Employee - Single table inheritance {value: employee}
         // Customer - Single table inheritance {value: foo_customer}
         // Executive - Joined table inheritance {outerKey: foo_id}
+        // Ceo - Single table inheritance {value: ceo}
         // Beaver - Separate table
 
         // Person
-        $this->assertCount(2, $schema['person'][SchemaInterface::CHILDREN]);
+        $this->assertCount(3, $schema['person'][SchemaInterface::CHILDREN]);
         $this->assertEquals([
             'employee' => Employee::class,
             'foo_customer' => Customer::class,
+            'ceo' => Ceo::class,
         ], $schema['person'][SchemaInterface::CHILDREN]);
         $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
         $this->assertEquals([
@@ -75,9 +78,10 @@ abstract class InheritanceTest extends BaseTest
             'type' => 'type',
             'salary' => 'salary',
             'bar' => 'bar',
-            //'bonus' => 'bonus', // JTI
+            // 'bonus' => 'bonus', // JTI
             'preferences' => 'preferences',
-            //'teethAmount' => 'teeth_amount', // Not child
+            'stocks' => 'stocks',
+            // 'teethAmount' => 'teeth_amount', // Not child
         ], $schema['person'][SchemaInterface::COLUMNS]);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT] ?? null);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT_KEY] ?? null);
@@ -99,6 +103,11 @@ abstract class InheritanceTest extends BaseTest
             ['bonus' => 'bonus', 'foo_id' => 'id', 'hidden' => 'hidden'],
             $schema['executive'][SchemaInterface::COLUMNS]
         );
+
+        // Ceo
+        $this->assertArrayHasKey('ceo', $schema);
+        $this->assertCount(1, $schema['ceo']);
+        $this->assertSame(Ceo::class, $schema['ceo'][SchemaInterface::ENTITY]);
 
         // Beaver
         $this->assertEmpty($schema['beaver'][SchemaInterface::DISCRIMINATOR] ?? null);
