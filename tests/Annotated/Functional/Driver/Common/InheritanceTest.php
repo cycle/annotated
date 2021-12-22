@@ -85,20 +85,24 @@ abstract class InheritanceTest extends BaseTest
         ], $schema['person'][SchemaInterface::COLUMNS]);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT] ?? null);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT_KEY] ?? null);
+        $this->assertSame('people', $schema['person'][SchemaInterface::TABLE]);
 
         // Employee
         $this->assertArrayHasKey('employee', $schema);
         $this->assertCount(1, $schema['employee']);
         $this->assertSame(Employee::class, $schema['employee'][SchemaInterface::ENTITY]);
+        $this->assertNull($schema['employee'][SchemaInterface::TABLE] ?? null);
 
         // Customer
         $this->assertArrayHasKey('customer', $schema);
         $this->assertCount(1, $schema['customer']);
         $this->assertSame(Customer::class, $schema['customer'][SchemaInterface::ENTITY]);
+        $this->assertNull($schema['customer'][SchemaInterface::TABLE] ?? null);
 
         // Executive
         $this->assertSame('employee', $schema['executive'][SchemaInterface::PARENT]);
         $this->assertSame('foo_id', $schema['executive'][SchemaInterface::PARENT_KEY]);
+        $this->assertSame('executives', $schema['executive'][SchemaInterface::TABLE]);
         $this->assertSame(
             ['bonus' => 'bonus', 'foo_id' => 'id', 'hidden' => 'hidden'],
             $schema['executive'][SchemaInterface::COLUMNS]
@@ -108,12 +112,14 @@ abstract class InheritanceTest extends BaseTest
         $this->assertArrayHasKey('ceo', $schema);
         $this->assertCount(1, $schema['ceo']);
         $this->assertSame(Ceo::class, $schema['ceo'][SchemaInterface::ENTITY]);
+        $this->assertNull($schema['ceo'][SchemaInterface::TABLE] ?? null);
 
         // Beaver
         $this->assertEmpty($schema['beaver'][SchemaInterface::DISCRIMINATOR] ?? null);
         $this->assertEmpty($schema['beaver'][SchemaInterface::PARENT] ?? null);
         $this->assertEmpty($schema['beaver'][SchemaInterface::PARENT_KEY] ?? null);
         $this->assertEmpty($schema['beaver'][SchemaInterface::CHILDREN] ?? null);
+        $this->assertSame('beavers', $schema['beaver'][SchemaInterface::TABLE]);
         $this->assertSame([
             'teethAmount' => 'teeth_amount',
             'foo_id' => 'id',
