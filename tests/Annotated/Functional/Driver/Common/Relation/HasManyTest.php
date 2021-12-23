@@ -18,7 +18,10 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
 
 abstract class HasManyTest extends BaseTest
 {
@@ -58,6 +61,45 @@ abstract class HasManyTest extends BaseTest
         $this->assertSame(
             'bar',
             $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
+        );
+    }
+
+    public function testInnerOuterKeys(): void
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures18'],
+            'exclude' => [],
+        ]));
+        $reader = new AttributeReader();
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            $t = new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        // RENDER!
+        $t->getReflector()->run();
+
+        $this->assertSame(
+            Relation::HAS_MANY,
+            $schema['booking_reservation'][Schema::RELATIONS]['segments'][Relation::TYPE]
+        );
+        $this->assertSame(
+            'id',
+            $schema['booking_reservation'][Schema::RELATIONS]['segments'][Relation::SCHEMA][Relation::INNER_KEY]
+        );
+        $this->assertSame(
+            'flightSegmentId',
+            $schema['booking_reservation'][Schema::RELATIONS]['segments'][Relation::SCHEMA][Relation::OUTER_KEY]
         );
     }
 }
