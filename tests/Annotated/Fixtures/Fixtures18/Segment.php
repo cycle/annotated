@@ -13,10 +13,10 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 )]
 class Segment
 {
-    #[Column(name: 'flightSegmentId', type: 'primary')]
+    #[Column(name: 'id_segment', type: 'primary')]
     protected ?int $id = null;
 
-    #[BelongsTo(target: Reservation::class, innerKey: 'FlightReservation_flightReservationId', outerKey: 'flightReservationId')]
-    private Reservation $flightReservation;
+    // #[BelongsTo(target: Reservation::class, innerKey: 'FlightReservation_flightReservationId', outerKey: 'flightReservationId')]
+    // private Reservation $flightReservation;
 
 }

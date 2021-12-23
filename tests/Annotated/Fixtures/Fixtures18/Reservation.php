@@ -15,11 +15,11 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 )]
 class Reservation
 {
-    #[Column(type: 'primary', name: 'flightReservationId')]
+    #[Column(type: 'primary', name: 'id_reservation')]
     protected ?int $id = null;
 
-    #[BelongsTo(target: Booking::class, innerKey: 'flightReservationId', outerKey: 'FlightRezervationId', fkCreate: false)]
-    private ?Booking $booking = null;
+    // #[BelongsTo(target: Booking::class, innerKey: 'id', outerKey: 'FlightRezervationId', fkCreate: false)]
+    // private ?Booking $booking = null;
 
     #[HasMany(target: Segment::class)]
     private array $segments = [];
