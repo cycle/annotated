@@ -13,7 +13,7 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable
  * @InheritanceJoinedTable(outerKey="foo_id")
  */
 #[Entity]
-#[InheritanceJoinedTable(outerKey: 'foo_id', fkCreate: true)]
+#[InheritanceJoinedTable(outerKey: 'foo_id')]
 class Executive extends ExecutiveProxy
 {
     use ExtraColumns;
