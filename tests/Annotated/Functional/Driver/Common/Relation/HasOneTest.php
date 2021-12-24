@@ -80,7 +80,7 @@ abstract class HasOneTest extends BaseTest
 
         $checks = [
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation0 */
-            ['reservation0', 'bid', 'rid'],
+            ['reservation0', 'bid', 'booking_bid'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation1 */
             ['reservation1', 'reserv_id', 'rid'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation2 */
@@ -102,5 +102,9 @@ abstract class HasOneTest extends BaseTest
                 "$name: Outer Key"
             );
         }
+        $this->assertArrayNotHasKey(
+            'id_reservation',
+            $schema['booking'][Schema::COLUMNS]
+        );
     }
 }

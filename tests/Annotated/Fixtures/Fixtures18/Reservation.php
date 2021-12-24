@@ -21,6 +21,15 @@ class Reservation
     // #[BelongsTo(target: Booking::class, innerKey: 'id', outerKey: 'FlightRezervationId', fkCreate: false)]
     // private ?Booking $booking = null;
 
+    // Without manual declaration
     #[HasMany(target: Segment::class)]
-    private array $segments = [];
+    private array $segments0 = [];
+
+    // Use property names
+    #[HasMany(target: Segment::class, innerKey: 'rid', outerKey: 'parent_id')]
+    private array $segments1 = [];
+
+    // Use column names
+    #[HasMany(target: Segment::class, innerKey: 'id_reservation', outerKey: 'parent_id_column')]
+    private array $segments2 = [];
 }

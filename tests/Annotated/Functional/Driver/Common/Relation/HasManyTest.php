@@ -9,6 +9,7 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\ORM\Relation;
+use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\SchemaInterface as Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
@@ -89,17 +90,28 @@ abstract class HasManyTest extends BaseTest
         // RENDER!
         $t->getReflector()->run();
 
-        $this->assertSame(
-            Relation::HAS_MANY,
-            $schema['booking_reservation'][Schema::RELATIONS]['segments'][Relation::TYPE]
-        );
-        $this->assertSame(
-            'id',
-            $schema['booking_reservation'][Schema::RELATIONS]['segments'][Relation::SCHEMA][Relation::INNER_KEY]
-        );
-        $this->assertSame(
-            'flightSegmentId',
-            $schema['booking_reservation'][Schema::RELATIONS]['segments'][Relation::SCHEMA][Relation::OUTER_KEY]
-        );
+        $checks = [
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments0 */
+            ['segments0', 'rid', 'booking_reservation_rid'],
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments1 */
+            ['segments1', 'rid', 'parent_id'],
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments2 */
+            ['segments2', 'rid', 'parent_id'],
+        ];
+        foreach ($checks as [$name, $innerKey, $outerKey]) {
+            $relation = $schema['booking_reservation'][SchemaInterface::RELATIONS][$name];
+
+            $this->assertSame(Relation::HAS_MANY, $relation[Relation::TYPE], "$name: relation type");
+            $this->assertSame(
+                (array)$innerKey,
+                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key"
+            );
+            $this->assertSame(
+                (array)$outerKey,
+                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key"
+            );
+        }
     }
 }
