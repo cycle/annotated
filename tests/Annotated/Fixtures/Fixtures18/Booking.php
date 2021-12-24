@@ -14,14 +14,20 @@ use Cycle\Annotated\Annotation\Relation\HasOne;
 class Booking
 {
     #[Column(type: 'primary', name: 'id_booking')]
-    protected ?int $id = null;
-
-    #[Column(type: 'string(12)')]
-    protected ?string $code = null;
+    protected ?int $bid = null;
 
     #[Column(type: 'bigInteger', name: 'reserv_id_column')]
     private int $reserv_id;
 
-    #[HasOne(target: Reservation::class, innerKey: 'reserv_id', outerKey: 'id', fkCreate: false)]
-    protected Reservation $reservation;
+    // Without manual declaration
+    #[HasOne(target: Reservation::class, fkCreate: false)]
+    protected Reservation $reservation0;
+
+    // Use property names
+    #[HasOne(target: Reservation::class, innerKey: 'reserv_id', outerKey: 'rid', fkCreate: false)]
+    protected Reservation $reservation1;
+
+    // Use column names
+    #[HasOne(target: Reservation::class, innerKey: 'reserv_id_column', outerKey: 'id_reservation', fkCreate: false)]
+    protected Reservation $reservation2;
 }

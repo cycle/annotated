@@ -78,13 +78,29 @@ abstract class HasOneTest extends BaseTest
         // RENDER!
         $t->getReflector()->run();
 
-        $this->assertSame(
-            Relation::HAS_ONE,
-            $schema['booking'][SchemaInterface::RELATIONS]['reservation'][Relation::TYPE]
-        );
-        $this->assertSame(
-            'FlightRezervationId',
-            $schema['booking'][Schema::RELATIONS]['reservation'][Relation::SCHEMA][Relation::INNER_KEY]
-        );
+        $checks = [
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation0 */
+            ['reservation0', 'bid', 'rid'],
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation1 */
+            ['reservation1', 'reserv_id', 'rid'],
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation2 */
+            ['reservation2', 'reserv_id', 'rid'],
+        ];
+
+        foreach ($checks as [$name, $innerKey, $outerKey]) {
+            $relation = $schema['booking'][SchemaInterface::RELATIONS][$name];
+
+            $this->assertSame(Relation::HAS_ONE, $relation[Relation::TYPE], "$name: relation type");
+            $this->assertSame(
+                (array)$innerKey,
+                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key"
+            );
+            $this->assertSame(
+                (array)$outerKey,
+                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key"
+            );
+        }
     }
 }

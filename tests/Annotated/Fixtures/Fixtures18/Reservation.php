@@ -16,7 +16,7 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 class Reservation
 {
     #[Column(type: 'primary', name: 'id_reservation')]
-    protected ?int $id = null;
+    protected ?int $rid = null;
 
     // #[BelongsTo(target: Booking::class, innerKey: 'id', outerKey: 'FlightRezervationId', fkCreate: false)]
     // private ?Booking $booking = null;
