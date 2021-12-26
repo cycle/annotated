@@ -10,6 +10,8 @@ use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Inheritance\JoinedTable as JoinedTableInheritanceSchema;
 use Cycle\Schema\Definition\Inheritance\SingleTable as SingleTableInheritanceSchema;
+use Cycle\Schema\Definition\Map\FieldMap;
+use Cycle\Schema\Exception\TableInheritance\WrongParentKeyColumnException;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
@@ -83,6 +85,7 @@ class TableInheritance implements GeneratorInterface
                 $this->removeStiExtraFields($entity, $allowedEntities);
             } elseif ($entity->getInheritance() instanceof JoinedTableInheritanceSchema) {
                 $this->removeJtiExtraFields($entity);
+                $this->addForeignKey($this->parseMetadata($entity, Inheritance::class), $entity, $registry);
             }
         }
 
@@ -201,5 +204,76 @@ class TableInheritance implements GeneratorInterface
 
             $entity->getFields()->remove($name);
         }
+    }
+
+    private function addForeignKey(
+        Inheritance\JoinedTable $annotation,
+        EntitySchema $entity,
+        Registry $registry
+    ): void {
+
+        if (!$annotation->isCreateFk()) {
+            return;
+        }
+
+        $parent = $this->getParentForForeignKey($entity, $registry);
+        $outerFields = $this->getOuterFields($entity, $parent, $annotation);
+
+        foreach ($outerFields->getColumnNames() as $column) {
+            if (!$registry->getTableSchema($parent)->hasColumn($column)) {
+                return;
+            }
+        }
+
+        foreach ($entity->getPrimaryFields()->getColumnNames() as $column) {
+            if (!$registry->getTableSchema($entity)->hasColumn($column)) {
+                return;
+            }
+        }
+
+        $registry->getTableSchema($entity)
+            ->foreignKey($entity->getPrimaryFields()->getColumnNames())
+            ->references($registry->getTable($parent), $outerFields->getColumnNames())
+            ->onUpdate($annotation->getFkAction())
+            ->onDelete($annotation->getFkAction());
+    }
+
+    private function getParentForForeignKey(EntitySchema $schema, Registry $registry): EntitySchema
+    {
+        $parentSchema = $schema->getInheritance();
+
+        if ($parentSchema instanceof JoinedTableInheritanceSchema) {
+            // entity is STI child
+            $parent = $parentSchema->getParent();
+            if ($parent->isChildOfSingleTableInheritance()) {
+                return $this->getParentForForeignKey($this->findParent(
+                    $registry,
+                    $this->utils->findParent($parent->getClass(), false)
+                ), $registry);
+            }
+
+            return $parent;
+        }
+
+        return $schema;
+    }
+
+    private function getOuterFields(
+        EntitySchema $entity,
+        EntitySchema $parent,
+        Inheritance\JoinedTable $annotation
+    ): FieldMap {
+        if ($annotation->getOuterKey()) {
+            if (!$parent->getFields()->has($annotation->getOuterKey())) {
+                throw new WrongParentKeyColumnException($entity, $annotation->getOuterKey());
+            }
+
+            return (new FieldMap())->set(
+                $annotation->getOuterKey(),
+                $parent->getFields()->get($annotation->getOuterKey())
+            );
+        }
+
+        return $parent->getPrimaryFields();
     }
 }

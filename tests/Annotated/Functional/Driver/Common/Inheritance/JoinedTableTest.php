@@ -12,8 +12,9 @@ use Cycle\Annotated\TableInheritance;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Executive;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
+use Cycle\Database\Schema\AbstractForeignKey;
+use Cycle\ORM\EntityManager;
 use Cycle\ORM\Schema;
-use Cycle\ORM\Transaction;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -57,6 +58,30 @@ abstract class JoinedTableTest extends BaseTest
             ],
             pk: ['id']
         );
+
+        $this->makeTable(
+            table: 'suppliers',
+            columns: [
+                'id' => 'int'
+            ],
+            pk: ['id']
+        );
+
+        $this->makeTable(
+            table: 'external_suppliers',
+            columns: [
+                'id' => 'int'
+            ],
+            pk: ['id']
+        );
+
+        $this->makeTable(
+            table: 'buyers',
+            columns: [
+                'id' => 'int'
+            ],
+            pk: ['id']
+        );
     }
 
     /**
@@ -64,34 +89,9 @@ abstract class JoinedTableTest extends BaseTest
      */
     public function testTableInheritance(ReaderInterface $reader): void
     {
-        $tokenizer = new Tokenizer(
-            new TokenizerConfig([
-                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
-                'exclude' => [],
-            ])
-        );
+        $this->orm = $this->orm->with(new Schema($this->compile($reader)));
 
-        $locator = $tokenizer->classLocator();
-
-        $r = new Registry($this->dbal);
-
-        $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator, $reader),
-            new Entities($locator, $reader),
-            new TableInheritance($reader),
-            new ResetTables(),
-            new MergeColumns($reader),
-            new GenerateRelations(),
-            new RenderTables(),
-            new RenderRelations(),
-            new MergeIndexes($reader),
-            new SyncTables(),
-            new GenerateTypecast(),
-        ]);
-
-        $this->orm = $this->orm->with(new Schema($schema));
-
-        $t = new Transaction($this->orm);
+        $em = new EntityManager($this->orm);
 
         $executive = new Executive();
         $executive->bonus = 15000;
@@ -101,8 +101,8 @@ abstract class JoinedTableTest extends BaseTest
         $executive->type = 'executive';
         $executive->proxyFieldWithAnnotation = 'value';
 
-        $t->persist($executive);
-        $t->run();
+        $em->persist($executive);
+        $em->run();
 
         $this->orm->getHeap()->clean();
 
@@ -114,5 +114,72 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertSame(15000, $loadedExecutive->bonus);
         $this->assertSame('executive', $loadedExecutive->getType());
         $this->assertNull($loadedExecutive->proxyFieldWithAnnotation);
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testAddForeignKeys(ReaderInterface $reader): void
+    {
+        $this->orm = $this->orm->with(new Schema($this->compile($reader)));
+        $db = $this->dbal->database();
+
+        $suppliersFk = $db->table('suppliers')->getForeignKeys();
+        $executivesFk = $db->table('executives')->getForeignKeys();
+        $externalSuppliersFk = $db->table('external_suppliers')->getForeignKeys();
+
+        // simple case. Supplier -> Person
+        $this->assertIsArray($suppliersFk);
+        $this->assertCount(1, $suppliersFk);
+        $this->assertInstanceOf(AbstractForeignKey::class, $suppliersFk['suppliers_id_fk']);
+        $this->assertSame('people', $suppliersFk['suppliers_id_fk']->getForeignTable());
+
+        // Executive -> Employee (STI) -> Person
+        $this->assertIsArray($executivesFk);
+        $this->assertCount(1, $executivesFk);
+        $this->assertInstanceOf(AbstractForeignKey::class, $executivesFk['executives_id_fk']);
+        $this->assertSame('people', $executivesFk['executives_id_fk']->getForeignTable());
+
+        // ExternalSupplier -> Supplier (JTI) -> Person
+        $this->assertIsArray($externalSuppliersFk);
+        $this->assertCount(1, $externalSuppliersFk);
+        $this->assertInstanceOf(AbstractForeignKey::class, $externalSuppliersFk['external_suppliers_id_fk']);
+        $this->assertSame('suppliers', $externalSuppliersFk['external_suppliers_id_fk']->getForeignTable());
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testNotAddForeignKey(ReaderInterface $reader): void
+    {
+        $this->orm = $this->orm->with(new Schema($this->compile($reader)));
+
+        $this->assertCount(0, $this->dbal->database()->table('buyers')->getForeignKeys());
+    }
+
+    private function compile(ReaderInterface $reader): array
+    {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
+                'exclude' => [],
+            ])
+        );
+
+        $locator = $tokenizer->classLocator();
+
+        return (new Compiler())->compile(new Registry($this->dbal), [
+            new ResetTables(),
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
+            new TableInheritance($reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
     }
 }
