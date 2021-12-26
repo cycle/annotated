@@ -211,7 +211,6 @@ class TableInheritance implements GeneratorInterface
         EntitySchema $entity,
         Registry $registry
     ): void {
-
         if (!$annotation->isCreateFk()) {
             return;
         }

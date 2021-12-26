@@ -62,7 +62,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->makeTable(
             table: 'suppliers',
             columns: [
-                'id' => 'int'
+                'id' => 'int',
             ],
             pk: ['id']
         );
@@ -70,7 +70,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->makeTable(
             table: 'external_suppliers',
             columns: [
-                'id' => 'int'
+                'id' => 'int',
             ],
             pk: ['id']
         );
@@ -78,7 +78,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->makeTable(
             table: 'buyers',
             columns: [
-                'id' => 'int'
+                'id' => 'int',
             ],
             pk: ['id']
         );
