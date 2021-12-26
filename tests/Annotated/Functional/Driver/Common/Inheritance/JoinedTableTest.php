@@ -131,20 +131,20 @@ abstract class JoinedTableTest extends BaseTest
         // simple case. Supplier -> Person
         $this->assertIsArray($suppliersFk);
         $this->assertCount(1, $suppliersFk);
-        $this->assertInstanceOf(AbstractForeignKey::class, $suppliersFk['suppliers_id_fk']);
-        $this->assertSame('people', $suppliersFk['suppliers_id_fk']->getForeignTable());
+        $this->assertInstanceOf(AbstractForeignKey::class, $suppliersFk[array_key_first($suppliersFk)]);
+        $this->assertSame('people', $suppliersFk[array_key_first($suppliersFk)]->getForeignTable());
 
         // Executive -> Employee (STI) -> Person
         $this->assertIsArray($executivesFk);
         $this->assertCount(1, $executivesFk);
-        $this->assertInstanceOf(AbstractForeignKey::class, $executivesFk['executives_id_fk']);
-        $this->assertSame('people', $executivesFk['executives_id_fk']->getForeignTable());
+        $this->assertInstanceOf(AbstractForeignKey::class, $executivesFk[array_key_first($executivesFk)]);
+        $this->assertSame('people', $executivesFk[array_key_first($executivesFk)]->getForeignTable());
 
         // ExternalSupplier -> Supplier (JTI) -> Person
         $this->assertIsArray($externalSuppliersFk);
         $this->assertCount(1, $externalSuppliersFk);
-        $this->assertInstanceOf(AbstractForeignKey::class, $externalSuppliersFk['external_suppliers_id_fk']);
-        $this->assertSame('suppliers', $externalSuppliersFk['external_suppliers_id_fk']->getForeignTable());
+        $this->assertInstanceOf(AbstractForeignKey::class, $externalSuppliersFk[array_key_first($externalSuppliersFk)]);
+        $this->assertSame('suppliers', $externalSuppliersFk[array_key_first($externalSuppliersFk)]->getForeignTable());
     }
 
     /**
