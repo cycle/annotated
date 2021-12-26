@@ -18,6 +18,9 @@ class Reservation
     #[Column(type: 'primary', name: 'id_reservation')]
     protected ?int $rid = null;
 
+    #[Column(type: 'bigInteger', name: 'booking_id_column')]
+    private int $booking_id;
+
     // #[BelongsTo(target: Booking::class, innerKey: 'id', outerKey: 'FlightRezervationId', fkCreate: false)]
     // private ?Booking $booking = null;
 

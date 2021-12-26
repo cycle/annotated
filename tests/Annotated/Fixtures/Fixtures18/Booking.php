@@ -7,6 +7,7 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures18;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Relation\ManyToMany;
 
 #[Entity(
     table: 'FlightBooking'
@@ -34,4 +35,43 @@ class Booking
     // Virtual entity fields
     #[HasOne(target: Reservation::class, innerKey: 'undefined_field_has_one1', outerKey: 'undefined_field_has_one2')]
     protected Reservation $reservation3;
+
+    // Without manual declaration
+    #[ManyToMany(target: Reservation::class, through: Pivot::class)]
+    protected array $reservations0;
+
+    // Use property names
+    #[ManyToMany(
+        target: Reservation::class,
+        through: Pivot::class,
+        innerKey: 'reserv_id',
+        outerKey: 'booking_id',
+        throughInnerKey: 'booking_reservation_rid',
+        throughOuterKey: 'booking_bid',
+    )]
+    protected array $reservations1;
+
+    // Use column names
+    #[ManyToMany(
+        target: Reservation::class,
+        through: Pivot::class,
+        innerKey: 'reserv_id_column',
+        outerKey: 'booking_id_column',
+        throughInnerKey: 'booking_reservation_id_column',
+        throughOuterKey: 'reserv_id_column',
+    )]
+    protected array $reservations2;
+
+
+    // Virtual entity fields
+    #[HasOne(target: Reservation::class, innerKey: 'undefined_field_has_one1', outerKey: 'undefined_field_has_one2')]
+    #[ManyToMany(
+        target: Reservation::class,
+        through: Pivot::class,
+        innerKey: 'undefined_field_mtm1',
+        outerKey: 'undefined_field_mtm2',
+        throughInnerKey: 'undefined_field_mtm3',
+        throughOuterKey: 'undefined_field_mtm4',
+    )]
+    protected array $reservations3;
 }
