@@ -117,6 +117,7 @@ abstract class HasManyTest extends BaseTest
         }
         /**
          * Check virtual entity properties
+         *
          * @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3
          */
         $this->assertArrayHasKey(

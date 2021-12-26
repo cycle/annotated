@@ -9,7 +9,6 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\ORM\Relation;
-use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
@@ -110,6 +109,7 @@ abstract class HasOneTest extends BaseTest
         );
         /**
          * Check virtual entity properties
+         *
          * @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3
          */
         $this->assertArrayHasKey(
