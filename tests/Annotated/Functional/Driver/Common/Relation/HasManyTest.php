@@ -97,6 +97,8 @@ abstract class HasManyTest extends BaseTest
             ['segments1', 'rid', 'parent_id'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments2 */
             ['segments2', 'rid', 'parent_id'],
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments3 */
+            ['segments3', 'undefined_field_has_many1', 'undefined_field_has_many2'],
         ];
         foreach ($checks as [$name, $innerKey, $outerKey]) {
             $relation = $schema['booking_reservation'][SchemaInterface::RELATIONS][$name];
@@ -113,5 +115,17 @@ abstract class HasManyTest extends BaseTest
                 "$name: Outer Key"
             );
         }
+        /**
+         * Check virtual entity properties
+         * @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3
+         */
+        $this->assertArrayHasKey(
+            'undefined_field_has_many1',
+            $schema['booking_reservation'][SchemaInterface::COLUMNS]
+        );
+        $this->assertArrayHasKey(
+            'undefined_field_has_many2',
+            $schema['segment'][SchemaInterface::COLUMNS]
+        );
     }
 }

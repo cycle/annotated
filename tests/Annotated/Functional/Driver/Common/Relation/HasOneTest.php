@@ -45,10 +45,10 @@ abstract class HasOneTest extends BaseTest
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('one', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_ONE, $schema['simple'][Schema::RELATIONS]['one'][Relation::TYPE]);
-        $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['one'][Relation::TARGET]);
-        $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['one'][Relation::LOAD]);
+        $this->assertArrayHasKey('one', $schema['simple'][SchemaInterface::RELATIONS]);
+        $this->assertSame(Relation::HAS_ONE, $schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::TYPE]);
+        $this->assertSame('eComplete', $schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::TARGET]);
+        $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::LOAD]);
     }
 
     public function testInnerOuterKeys(): void
@@ -85,6 +85,8 @@ abstract class HasOneTest extends BaseTest
             ['reservation1', 'reserv_id', 'rid'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation2 */
             ['reservation2', 'reserv_id', 'rid'],
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3 */
+            ['reservation3', 'undefined_field_has_one1', 'undefined_field_has_one2'],
         ];
 
         foreach ($checks as [$name, $innerKey, $outerKey]) {
@@ -104,7 +106,19 @@ abstract class HasOneTest extends BaseTest
         }
         $this->assertArrayNotHasKey(
             'id_reservation',
-            $schema['booking'][Schema::COLUMNS]
+            $schema['booking'][SchemaInterface::COLUMNS]
+        );
+        /**
+         * Check virtual entity properties
+         * @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3
+         */
+        $this->assertArrayHasKey(
+            'undefined_field_has_one1',
+            $schema['booking'][SchemaInterface::COLUMNS]
+        );
+        $this->assertArrayHasKey(
+            'undefined_field_has_one2',
+            $schema['booking_reservation'][SchemaInterface::COLUMNS]
         );
     }
 }

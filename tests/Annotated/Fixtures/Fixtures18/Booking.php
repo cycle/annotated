@@ -30,4 +30,8 @@ class Booking
     // Use column names
     #[HasOne(target: Reservation::class, innerKey: 'reserv_id_column', outerKey: 'id_reservation', fkCreate: false)]
     protected Reservation $reservation2;
+
+    // Virtual entity fields
+    #[HasOne(target: Reservation::class, innerKey: 'undefined_field_has_one1', outerKey: 'undefined_field_has_one2')]
+    protected Reservation $reservation3;
 }

@@ -32,4 +32,8 @@ class Reservation
     // Use column names
     #[HasMany(target: Segment::class, innerKey: 'id_reservation', outerKey: 'parent_id_column')]
     private array $segments2 = [];
+
+    // Virtual entity fields
+    #[HasMany(target: Segment::class, innerKey: 'undefined_field_has_many1', outerKey: 'undefined_field_has_many2')]
+    private array $segments3 = [];
 }
