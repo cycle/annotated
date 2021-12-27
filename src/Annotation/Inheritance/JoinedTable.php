@@ -17,7 +17,7 @@ use JetBrains\PhpStorm\ExpectedValues;
 class JoinedTable extends Inheritance
 {
     /**
-     * @param array|non-empty-string|null $outerKey Outer key name.
+     * @param non-empty-string|null $outerKey Outer (parent) key name.
      * @param bool $fkCreate Set to true to automatically create FK on outerKey.
      * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
      */
