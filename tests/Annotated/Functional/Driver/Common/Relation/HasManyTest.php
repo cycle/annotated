@@ -97,8 +97,6 @@ abstract class HasManyTest extends BaseTest
             ['segments1', 'rid', 'parent_id'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments2 */
             ['segments2', 'rid', 'parent_id'],
-            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Reservation::$segments3 */
-            ['segments3', 'undefined_field_has_many1', 'undefined_field_has_many2'],
         ];
         foreach ($checks as [$name, $innerKey, $outerKey]) {
             $relation = $schema['booking_reservation'][SchemaInterface::RELATIONS][$name];
@@ -115,18 +113,62 @@ abstract class HasManyTest extends BaseTest
                 "$name: Outer Key"
             );
         }
-        /**
-         * Check virtual entity properties
-         *
-         * @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3
-         */
-        $this->assertArrayHasKey(
-            'undefined_field_has_many1',
-            $schema['booking_reservation'][SchemaInterface::COLUMNS]
-        );
-        $this->assertArrayHasKey(
-            'undefined_field_has_many2',
-            $schema['segment'][SchemaInterface::COLUMNS]
-        );
+    }
+
+    public function testVirtualInnerOuterKeys(): void
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures19'],
+            'exclude' => [],
+        ]));
+        $reader = new AttributeReader();
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            $t = new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        // RENDER!
+        $t->getReflector()->run();
+
+        $checks = [
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures19\Reservation::$segments3 */
+            ['segments3', 'undefined_field_has_many1', 'undefined_field_has_many2'],
+        ];
+        foreach ($checks as [$name, $innerKey, $outerKey]) {
+            $relation = $schema['booking_reservation'][SchemaInterface::RELATIONS][$name];
+            $innerKey = (array)$innerKey;
+            $outerKey = (array)$outerKey;
+
+            $this->assertSame(Relation::HAS_MANY, $relation[Relation::TYPE], "$name: relation type");
+            $this->assertSame(
+                $innerKey,
+                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key"
+            );
+            $this->assertSame(
+                $outerKey,
+                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key"
+            );
+            // Check virtual entity properties
+            $this->assertArrayHasKey(
+                $innerKey[0],
+                $schema['booking_reservation'][SchemaInterface::COLUMNS]
+            );
+            $this->assertArrayHasKey(
+                $outerKey[0],
+                $schema['segment'][SchemaInterface::COLUMNS]
+            );
+        }
     }
 }

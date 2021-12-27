@@ -232,30 +232,34 @@ abstract class ManyToManyTest extends BaseTest
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservations2 */
             ['reservations2', 'reserv_id', 'booking_id',  'booking_reservation_rid', 'booking_bid'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservations3 */
-            ['reservations2', 'undefined_field_mtm1', 'undefined_field_mtm2',  'undefined_field_mtm3', 'undefined_field_mtm4'],
+            // ['reservations2', 'undefined_field_mtm1', 'undefined_field_mtm2',  'undefined_field_mtm3', 'undefined_field_mtm4'],
         ];
 
         foreach ($checks as [$name, $innerKey, $outerKey, $throughInnerKey, $throughOuterKey]) {
             $relation = $schema['booking'][SchemaInterface::RELATIONS][$name];
+            $innerKey = (array)$innerKey;
+            $outerKey = (array)$outerKey;
+            $throughInnerKey = (array)$throughInnerKey;
+            $throughOuterKey = (array)$throughOuterKey;
 
             $this->assertSame(Relation::MANY_TO_MANY, $relation[Relation::TYPE], "$name: relation type");
             $this->assertSame(
-                (array)$innerKey,
+                $innerKey,
                 (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
                 "$name: Inner Key"
             );
             $this->assertSame(
-                (array)$outerKey,
+                $outerKey,
                 (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
                 "$name: Outer Key"
             );
             $this->assertSame(
-                (array)$throughInnerKey,
+                $throughInnerKey,
                 (array)$relation[Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
                 "$name: Through inner Key"
             );
             $this->assertSame(
-                (array)$throughOuterKey,
+                $throughOuterKey,
                 (array)$relation[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
                 "$name: Through outer Key"
             );
@@ -264,5 +268,68 @@ abstract class ManyToManyTest extends BaseTest
             'booking_id_column',
             $schema['booking_reservation'][SchemaInterface::COLUMNS]
         );
+    }
+
+    public function testVirtualInnerOuterKeys(): void
+    {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures19'],
+                'exclude' => [],
+            ])
+        );
+        $reader = new AttributeReader();
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            $t = new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        // RENDER!
+        $t->getReflector()->run();
+
+        $checks = [
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures19\Booking::$reservations3 */
+            ['reservations2', 'undefined_field_mtm1', 'undefined_field_mtm2',  'undefined_field_mtm3', 'undefined_field_mtm4'],
+        ];
+
+        foreach ($checks as [$name, $innerKey, $outerKey, $throughInnerKey, $throughOuterKey]) {
+            $relation = $schema['booking'][SchemaInterface::RELATIONS][$name];
+            $innerKey = (array)$innerKey;
+            $outerKey = (array)$outerKey;
+            $throughInnerKey = (array)$throughInnerKey;
+            $throughOuterKey = (array)$throughOuterKey;
+
+            $this->assertSame(Relation::MANY_TO_MANY, $relation[Relation::TYPE], "$name: relation type");
+            $this->assertSame(
+                $innerKey,
+                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key"
+            );
+            $this->assertSame(
+                $outerKey,
+                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key"
+            );
+            $this->assertSame(
+                $throughInnerKey,
+                (array)$relation[Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
+                "$name: Through inner Key"
+            );
+            $this->assertSame(
+                $throughOuterKey,
+                (array)$relation[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
+                "$name: Through outer Key"
+            );
+        }
     }
 }

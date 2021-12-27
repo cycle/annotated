@@ -32,10 +32,6 @@ class Booking
     #[HasOne(target: Reservation::class, innerKey: 'reserv_id_column', outerKey: 'id_reservation', fkCreate: false)]
     protected Reservation $reservation2;
 
-    // Virtual entity fields
-    #[HasOne(target: Reservation::class, innerKey: 'undefined_field_has_one1', outerKey: 'undefined_field_has_one2')]
-    protected Reservation $reservation3;
-
     // Without manual declaration
     #[ManyToMany(target: Reservation::class, through: Pivot::class)]
     protected array $reservations0;
@@ -61,17 +57,4 @@ class Booking
         throughOuterKey: 'reserv_id_column',
     )]
     protected array $reservations2;
-
-
-    // Virtual entity fields
-    #[HasOne(target: Reservation::class, innerKey: 'undefined_field_has_one1', outerKey: 'undefined_field_has_one2')]
-    #[ManyToMany(
-        target: Reservation::class,
-        through: Pivot::class,
-        innerKey: 'undefined_field_mtm1',
-        outerKey: 'undefined_field_mtm2',
-        throughInnerKey: 'undefined_field_mtm3',
-        throughOuterKey: 'undefined_field_mtm4',
-    )]
-    protected array $reservations3;
 }

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Annotated\Tests\Fixtures\Fixtures18;
+namespace Cycle\Annotated\Tests\Fixtures\Fixtures19;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasOne;
 
 #[Entity(
     table: 'Pivotable'

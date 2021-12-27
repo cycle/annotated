@@ -84,8 +84,6 @@ abstract class HasOneTest extends BaseTest
             ['reservation1', 'reserv_id', 'rid'],
             /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation2 */
             ['reservation2', 'reserv_id', 'rid'],
-            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3 */
-            ['reservation3', 'undefined_field_has_one1', 'undefined_field_has_one2'],
         ];
 
         foreach ($checks as [$name, $innerKey, $outerKey]) {
@@ -107,18 +105,65 @@ abstract class HasOneTest extends BaseTest
             'id_reservation',
             $schema['booking'][SchemaInterface::COLUMNS]
         );
-        /**
-         * Check virtual entity properties
-         *
-         * @see \Cycle\Annotated\Tests\Fixtures\Fixtures18\Booking::$reservation3
-         */
-        $this->assertArrayHasKey(
-            'undefined_field_has_one1',
-            $schema['booking'][SchemaInterface::COLUMNS]
+    }
+
+    public function testVirtualInnerOuterKeys(): void
+    {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures19'],
+                'exclude' => [],
+            ])
         );
-        $this->assertArrayHasKey(
-            'undefined_field_has_one2',
-            $schema['booking_reservation'][SchemaInterface::COLUMNS]
-        );
+        $reader = new AttributeReader();
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            $t = new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        // RENDER!
+        $t->getReflector()->run();
+
+        $checks = [
+            /** @see \Cycle\Annotated\Tests\Fixtures\Fixtures19\Booking::$reservation3 */
+            ['reservation3', 'undefined_field_has_one1', 'undefined_field_has_one2'],
+        ];
+
+        foreach ($checks as [$name, $innerKey, $outerKey]) {
+            $relation = $schema['booking'][SchemaInterface::RELATIONS][$name];
+            $innerKey = (array)$innerKey;
+            $outerKey = (array)$outerKey;
+
+            $this->assertSame(Relation::HAS_ONE, $relation[Relation::TYPE], "$name: relation type");
+            $this->assertSame(
+                $innerKey,
+                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key"
+            );
+            $this->assertSame(
+                $outerKey,
+                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key"
+            );
+            // Check virtual entity properties
+            $this->assertArrayHasKey(
+                $innerKey[0],
+                $schema['booking'][SchemaInterface::COLUMNS]
+            );
+            $this->assertArrayHasKey(
+                $outerKey[0],
+                $schema['booking_reservation'][SchemaInterface::COLUMNS]
+            );
+        }
     }
 }
