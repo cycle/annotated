@@ -24,14 +24,14 @@ class Reservation
     // private ?Booking $booking = null;
 
     // Without manual declaration
-    #[HasMany(target: Segment::class)]
+    #[HasMany(target: Segment::class, fkCreate: false)]
     private array $segments0 = [];
 
     // Use property names
-    #[HasMany(target: Segment::class, innerKey: 'rid', outerKey: 'parent_id')]
+    #[HasMany(target: Segment::class, innerKey: 'rid', outerKey: 'parent_id', fkCreate: false)]
     private array $segments1 = [];
 
     // Use column names
-    #[HasMany(target: Segment::class, innerKey: 'id_reservation', outerKey: 'parent_id_column')]
+    #[HasMany(target: Segment::class, innerKey: 'id_reservation', outerKey: 'parent_id_column', fkCreate: false)]
     private array $segments2 = [];
 }

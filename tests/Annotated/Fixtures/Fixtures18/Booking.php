@@ -33,7 +33,7 @@ class Booking
     protected Reservation $reservation2;
 
     // Without manual declaration
-    #[ManyToMany(target: Reservation::class, through: Pivot::class)]
+    #[ManyToMany(target: Reservation::class, through: Pivot::class, fkCreate: false)]
     protected array $reservations0;
 
     // Use property names
@@ -44,6 +44,7 @@ class Booking
         outerKey: 'booking_id',
         throughInnerKey: 'booking_reservation_rid',
         throughOuterKey: 'booking_bid',
+        fkCreate: false,
     )]
     protected array $reservations1;
 
@@ -55,6 +56,7 @@ class Booking
         outerKey: 'booking_id_column',
         throughInnerKey: 'booking_reservation_id_column',
         throughOuterKey: 'reserv_id_column',
+        fkCreate: false,
     )]
     protected array $reservations2;
 }
