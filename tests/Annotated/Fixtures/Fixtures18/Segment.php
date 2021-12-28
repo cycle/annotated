@@ -15,6 +15,6 @@ class Segment
     #[Column(name: 'id_segment', type: 'primary')]
     protected ?int $sid = null;
 
-    #[Column(name: 'parent_id_column', type: 'primary')]
+    #[Column(name: 'parent_id_column', type: 'bigInteger')]
     protected ?int $parent_id = null;
 }
