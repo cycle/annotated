@@ -262,15 +262,14 @@ class TableInheritance implements GeneratorInterface
         EntitySchema $parent,
         Inheritance\JoinedTable $annotation
     ): FieldMap {
-        if ($annotation->getOuterKey()) {
-            if (!$parent->getFields()->has($annotation->getOuterKey())) {
-                throw new WrongParentKeyColumnException($entity, $annotation->getOuterKey());
+        $outerKey = $annotation->getOuterKey();
+
+        if ($outerKey) {
+            if (!$parent->getFields()->has($outerKey)) {
+                throw new WrongParentKeyColumnException($entity, $outerKey);
             }
 
-            return (new FieldMap())->set(
-                $annotation->getOuterKey(),
-                $parent->getFields()->get($annotation->getOuterKey())
-            );
+            return (new FieldMap())->set($outerKey, $parent->getFields()->get($outerKey));
         }
 
         return $parent->getPrimaryFields();

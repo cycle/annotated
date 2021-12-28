@@ -9,10 +9,10 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable
 
 /**
  * @Entity(table="external_suppliers")
- * @InheritanceJoinedTable
+ * @InheritanceJoinedTable(outerKey="custom_id")
  */
 #[Entity(table: 'external_suppliers')]
-#[InheritanceJoinedTable]
+#[InheritanceJoinedTable(outerKey: 'custom_id')]
 class ExternalSupplier extends Supplier
 {
 }

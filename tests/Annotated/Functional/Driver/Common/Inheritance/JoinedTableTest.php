@@ -63,6 +63,7 @@ abstract class JoinedTableTest extends BaseTest
             table: 'suppliers',
             columns: [
                 'id' => 'int',
+                'custom_id' => 'int',
             ],
             pk: ['id']
         );
@@ -132,16 +133,22 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertCount(1, $suppliersFk);
         $this->assertInstanceOf(AbstractForeignKey::class, reset($suppliersFk));
         $this->assertSame('people', reset($suppliersFk)->getForeignTable());
+        $this->assertSame(['id'], reset($suppliersFk)->getForeignKeys());
+        $this->assertSame(['id'], reset($suppliersFk)->getColumns());
 
         // Executive -> Employee (STI) -> Person
         $this->assertCount(1, $executivesFk);
         $this->assertInstanceOf(AbstractForeignKey::class, reset($executivesFk));
         $this->assertSame('people', reset($executivesFk)->getForeignTable());
+        $this->assertSame(['id'], reset($executivesFk)->getForeignKeys());
+        $this->assertSame(['id'], reset($executivesFk)->getColumns());
 
-        // ExternalSupplier -> Supplier (JTI) -> Person
+        // ExternalSupplier -> Supplier (JTI) -> Person. With outerKey
         $this->assertCount(1, $externalSuppliersFk);
         $this->assertInstanceOf(AbstractForeignKey::class, reset($externalSuppliersFk));
         $this->assertSame('suppliers', reset($externalSuppliersFk)->getForeignTable());
+        $this->assertSame(['custom_id'], reset($externalSuppliersFk)->getForeignKeys());
+        $this->assertSame(['id'], reset($externalSuppliersFk)->getColumns());
     }
 
     /**
