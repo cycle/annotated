@@ -13,6 +13,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures16\Executive;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
 use Cycle\Database\Schema\AbstractForeignKey;
+use Cycle\Database\Schema\AbstractIndex;
 use Cycle\ORM\EntityManager;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -178,13 +179,16 @@ abstract class JoinedTableTest extends BaseTest
 
         $indexes = $this->dbal->database()->table('suppliers')->getIndexes();
 
+        // remove pk index
+        $indexes = array_filter($indexes, fn(AbstractIndex $index) => $index->getColumns() !== ['id']);
+
         // one index added automatically, one added manual
         $this->assertCount(2, $indexes);
 
-        $this->assertSame(['index_id'], reset($indexes)->getColumns());
-        $this->assertTrue(reset($indexes)->isUnique());
+        $this->assertTrue($this->dbal->database()->table('suppliers')->hasIndex(['index_id']));
+        $this->assertTrue($this->dbal->database()->table('suppliers')->hasIndex(['custom_id']));
 
-        $this->assertSame(['custom_id'], end($indexes)->getColumns());
+        $this->assertTrue(reset($indexes)->isUnique());
         $this->assertTrue(end($indexes)->isUnique());
     }
 
