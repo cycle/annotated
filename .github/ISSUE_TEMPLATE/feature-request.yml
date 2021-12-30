@@ -10,19 +10,6 @@ body:
       value: |
         Thanks for taking the time to share your idea!
 
-  - type: dropdown
-    id: plugin
-    attributes:
-      label: Plugin
-      description: What package is affected?
-      options:
-        - ORM
-        - Database
-        - Attributes and annotations
-        - Entity Behaviors
-        - Migrations
-        - Schema Renderer
-
   - type: textarea
     id: idea
     attributes:
