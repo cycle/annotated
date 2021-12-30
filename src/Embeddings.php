@@ -48,7 +48,7 @@ final class Embeddings implements GeneratorInterface
             $this->verifyNoRelations($e, $class);
 
             // columns
-            $this->generator->initFields($e, $class, $em->getColumnPrefix());
+            $this->generator->initFields($e, $class);
 
             // register entity (OR find parent)
             $registry->register($e);
