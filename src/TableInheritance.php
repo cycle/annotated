@@ -230,7 +230,9 @@ class TableInheritance implements GeneratorInterface
             }
         }
 
-        $registry->getTableSchema($parent)->index($outerFields->getColumnNames())->unique();
+        if (!$registry->getTableSchema($parent)->hasIndex($outerFields->getColumnNames())) {
+            $registry->getTableSchema($parent)->index($outerFields->getColumnNames())->unique();
+        }
 
         $registry->getTableSchema($entity)
             ->foreignKey($entity->getPrimaryFields()->getColumnNames())

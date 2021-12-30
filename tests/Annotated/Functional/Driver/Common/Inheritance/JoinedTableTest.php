@@ -77,6 +77,14 @@ abstract class JoinedTableTest extends BaseTest
         );
 
         $this->makeTable(
+            table: 'local_suppliers',
+            columns: [
+                'id' => 'int',
+            ],
+            pk: ['id']
+        );
+
+        $this->makeTable(
             table: 'buyers',
             columns: [
                 'id' => 'int',
@@ -159,6 +167,25 @@ abstract class JoinedTableTest extends BaseTest
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
 
         $this->assertCount(0, $this->dbal->database()->table('buyers')->getForeignKeys());
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testAddIndex(ReaderInterface $reader): void
+    {
+        $this->orm = $this->orm->with(new Schema($this->compile($reader)));
+
+        $indexes = $this->dbal->database()->table('suppliers')->getIndexes();
+
+        // one index added automatically, one added manual
+        $this->assertCount(2, $indexes);
+
+        $this->assertSame(['index_id'], reset($indexes)->getColumns());
+        $this->assertTrue(reset($indexes)->isUnique());
+
+        $this->assertSame(['custom_id'], end($indexes)->getColumns());
+        $this->assertTrue(end($indexes)->isUnique());
     }
 
     private function compile(ReaderInterface $reader): array

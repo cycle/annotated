@@ -42,7 +42,12 @@ final class MergeIndexes implements GeneratorInterface
             $this->render($registry->getTableSchema($e), $e, $e->getScope());
 
             foreach ($registry->getChildren($e) as $child) {
-                $this->render($registry->getTableSchema($e), $e, $child->getClass());
+                if (!$child->isChildOfSingleTableInheritance() && $registry->hasEntity($child->getRole())) {
+                    $tableSchema = $registry->getTableSchema($child);
+                } else {
+                    $tableSchema = $registry->getTableSchema($e);
+                }
+                $this->render($tableSchema, $e, $child->getClass());
             }
         }
 
