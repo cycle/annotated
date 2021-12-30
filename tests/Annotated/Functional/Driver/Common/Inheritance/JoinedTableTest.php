@@ -180,7 +180,7 @@ abstract class JoinedTableTest extends BaseTest
         $indexes = $this->dbal->database()->table('suppliers')->getIndexes();
 
         // remove pk index
-        $indexes = array_filter($indexes, fn(AbstractIndex $index) => $index->getColumns() !== ['id']);
+        $indexes = array_filter($indexes, fn (AbstractIndex $index) => $index->getColumns() !== ['id']);
 
         // one index added automatically, one added manual
         $this->assertCount(2, $indexes);
