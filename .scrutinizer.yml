@@ -9,3 +9,13 @@ tools:
   external_code_coverage:
     timeout: 600    # Timeout in seconds.
     runs: 1         # How many code coverage submissions Scrutinizer will wait
+
+build:
+  nodes:
+    analysis:
+      environment:
+        php: 8.0
+
+      tests:
+        override:
+          - php-scrutinizer-run
