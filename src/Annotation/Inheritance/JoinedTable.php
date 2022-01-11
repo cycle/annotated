@@ -6,6 +6,7 @@ namespace Cycle\Annotated\Annotation\Inheritance;
 
 use Cycle\Annotated\Annotation\Inheritance;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @Annotation
@@ -15,8 +16,19 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class JoinedTable extends Inheritance
 {
+    /**
+     * @param non-empty-string|null $outerKey Outer (parent) key name.
+     * @param bool $fkCreate Set to true to automatically create FK on outerKey.
+     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     */
     public function __construct(
-        private ?string $outerKey = null
+        private ?string $outerKey = null,
+        private bool $fkCreate = true,
+        /**
+         * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
+         */
+        #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
+        private ?string $fkAction = 'CASCADE',
     ) {
         parent::__construct('joined');
     }
@@ -24,5 +36,15 @@ class JoinedTable extends Inheritance
     public function getOuterKey(): ?string
     {
         return $this->outerKey;
+    }
+
+    public function isCreateFk(): bool
+    {
+        return $this->fkCreate;
+    }
+
+    public function getFkAction(): string
+    {
+        return $this->fkAction;
     }
 }
