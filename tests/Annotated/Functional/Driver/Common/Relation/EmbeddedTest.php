@@ -55,7 +55,7 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
 
-        $this->assertSame('user:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
+        $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
     }
 
@@ -89,7 +89,53 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
 
-        $this->assertSame('user:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
+        $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_PROMISE, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testEmbeddedPrefix(ReaderInterface $reader): void
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures6'],
+            'exclude' => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
+            new ResetTables(),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $address = [
+            'city' => 'address_city',
+            'country' => 'address_country',
+            'address' => 'address_address',
+            'zipcode' => 'address_zipcode',
+            'id' => 'id',
+        ];
+        $workAddress = [
+            'city' => 'work_address_city',
+            'country' => 'work_address_country',
+            'address' => 'work_address_address',
+            'zipcode' => 'work_address_zipcode',
+            'id' => 'id',
+        ];
+
+        $this->assertSame($address, $schema['user:address:address'][Schema::COLUMNS]);
+        $this->assertSame($workAddress, $schema['user:address:workAddress'][Schema::COLUMNS]);
     }
 }
