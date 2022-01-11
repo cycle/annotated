@@ -142,6 +142,7 @@ final class Configurator
                 }
 
                 if ($meta instanceof RelationAnnotation\Embedded && $meta->getPrefix() === null) {
+                    /** @var Embeddable|null $embeddable */
                     $embeddable = $this->reader->firstClassMetadata(
                         new \ReflectionClass($relation->getTarget()),
                         Embeddable::class

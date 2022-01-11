@@ -42,6 +42,7 @@ final class Embeddings implements GeneratorInterface
             if ($em === null) {
                 continue;
             }
+            \assert($em instanceof Embeddable);
 
             $e = $this->generator->initEmbedding($em, $class);
 
