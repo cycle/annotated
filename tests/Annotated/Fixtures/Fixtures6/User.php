@@ -21,4 +21,8 @@ class User
     /** @Embedded(target=Address::class) */
     #[Embedded(target: Address::class)]
     protected $address;
+
+    /** @Embedded(target=Address::class, prefix="work_address_") */
+    #[Embedded(target: Address::class, prefix: 'work_address_')]
+    protected Address $workAddress;
 }

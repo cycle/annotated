@@ -141,6 +141,15 @@ final class Configurator
                     );
                 }
 
+                if ($meta instanceof RelationAnnotation\Embedded && $meta->getPrefix() === null) {
+                    /** @var Embeddable|null $embeddable */
+                    $embeddable = $this->reader->firstClassMetadata(
+                        new \ReflectionClass($relation->getTarget()),
+                        Embeddable::class
+                    );
+                    $meta->setPrefix($embeddable->getColumnPrefix());
+                }
+
                 foreach ($meta->getOptions() as $option => $value) {
                     $value = match ($option) {
                         'collection' => $this->resolveName($value, $class),
