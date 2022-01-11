@@ -8,7 +8,7 @@ filter:
 tools:
   external_code_coverage:
     timeout: 600    # Timeout in seconds.
-    runs: 1         # How many code coverage submissions Scrutinizer will wait
+    runs: 2         # How many code coverage submissions Scrutinizer will wait
 
 build:
   nodes:
