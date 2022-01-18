@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Cycle\ORM\Parser\Typecast;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use JetBrains\PhpStorm\ExpectedValues;
@@ -28,9 +29,11 @@ final class Column
      * @param bool $primary Explicitly set column as a primary key.
      * @param bool $nullable Set column as nullable.
      * @param mixed|null $default Default column value.
-     * @param non-empty-string|null $typecast Column typecast function.
-     *        Defaults to one of (int|float|bool|datetime) based on column type.
-     *        Note: It's a rule name for core or custom Typecast-class. Eg. uuid.
+     * @param non-empty-string|null $typecast Typecast rule name.
+     *        Regarding the default Typecast handler {@see Typecast} the value can be `callable` or
+     *        one of ("int"|"float"|"bool"|"datetime") based on column type.
+     *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
+     *        a relevant Typecast handler that supports the rule.
      * @param bool $castDefault
      */
     public function __construct(
