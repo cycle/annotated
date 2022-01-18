@@ -29,7 +29,8 @@ final class Column
      * @param bool $nullable Set column as nullable.
      * @param mixed|null $default Default column value.
      * @param non-empty-string|null $typecast Column typecast function.
-     *        Defaults to one of (int|float|bool|datetime) based on column type
+     *        Defaults to one of (int|float|bool|datetime) based on column type.
+     *        Note: It's a rule name for core or custom Typecast-class. Eg. uuid.
      * @param bool $castDefault
      */
     public function __construct(
