@@ -42,7 +42,7 @@ final class MorphedHasMany extends Relation
         protected bool $nullable = false,
         protected array|string|null $innerKey = null,
         protected array|string|null $outerKey = null,
-        protected string $morphKey = '{relationName}_role',
+        protected ?string $morphKey = null,
         protected int $morphKeyLength = 32,
         protected array $where = [],
         protected bool $indexCreate = true,
