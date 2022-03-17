@@ -61,7 +61,7 @@ abstract class InvalidTest extends BaseTest
     {
         $this->expectException(AnnotationException::class);
         $this->expectErrorMessage(
-            'Some of required arguments [`type`] is missed on `Cycle\Annotated\Tests\Fixtures\Fixtures4\User.id.`'
+            'Column type definition is required on `Cycle\Annotated\Tests\Fixtures\Fixtures4\User`.`id`'
         );
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
