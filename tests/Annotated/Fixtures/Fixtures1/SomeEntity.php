@@ -7,8 +7,8 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures1;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-/** * @Entity(table="SomeEntity", columns={@Column(name="columnDeclaredInClass", type="integer")}) */
-#[Entity(table: "SomeEntity", columns: [new Column(name: "columnDeclaredInClass", type: 'integer')])]
+/** * @Entity(table="SomeEntity") */
+#[Entity(table: "SomeEntity")]
 class SomeEntity implements LabelledInterface
 {
     /** @Column(type="primary") */
@@ -30,6 +30,4 @@ class SomeEntity implements LabelledInterface
     /** @Column */
     #[Column]
     public \DateTimeImmutable $dateTime;
-
-    public $columnDeclaredInClass = 123;
 }

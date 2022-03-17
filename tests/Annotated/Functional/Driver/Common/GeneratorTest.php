@@ -14,6 +14,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures1\Repository\CompleteRepository;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Simple;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\SomeEntity;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Source\TestSource;
+use Cycle\Annotated\Tests\Fixtures\Fixtures1\WithColumnInEntity;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\WithTable;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
@@ -177,7 +178,15 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame('123', $fields->get('nullableStringWithDefault')->getOptions()->get(Column::OPT_DEFAULT));
 
         $this->assertSame('datetime', $fields->get('dateTime')->getType());
+    }
 
-        $this->assertFalse($fields->get('columnDeclaredInClass')->getOptions()->has(Column::OPT_DEFAULT));
+    public function testSimpleReferredSchemaWithColumnInEntity(): void{
+        $reader = new AnnotationReader();
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $reader))->run($r);
+
+        $fields = $r->getEntity(WithColumnInEntity::class)->getFields();
+
+        $this->assertFalse($fields->get('columnDeclaredInEntity')->getOptions()->has(Column::OPT_DEFAULT));
     }
 }
