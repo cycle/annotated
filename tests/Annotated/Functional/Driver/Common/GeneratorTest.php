@@ -180,7 +180,8 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame('datetime', $fields->get('dateTime')->getType());
     }
 
-    public function testSimpleReferredSchemaWithColumnInEntity(): void{
+    public function testSimpleReferredSchemaWithColumnInEntity(): void
+    {
         $reader = new AnnotationReader();
         $r = new Registry($this->dbal);
         (new Entities($this->locator, $reader))->run($r);
