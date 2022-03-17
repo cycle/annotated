@@ -164,19 +164,19 @@ abstract class GeneratorTest extends BaseTest
 
         $fields = $r->getEntity(SomeEntity::class)->getFields();
 
-        $this->assertSame("int", $fields->get('idificator')->getType());
+        $this->assertSame('int', $fields->get('idificator')->getType());
         $this->assertFalse($fields->get('idificator')->getOptions()->has(Column::OPT_NULLABLE));
         $this->assertFalse($fields->get('idificator')->getOptions()->has(Column::OPT_DEFAULT));
 
-        $this->assertSame("string", $fields->get('nullableString')->getType());
+        $this->assertSame('string', $fields->get('nullableString')->getType());
         $this->assertSame(true, $fields->get('nullableString')->getOptions()->get(Column::OPT_NULLABLE));
         $this->assertSame(null, $fields->get('nullableString')->getOptions()->get(Column::OPT_DEFAULT));
 
-        $this->assertSame("string", $fields->get('nullableStringWithDefault')->getType());
+        $this->assertSame('string', $fields->get('nullableStringWithDefault')->getType());
         $this->assertSame(true, $fields->get('nullableStringWithDefault')->getOptions()->get(Column::OPT_NULLABLE));
-        $this->assertSame("123", $fields->get('nullableStringWithDefault')->getOptions()->get(Column::OPT_DEFAULT));
+        $this->assertSame('123', $fields->get('nullableStringWithDefault')->getOptions()->get(Column::OPT_DEFAULT));
 
-        $this->assertSame("datetime", $fields->get('dateTime')->getType());
+        $this->assertSame('datetime', $fields->get('dateTime')->getType());
 
         $this->assertFalse($fields->get('columnDeclaredInClass')->getOptions()->has(Column::OPT_DEFAULT));
     }

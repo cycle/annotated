@@ -238,7 +238,7 @@ final class Configurator
                     if ($propertyType->isBuiltin()) {
                         $type ??= $propertyType->getName();
                     } elseif (is_subclass_of($propertyType->getName(), \DateTimeInterface::class)) {
-                        $type = "datetime";
+                        $type = 'datetime';
                     }
                 }
             }
