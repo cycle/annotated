@@ -37,7 +37,8 @@ final class Column
      * @param bool $castDefault
      */
     public function __construct(
-        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean', 'integer', 'tinyInteger', 'bigInteger',
+        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
+            'integer', 'tinyInteger', 'smallInteger', 'bigInteger',
             'string', 'text', 'tinyText', 'longText', 'double', 'float', 'decimal', 'datetime', 'date', 'time',
             'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
         ])]
