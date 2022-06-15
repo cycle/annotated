@@ -243,6 +243,12 @@ final class Configurator
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_CAST_DEFAULT, true);
         }
 
+        if (method_exists($field, 'getAttributes')) {
+            foreach ($column->getAttributes() as $k => $v) {
+                $field->getAttributes()->set($k, $v);
+            }
+        }
+
         return $field;
     }
 

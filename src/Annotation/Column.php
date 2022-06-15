@@ -7,6 +7,7 @@ namespace Cycle\Annotated\Annotation;
 use Cycle\ORM\Parser\Typecast;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -49,6 +50,11 @@ final class Column
         private mixed $default = null,
         private mixed $typecast = null,
         private bool $castDefault = false,
+        /**
+         * @var array Database engine specific attributes
+         */
+        #[ArrayShape(['unsigned' => 'bool', 'zerofill' => 'bool'])]
+        private array   $attributes = [],
     ) {
         if ($default !== null) {
             $this->hasDefault = true;
@@ -98,5 +104,10 @@ final class Column
     public function getTypecast(): mixed
     {
         return $this->typecast;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 }
