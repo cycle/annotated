@@ -21,6 +21,7 @@ use JetBrains\PhpStorm\ExpectedValues;
 final class Column
 {
     private bool $hasDefault = false;
+    private bool $hasNullable = false;
 
     /**
      * @param non-empty-string $type Column type. {@see \Cycle\Database\Schema\AbstractColumn::$mapping}
@@ -41,17 +42,21 @@ final class Column
             'string', 'text', 'tinyText', 'longText', 'double', 'float', 'decimal', 'datetime', 'date', 'time',
             'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
         ])]
-        private string $type,
+        private ?string $type = null,
         private ?string $name = null,
         private ?string $property = null,
         private bool $primary = false,
-        private bool $nullable = false,
+        private ?bool $nullable = null,
         private mixed $default = null,
         private mixed $typecast = null,
         private bool $castDefault = false,
     ) {
         if ($default !== null) {
             $this->hasDefault = true;
+        }
+
+        if ($this->nullable !== null) {
+            $this->hasNullable = true;
         }
     }
 
@@ -72,7 +77,7 @@ final class Column
 
     public function isNullable(): bool
     {
-        return $this->nullable;
+        return $this->nullable === true;
     }
 
     public function isPrimary(): bool
@@ -83,6 +88,11 @@ final class Column
     public function hasDefault(): bool
     {
         return $this->hasDefault;
+    }
+
+    public function hasNullable(): bool
+    {
+        return $this->hasNullable;
     }
 
     public function getDefault(): mixed

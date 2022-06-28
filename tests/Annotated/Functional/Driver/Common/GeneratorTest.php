@@ -12,11 +12,14 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures1\CompleteMapper;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Constrain\SomeConstrain;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Repository\CompleteRepository;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Simple;
+use Cycle\Annotated\Tests\Fixtures\Fixtures1\SomeEntity;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Source\TestSource;
+use Cycle\Annotated\Tests\Fixtures\Fixtures1\WithColumnInEntity;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\WithTable;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Cycle\Schema\Table\Column;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
@@ -150,5 +153,41 @@ abstract class GeneratorTest extends BaseTest
         );
 
         $this->assertFalse($r->getEntity('eComplete')->getFields()->has('ignored'));
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testSimpleReferredSchema(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $reader))->run($r);
+
+        $fields = $r->getEntity(SomeEntity::class)->getFields();
+
+        $this->assertSame('int', $fields->get('idificator')->getType());
+        $this->assertFalse($fields->get('idificator')->getOptions()->has(Column::OPT_NULLABLE));
+        $this->assertFalse($fields->get('idificator')->getOptions()->has(Column::OPT_DEFAULT));
+
+        $this->assertSame('string', $fields->get('nullableString')->getType());
+        $this->assertSame(true, $fields->get('nullableString')->getOptions()->get(Column::OPT_NULLABLE));
+        $this->assertSame(null, $fields->get('nullableString')->getOptions()->get(Column::OPT_DEFAULT));
+
+        $this->assertSame('string', $fields->get('nullableStringWithDefault')->getType());
+        $this->assertSame(true, $fields->get('nullableStringWithDefault')->getOptions()->get(Column::OPT_NULLABLE));
+        $this->assertSame('123', $fields->get('nullableStringWithDefault')->getOptions()->get(Column::OPT_DEFAULT));
+
+        $this->assertSame('datetime', $fields->get('dateTime')->getType());
+    }
+
+    public function testSimpleReferredSchemaWithColumnInEntity(): void
+    {
+        $reader = new AnnotationReader();
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $reader))->run($r);
+
+        $fields = $r->getEntity(WithColumnInEntity::class)->getFields();
+
+        $this->assertFalse($fields->get('columnDeclaredInEntity')->getOptions()->has(Column::OPT_DEFAULT));
     }
 }

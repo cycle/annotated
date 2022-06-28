@@ -22,6 +22,7 @@ use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Exception;
 use Spiral\Attributes\ReaderInterface;
+use function is_subclass_of;
 
 final class Configurator
 {
@@ -101,7 +102,7 @@ final class Configurator
                 continue;
             }
 
-            $field = $this->initField($property->getName(), $column, $class, $columnPrefix);
+            $field = $this->initField($property, $column, $class, $columnPrefix);
             $field->setEntityClass($property->getDeclaringClass()->getName());
             $entity->getFields()->set($property->getName(), $field);
         }
@@ -208,35 +209,64 @@ final class Configurator
                 );
             }
 
-            if ($column->getType() === null) {
-                throw new AnnotationException(
-                    "Column type definition is required on `{$entity->getClass()}`.`{$columnName}`"
-                );
-            }
-
             $field = $this->initField($columnName, $column, $class, '');
             $field->setEntityClass($entity->getClass());
             $entity->getFields()->set($propertyName, $field);
         }
     }
 
-    public function initField(string $name, Column $column, \ReflectionClass $class, string $columnPrefix): Field
+    public function initField(string|\ReflectionProperty $nameOrProperty, Column $column, \ReflectionClass $class, string $columnPrefix): Field
     {
+        $type = $column->getType();
+        $isNullable = $column->hasNullable() ? $column->isNullable() : null;
+        $hasDefault = $column->hasDefault();
+        $default = $column->getDefault();
+
+        if ($nameOrProperty instanceof \ReflectionProperty) {
+            $name = ($property = $nameOrProperty)->getName();
+            $propertyType = $property->getType();
+
+            if ($property->hasDefaultValue() && !$hasDefault) {
+                $hasDefault = true;
+                $default = $property->getDefaultValue();
+            }
+
+            if ($propertyType instanceof \ReflectionType) {
+                $isNullable ??= $propertyType->allowsNull();
+
+                if ($propertyType instanceof \ReflectionNamedType) {
+                    if ($propertyType->isBuiltin()) {
+                        $type ??= $propertyType->getName();
+                    } elseif (is_subclass_of($propertyType->getName(), \DateTimeInterface::class)) {
+                        $type = 'datetime';
+                    }
+                }
+            }
+        } else {
+            $name = $nameOrProperty;
+        }
+
+        if ($type === null) {
+            throw new AnnotationException(
+                "Column type definition is required on `{$class->getName()}`.`{$name}`"
+            );
+        }
+
         $field = new Field();
 
-        $field->setType($column->getType());
+        $field->setType($type);
         $field->setColumn($columnPrefix . ($column->getColumn() ?? $this->inflector->tableize($name)));
         $field->setPrimary($column->isPrimary());
 
         $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));
 
-        if ($column->isNullable()) {
+        if ($isNullable) {
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_NULLABLE, true);
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, null);
         }
 
-        if ($column->hasDefault()) {
-            $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, $column->getDefault());
+        if ($hasDefault) {
+            $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_DEFAULT, $default);
         }
 
         if ($column->castDefault()) {
