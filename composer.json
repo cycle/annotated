@@ -10,7 +10,7 @@
         "cycle/orm": "^2.2.0",
         "cycle/schema-builder": "^2.1.0",
         "doctrine/annotations": "^1.13",
-        "spiral/attributes": "^2.8",
+        "spiral/attributes": "^2.8|^3.0",
         "spiral/tokenizer": "^2.8|^3.0",
         "doctrine/inflector": "^2.0"
     },
