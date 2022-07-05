@@ -251,36 +251,41 @@ final class Configurator
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
     {
-        if ($name === null || class_exists($name, true) || interface_exists($name, true)) {
+        if ($name === null || $this->exists($name)) {
             return $name;
         }
 
-        $resolved = sprintf(
+        $resolved = \sprintf(
             '%s\\%s',
             $class->getNamespaceName(),
-            ltrim(str_replace('/', '\\', $name), '\\')
+            \ltrim(\str_replace('/', '\\', $name), '\\')
         );
 
-        if (class_exists($resolved, true) || interface_exists($resolved, true)) {
-            return ltrim($resolved, '\\');
+        if ($this->exists($resolved)) {
+            return \ltrim($resolved, '\\');
         }
 
         return $name;
     }
 
+    private function exists(string $name): bool
+    {
+        return \class_exists($name, true) || \interface_exists($name, true);
+    }
+
     private function resolveTypecast(mixed $typecast, \ReflectionClass $class): mixed
     {
-        if (is_string($typecast) && strpos($typecast, '::') !== false) {
+        if (\is_string($typecast) && \str_contains($typecast, '::')) {
             // short definition
-            $typecast = explode('::', $typecast);
+            $typecast = \explode('::', $typecast);
 
             // resolve class name
             $typecast[0] = $this->resolveName($typecast[0], $class);
         }
 
-        if (is_string($typecast)) {
+        if (\is_string($typecast)) {
             $typecast = $this->resolveName($typecast, $class);
-            if (class_exists($typecast)) {
+            if (\class_exists($typecast) && \method_exists($typecast, 'typecast')) {
                 $typecast = [$typecast, 'typecast'];
             }
         }

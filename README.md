@@ -34,8 +34,8 @@ class User
      *     through=TagMap::class, 
      *     load="lazy", 
      *     collection="Collection\BaseCollection"
-     * 
-*    ) */
+     * )
+     */
     protected $tags;
     
     ...
