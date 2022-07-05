@@ -270,7 +270,7 @@ final class Configurator
 
     private function exists(string $name): bool
     {
-        return \class_exists($name, true) || \interface_exists($name, true) || \enum_exists($name, true);
+        return \class_exists($name, true) || \interface_exists($name, true);
     }
 
     private function resolveTypecast(mixed $typecast, \ReflectionClass $class): mixed
