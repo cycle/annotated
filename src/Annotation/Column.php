@@ -29,7 +29,7 @@ final class Column
      * @param bool $primary Explicitly set column as a primary key.
      * @param bool $nullable Set column as nullable.
      * @param mixed|null $default Default column value.
-     * @param non-empty-string|callable|null $typecast Typecast rule name.
+     * @param callable|non-empty-string|null $typecast Typecast rule name.
      *        Regarding the default Typecast handler {@see Typecast} the value can be `callable` or
      *        one of ("int"|"float"|"bool"|"datetime") based on column type.
      *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
