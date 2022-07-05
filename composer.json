@@ -8,7 +8,7 @@
   "require": {
     "php": ">=8.0",
     "spiral/tokenizer": "^2.8",
-    "cycle/orm": "^2.0.0",
+    "cycle/orm": "^2.2.0",
     "cycle/schema-builder": "^2.1.0",
     "doctrine/annotations": "^1.13",
     "spiral/attributes": "^2.8",
