@@ -46,7 +46,7 @@ final class TokenizerEmbeddingLocatorTest extends TestCase
                     new \ReflectionClass(Address::class)
                 ),
             ],
-            $mock
+            $mock,
         ];
     }
 }

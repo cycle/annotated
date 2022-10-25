@@ -35,7 +35,7 @@ final class TokenizerEntityLocatorTest extends TestCase
 
         $mock = $this->createMock(ClassesInterface::class);
         $mock->method('getClasses')->willReturn([
-            AnotherClass::class => new \ReflectionClass(AnotherClass::class)
+            AnotherClass::class => new \ReflectionClass(AnotherClass::class),
         ]);
         yield [[], $mock];
 
@@ -55,7 +55,7 @@ final class TokenizerEntityLocatorTest extends TestCase
                     new \ReflectionClass(WithTable::class)
                 ),
             ],
-            $mock
+            $mock,
         ];
     }
 }
