@@ -32,9 +32,9 @@ final class Entities implements GeneratorInterface
         DoctrineReader|ReaderInterface $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
     ) {
-        $this->reader = ReaderFactory::create($reader);
-        $this->utils = new EntityUtils($this->reader);
-        $this->generator = new Configurator($this->reader, $tableNamingStrategy);
+        $reader = ReaderFactory::create($reader);
+        $this->utils = new EntityUtils($reader);
+        $this->generator = new Configurator($reader, $tableNamingStrategy);
     }
 
     public function run(Registry $registry): Registry
