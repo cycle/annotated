@@ -6,6 +6,7 @@ namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Schema\Compiler;
@@ -41,7 +42,7 @@ abstract class InvalidTest extends BaseTest
         $this->expectException(RelationException::class);
 
         (new Compiler())->compile($r, [
-            new Entities($locator, $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new ResetTables(),
             new MergeColumns($reader),
             new GenerateRelations(),
@@ -74,7 +75,7 @@ abstract class InvalidTest extends BaseTest
         $r = new Registry($this->dbal);
 
         (new Compiler())->compile($r, [
-            new Entities($locator, $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new ResetTables(),
             new MergeColumns($reader),
             new GenerateRelations(),

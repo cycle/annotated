@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
-use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Locator\EntityLocatorInterface;
 use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Exception\RegistryException;
@@ -14,7 +13,6 @@ use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Tokenizer\ClassesInterface;
 
 /**
  * Generates ORM schema based on annotated classes.
@@ -26,12 +24,11 @@ final class Entities implements GeneratorInterface
     public const TABLE_NAMING_SINGULAR = 2;
     public const TABLE_NAMING_NONE = 3;
 
-    private ReaderInterface $reader;
     private Configurator $generator;
     private EntityUtils $utils;
 
     public function __construct(
-        private ClassesInterface $locator,
+        private EntityLocatorInterface $locator,
         DoctrineReader|ReaderInterface $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
     ) {
@@ -44,31 +41,20 @@ final class Entities implements GeneratorInterface
     {
         /** @var EntitySchema[] $children */
         $children = [];
-        foreach ($this->locator->getClasses() as $class) {
-            try {
-                /** @var Entity $ann */
-                $ann = $this->reader->firstClassMetadata($class, Entity::class);
-            } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            if ($ann === null) {
-                continue;
-            }
-
-            $e = $this->generator->initEntity($ann, $class);
+        foreach ($this->locator->getEntities() as $entity) {
+            $e = $this->generator->initEntity($entity->attribute, $entity->class);
 
             // columns
-            $this->generator->initFields($e, $class);
+            $this->generator->initFields($e, $entity->class);
 
             // relations
-            $this->generator->initRelations($e, $class);
+            $this->generator->initRelations($e, $entity->class);
 
             // schema modifiers
-            $this->generator->initModifiers($e, $class);
+            $this->generator->initModifiers($e, $entity->class);
 
             // additional columns (mapped to local fields automatically)
-            $this->generator->initColumns($e, $ann->getColumns(), $class);
+            $this->generator->initColumns($e, $entity->attribute->getColumns(), $entity->class);
 
             if ($this->utils->hasParent($e->getClass())) {
                 $children[] = $e;
@@ -90,12 +76,12 @@ final class Entities implements GeneratorInterface
     private function normalizeNames(Registry $registry): Registry
     {
         // resolve all the relation target names into roles
-        foreach ($this->locator->getClasses() as $class) {
-            if (! $registry->hasEntity($class->getName())) {
+        foreach ($this->locator->getEntities() as $entity) {
+            if (!$registry->hasEntity($entity->class->getName())) {
                 continue;
             }
 
-            $e = $registry->getEntity($class->getName());
+            $e = $registry->getEntity($entity->class->getName());
 
             // relations
             foreach ($e->getRelations() as $name => $r) {
@@ -152,7 +138,7 @@ final class Entities implements GeneratorInterface
 
     private function resolveTarget(Registry $registry, string $name): ?string
     {
-        if (interface_exists($name, true)) {
+        if (\interface_exists($name, true)) {
             // do not resolve interfaces
             return $name;
         }

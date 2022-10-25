@@ -6,6 +6,8 @@ namespace Cycle\Annotated\Tests\Functional\Driver\Common\Inheritance;
 
 use Cycle\Annotated\Embeddings;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\TableInheritance;
@@ -16,7 +18,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
 use Cycle\ORM\Schema;
-use Cycle\ORM\Transaction;
+use Cycle\ORM\EntityManager;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -65,8 +67,8 @@ abstract class SingleTableTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator, $reader),
-            new Entities($locator, $reader),
+            new Embeddings(new TokenizerEmbeddingLocator($locator, $reader), $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new TableInheritance($reader),
             new ResetTables(),
             new MergeColumns($reader),
@@ -80,7 +82,7 @@ abstract class SingleTableTest extends BaseTest
 
         $this->orm = $this->orm->with(new Schema($schema));
 
-        $t = new Transaction($this->orm);
+        $t = new EntityManager($this->orm);
 
         $employee = new Employee();
         $employee->name = 'foo';

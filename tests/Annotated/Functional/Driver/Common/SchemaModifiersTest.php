@@ -6,6 +6,8 @@ namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Embeddings;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Child;
@@ -43,8 +45,8 @@ abstract class SchemaModifiersTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator, $reader),
-            new Entities($locator, $reader),
+            new Embeddings(new TokenizerEmbeddingLocator($locator, $reader), $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new ResetTables(),
             new MergeColumns($reader),
             new GenerateRelations(),

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Embeddings;
+use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\Typecaster;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\UuidTypecaster;
@@ -36,7 +38,7 @@ abstract class TypecastTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator, $reader),
+            new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
             new MergeColumns($reader),
         ]);
 
@@ -54,7 +56,7 @@ abstract class TypecastTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($this->locator, $reader),
+            new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
             new MergeColumns($reader),
         ]);
 
@@ -84,8 +86,8 @@ abstract class TypecastTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator, $reader),
-            new Entities($locator, $reader),
+            new Embeddings(new TokenizerEmbeddingLocator($locator, $reader), $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new ResetTables(),
             new MergeColumns($reader),
             new GenerateRelations(),
