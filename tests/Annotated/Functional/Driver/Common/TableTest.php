@@ -250,8 +250,8 @@ abstract class TableTest extends BaseTest
         (new Entities(
             new TokenizerEntityLocator($this->locator, $reader),
             $reader,
-            Entities::TABLE_NAMING_PLURAL)
-        )->run($r);
+            Entities::TABLE_NAMING_PLURAL
+        ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
@@ -271,8 +271,8 @@ abstract class TableTest extends BaseTest
         (new Entities(
             new TokenizerEntityLocator($this->locator, $reader),
             $reader,
-            Entities::TABLE_NAMING_SINGULAR)
-        )->run($r);
+            Entities::TABLE_NAMING_SINGULAR
+        ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
@@ -292,8 +292,8 @@ abstract class TableTest extends BaseTest
         (new Entities(
             new TokenizerEntityLocator($this->locator, $reader),
             $reader,
-            Entities::TABLE_NAMING_NONE)
-        )->run($r);
+            Entities::TABLE_NAMING_NONE
+        ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
