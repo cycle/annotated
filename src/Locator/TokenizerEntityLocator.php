@@ -20,7 +20,7 @@ final class TokenizerEntityLocator implements EntityLocatorInterface
     private ReaderInterface $reader;
 
     public function __construct(
-        private ClassesInterface $locator,
+        private ClassesInterface $classes,
         DoctrineReader|ReaderInterface $reader = null,
     ) {
         $this->reader = ReaderFactory::create($reader);
@@ -28,7 +28,9 @@ final class TokenizerEntityLocator implements EntityLocatorInterface
 
     public function getEntities(): array
     {
-        foreach ($this->locator->getClasses() as $class) {
+        $this->entities = [];
+
+        foreach ($this->classes->getClasses() as $class) {
             try {
                 /** @var Attribute $attribute */
                 $attribute = $this->reader->firstClassMetadata($class, Attribute::class);

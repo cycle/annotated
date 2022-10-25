@@ -20,7 +20,7 @@ final class TokenizerEmbeddingLocator implements EmbeddingLocatorInterface
     private ReaderInterface $reader;
 
     public function __construct(
-        private ClassesInterface $locator,
+        private ClassesInterface $classes,
         DoctrineReader|ReaderInterface $reader = null,
     ) {
         $this->reader = ReaderFactory::create($reader);
@@ -28,7 +28,9 @@ final class TokenizerEmbeddingLocator implements EmbeddingLocatorInterface
 
     public function getEmbeddings(): array
     {
-        foreach ($this->locator->getClasses() as $class) {
+        $this->embeddings = [];
+
+        foreach ($this->classes->getClasses() as $class) {
             try {
                 $attribute = $this->reader->firstClassMetadata($class, Embeddable::class);
             } catch (\Exception $e) {
