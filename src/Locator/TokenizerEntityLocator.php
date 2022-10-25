@@ -13,10 +13,6 @@ use Spiral\Tokenizer\ClassesInterface;
 
 final class TokenizerEntityLocator implements EntityLocatorInterface
 {
-    /**
-     * @var Entity[]
-     */
-    private array $entities = [];
     private ReaderInterface $reader;
 
     public function __construct(
@@ -28,8 +24,7 @@ final class TokenizerEntityLocator implements EntityLocatorInterface
 
     public function getEntities(): array
     {
-        $this->entities = [];
-
+        $entities = [];
         foreach ($this->classes->getClasses() as $class) {
             try {
                 /** @var Attribute $attribute */
@@ -39,10 +34,10 @@ final class TokenizerEntityLocator implements EntityLocatorInterface
             }
 
             if ($attribute !== null) {
-                $this->entities[] = new Entity($attribute, $class);
+                $entities[] = new Entity($attribute, $class);
             }
         }
 
-        return $this->entities;
+        return $entities;
     }
 }
