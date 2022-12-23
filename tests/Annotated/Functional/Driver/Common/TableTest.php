@@ -6,6 +6,7 @@ namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\ORM\Schema;
@@ -26,7 +27,7 @@ abstract class TableTest extends BaseTest
     public function testColumnsRendered(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
@@ -53,7 +54,7 @@ abstract class TableTest extends BaseTest
         $schema = (new Compiler())->compile(
             $r,
             [
-                new Entities($this->locator, $reader),
+                new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
                 new MergeColumns($reader),
                 new RenderTables(),
             ]
@@ -72,7 +73,7 @@ abstract class TableTest extends BaseTest
         $schema = (new Compiler())->compile(
             $r,
             [
-                new Entities($this->locator, $reader),
+                new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
                 new MergeColumns($reader),
                 new RenderTables(),
             ]
@@ -92,7 +93,7 @@ abstract class TableTest extends BaseTest
         $locator = $tokenizer->classLocator();
         $r = new Registry($this->dbal);
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new MergeColumns($reader),
             new RenderTables(),
         ]);
@@ -119,7 +120,7 @@ abstract class TableTest extends BaseTest
         );
 
         (new Compiler())->compile($r, [
-            new Entities($locator, $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new MergeColumns($reader),
             new RenderTables(),
         ]);
@@ -138,7 +139,7 @@ abstract class TableTest extends BaseTest
         ]));
         $locator = $tokenizer->classLocator();
 
-        (new Entities($locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
         (new MergeIndexes($reader))->run($r);
@@ -165,7 +166,7 @@ abstract class TableTest extends BaseTest
         ]));
         $locator = $tokenizer->classLocator();
 
-        (new Entities($locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
         (new MergeIndexes($reader))->run($r);
@@ -178,7 +179,7 @@ abstract class TableTest extends BaseTest
     {
         $r = new Registry($this->dbal);
 
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
         (new MergeIndexes($reader))->run($r);
@@ -209,7 +210,7 @@ abstract class TableTest extends BaseTest
 
         $r = new Registry($this->dbal);
 
-        (new Entities($locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
         (new MergeIndexes($reader))->run($r);
@@ -229,7 +230,7 @@ abstract class TableTest extends BaseTest
     public function testNamingDefault(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
@@ -246,7 +247,11 @@ abstract class TableTest extends BaseTest
     public function testNamingPluralize(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader, Entities::TABLE_NAMING_PLURAL))->run($r);
+        (new Entities(
+            new TokenizerEntityLocator($this->locator, $reader),
+            $reader,
+            Entities::TABLE_NAMING_PLURAL
+        ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
@@ -263,7 +268,11 @@ abstract class TableTest extends BaseTest
     public function testNamingSingular(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader, Entities::TABLE_NAMING_SINGULAR))->run($r);
+        (new Entities(
+            new TokenizerEntityLocator($this->locator, $reader),
+            $reader,
+            Entities::TABLE_NAMING_SINGULAR
+        ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
@@ -280,7 +289,11 @@ abstract class TableTest extends BaseTest
     public function testNamingNone(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader, Entities::TABLE_NAMING_NONE))->run($r);
+        (new Entities(
+            new TokenizerEntityLocator($this->locator, $reader),
+            $reader,
+            Entities::TABLE_NAMING_NONE
+        ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 

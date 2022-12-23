@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Complete;
@@ -30,7 +31,7 @@ abstract class GeneratorTest extends BaseTest
     public function testCreateEntitiesWithNullReader(): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator)))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity(WithTable::class));
@@ -42,7 +43,7 @@ abstract class GeneratorTest extends BaseTest
         $reader = new DoctrineAnnotationReader();
         $r = new Registry($this->dbal);
 
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
         (new MergeIndexes($reader))->run($r);
@@ -73,7 +74,7 @@ abstract class GeneratorTest extends BaseTest
         ]));
         $locator = $tokenizer->classLocator();
 
-        (new Entities($locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
         (new MergeIndexes($reader))->run($r);
@@ -92,7 +93,7 @@ abstract class GeneratorTest extends BaseTest
     public function testLocateAll(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity(WithTable::class));
@@ -105,7 +106,7 @@ abstract class GeneratorTest extends BaseTest
     public function testSimpleSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Simple::class));
         $this->assertTrue($r->hasEntity('simple'));
@@ -127,7 +128,7 @@ abstract class GeneratorTest extends BaseTest
     public function testCompleteSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
 
         $this->assertTrue($r->hasEntity(Complete::class));
         $this->assertTrue($r->hasEntity('eComplete'));

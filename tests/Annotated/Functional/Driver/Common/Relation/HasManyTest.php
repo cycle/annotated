@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Common\Relation;
 
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
@@ -36,7 +37,7 @@ abstract class HasManyTest extends BaseTest
         $schema = (new Compiler())->compile(
             $r,
             [
-                new Entities($this->locator, $reader),
+                new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
                 new ResetTables(),
                 new MergeColumns($reader),
                 new GenerateRelations(),
@@ -78,7 +79,7 @@ abstract class HasManyTest extends BaseTest
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new MergeColumns($reader),
             new GenerateRelations(),
             $t = new RenderTables(),

@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
-use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Relation\RelationInterface;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Locator\EmbeddingLocatorInterface;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Tokenizer\ClassesInterface;
 
 /**
  * Generates ORM schema based on annotated classes.
@@ -20,11 +19,10 @@ use Spiral\Tokenizer\ClassesInterface;
 final class Embeddings implements GeneratorInterface
 {
     private ReaderInterface $reader;
-
     private Configurator $generator;
 
     public function __construct(
-        private ClassesInterface $locator,
+        private EmbeddingLocatorInterface $locator,
         DoctrineReader|ReaderInterface $reader = null
     ) {
         $this->reader = ReaderFactory::create($reader);
@@ -33,23 +31,13 @@ final class Embeddings implements GeneratorInterface
 
     public function run(Registry $registry): Registry
     {
-        foreach ($this->locator->getClasses() as $class) {
-            try {
-                $em = $this->reader->firstClassMetadata($class, Embeddable::class);
-            } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
-            }
-            if ($em === null) {
-                continue;
-            }
-            \assert($em instanceof Embeddable);
+        foreach ($this->locator->getEmbeddings() as $embedding) {
+            $e = $this->generator->initEmbedding($embedding->attribute, $embedding->class);
 
-            $e = $this->generator->initEmbedding($em, $class);
-
-            $this->verifyNoRelations($e, $class);
+            $this->verifyNoRelations($e, $embedding->class);
 
             // columns
-            $this->generator->initFields($e, $class);
+            $this->generator->initFields($e, $embedding->class);
 
             // register entity (OR find parent)
             $registry->register($e);
