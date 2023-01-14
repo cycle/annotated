@@ -16,8 +16,8 @@ use Cycle\Annotated\Annotation\Inheritance\DiscriminatorColumn;
 #[DiscriminatorColumn(name: 'type')]
 class Person
 {
-    /** @Column(type="primary", name="id") */
-    #[Column(type: 'primary', name: 'id')]
+    /** @Column(type="bigInteger", primary="true") */
+    #[Column(type: 'bigInteger', primary: true)]
     protected int $id;
 
     /** @Column(type="string") */

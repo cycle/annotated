@@ -14,9 +14,9 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable;
  */
 #[Entity]
 #[JoinedTable]
-class Employee extends Person
+class Executive extends Employee
 {
     /** @Column(type="integer") */
     #[Column(type: 'integer')]
-    public int $salary;
+    public int $bonus;
 }

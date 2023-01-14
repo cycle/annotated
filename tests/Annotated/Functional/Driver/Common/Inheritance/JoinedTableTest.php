@@ -257,7 +257,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertSame([
             'id' => 'id',
             'name' => 'name',
-            'type' => 'type'
+            'type' => 'type',
         ], $schema['person'][SchemaInterface::COLUMNS]);
     }
 }

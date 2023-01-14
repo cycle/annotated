@@ -6,14 +6,14 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures21;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable;
+use Cycle\Annotated\Annotation\Inheritance\JoinedTable;
 
 /**
  * @Entity
- * @InheritanceJoinedTable(fkCreate=false)
+ * @JoinedTable
  */
 #[Entity]
-#[InheritanceJoinedTable(fkCreate: false)]
+#[JoinedTable]
 class Buyer extends Person
 {
     /** @Column(type="string") */
