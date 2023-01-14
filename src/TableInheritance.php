@@ -85,6 +85,7 @@ class TableInheritance implements GeneratorInterface
                 $this->removeStiExtraFields($entity, $allowedEntities);
             } elseif ($entity->getInheritance() instanceof JoinedTableInheritanceSchema) {
                 $this->removeJtiExtraFields($entity);
+                $this->removeJtiFieldsFromParent($entity);
                 $this->addForeignKey($this->parseMetadata($entity, Inheritance::class), $entity, $registry);
             }
         }
@@ -186,6 +187,20 @@ class TableInheritance implements GeneratorInterface
                 } elseif ($field->getType() === 'bigPrimary') {
                     $field->setType('bigInteger')->setPrimary(true);
                 }
+            }
+        }
+    }
+
+    /**
+     * Removes JTI fields from parent
+     */
+    public function removeJtiFieldsFromParent(EntitySchema $entity)
+    {
+        $parent = $entity->getInheritance()->getParent()->getFields();
+
+        foreach ($entity->getFields() as $name => $field) {
+            if (!$field->isPrimary() && $parent->hasColumn($name)) {
+                $parent->remove($name);
             }
         }
     }

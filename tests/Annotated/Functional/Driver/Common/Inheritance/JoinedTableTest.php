@@ -16,6 +16,7 @@ use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
 use Cycle\ORM\EntityManager;
 use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -216,5 +217,47 @@ abstract class JoinedTableTest extends BaseTest
             new SyncTables(),
             new GenerateTypecast(),
         ]);
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testJtiParentColumns(ReaderInterface $reader)
+    {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures21'],
+                'exclude' => [],
+            ])
+        );
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new ResetTables(),
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
+            new TableInheritance($reader),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertNotEmpty($schema);
+
+        $this->assertArrayHasKey(SchemaInterface::COLUMNS, $schema['person']);
+
+        // assert that parent doesn't have jti columns
+        $this->assertSame([
+            'id' => 'id',
+            'name' => 'name',
+            'type' => 'type'
+        ], $schema['person'][SchemaInterface::COLUMNS]);
     }
 }
