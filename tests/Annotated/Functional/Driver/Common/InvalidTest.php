@@ -18,6 +18,7 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -59,10 +60,12 @@ abstract class InvalidTest extends BaseTest
      */
     public function testNotDefinedColumnTypeShouldThrowAnException(ReaderInterface $reader): void
     {
+        $message = $reader instanceof AnnotationReader
+            ? 'Too few arguments to function Cycle\Annotated\Annotation\Column::__construct(), 0 passed'
+            : 'Some of required arguments [`type`] is missed on `Cycle\Annotated\Tests\Fixtures\Fixtures4\User.id.`';
+
         $this->expectException(AnnotationException::class);
-        // $this->expectErrorMessage(
-        //     'Some of required arguments [`type`] is missed on `Cycle\Annotated\Tests\Fixtures\Fixtures4\User.id.`'
-        // );
+        $this->expectErrorMessage($message);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../../../Fixtures/Fixtures4'],
