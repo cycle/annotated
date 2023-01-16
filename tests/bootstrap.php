@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Cycle\Database\Config;
 
 error_reporting(E_ALL | E_STRICT);
@@ -10,8 +9,6 @@ ini_set('display_errors', '1');
 
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
-
-AnnotationRegistry::registerLoader('class_exists');
 
 $drivers = [
     'sqlite' => new Config\SQLiteDriverConfig(
