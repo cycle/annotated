@@ -18,6 +18,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
 use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\EntityManager;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
@@ -143,5 +144,44 @@ abstract class SingleTableTest extends BaseTest
         $this->assertSame('ceo', $loadedCeo->name);
         $this->assertSame(150000, $loadedCeo->salary);
         $this->assertSame(1000, $loadedCeo->stocks);
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testTableInheritanceSchema(ReaderInterface $reader): void
+    {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures20'],
+                'exclude' => [],
+            ])
+        );
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
+            new TableInheritance($reader),
+            new ResetTables(),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertNotEmpty($schema);
+
+        $this->assertArrayHasKey(SchemaInterface::CHILDREN, $schema['person']);
+        $this->assertArrayHasKey(SchemaInterface::DISCRIMINATOR, $schema['person']);
+        $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
+
+        $this->assertArrayHasKey(SchemaInterface::PARENT, $schema['buyer']);
+        $this->assertArrayHasKey(SchemaInterface::PARENT_KEY, $schema['buyer']);
     }
 }

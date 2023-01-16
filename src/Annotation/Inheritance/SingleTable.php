@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation\Inheritance;
 
 use Cycle\Annotated\Annotation\Inheritance;
-use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation

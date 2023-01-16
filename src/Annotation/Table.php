@@ -6,8 +6,8 @@ namespace Cycle\Annotated\Annotation;
 
 use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\Annotated\Annotation\Table\PrimaryKey;
-use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
