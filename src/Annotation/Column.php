@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation;
 
 use Cycle\ORM\Parser\Typecast;
-use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
