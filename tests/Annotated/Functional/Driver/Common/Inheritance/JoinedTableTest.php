@@ -193,11 +193,30 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertTrue(end($indexes)->isUnique());
     }
 
-    private function compile(ReaderInterface $reader): array
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testJtiParentColumns(ReaderInterface $reader): void
+    {
+        $schema = $this->compile($reader, 'Fixtures21');
+
+        $this->assertNotEmpty($schema);
+
+        $this->assertArrayHasKey(SchemaInterface::COLUMNS, $schema['person']);
+
+        // assert that parent doesn't have jti columns
+        $this->assertSame([
+            'id' => 'id',
+            'name' => 'name',
+            'type' => 'type',
+        ], $schema['person'][SchemaInterface::COLUMNS]);
+    }
+
+    private function compile(ReaderInterface $reader, string $fixtures = 'Fixtures16'): array
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
+                'directories' => [sprintf(__DIR__ . '/../../../../Fixtures/%s', $fixtures)],
                 'exclude' => [],
             ])
         );
@@ -217,47 +236,5 @@ abstract class JoinedTableTest extends BaseTest
             new SyncTables(),
             new GenerateTypecast(),
         ]);
-    }
-
-    /**
-     * @dataProvider allReadersProvider
-     */
-    public function testJtiParentColumns(ReaderInterface $reader)
-    {
-        $tokenizer = new Tokenizer(
-            new TokenizerConfig([
-                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures21'],
-                'exclude' => [],
-            ])
-        );
-
-        $locator = $tokenizer->classLocator();
-
-        $r = new Registry($this->dbal);
-
-        $schema = (new Compiler())->compile($r, [
-            new ResetTables(),
-            new Embeddings($locator, $reader),
-            new Entities($locator, $reader),
-            new TableInheritance($reader),
-            new MergeColumns($reader),
-            new GenerateRelations(),
-            new RenderTables(),
-            new RenderRelations(),
-            new MergeIndexes($reader),
-            new SyncTables(),
-            new GenerateTypecast(),
-        ]);
-
-        $this->assertNotEmpty($schema);
-
-        $this->assertArrayHasKey(SchemaInterface::COLUMNS, $schema['person']);
-
-        // assert that parent doesn't have jti columns
-        $this->assertSame([
-            'id' => 'id',
-            'name' => 'name',
-            'type' => 'type',
-        ], $schema['person'][SchemaInterface::COLUMNS]);
     }
 }

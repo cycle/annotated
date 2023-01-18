@@ -81,7 +81,7 @@ final class Entities implements GeneratorInterface
         }
 
         foreach ($children as $e) {
-            $registry->registerChild($registry->getEntity($this->utils->findParent($e->getClass())), $e);
+            $registry->registerChildWithoutMerge($registry->getEntity($this->utils->findParent($e->getClass())), $e);
         }
 
         return $this->normalizeNames($registry);

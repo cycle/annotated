@@ -13,8 +13,8 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity]
 class Person
 {
-    /** @Column(type="bigInteger", primary="true") */
-    #[Column(type: 'bigInteger', primary: true)]
+    /** @Column(type="primary") */
+    #[Column(type: 'primary')]
     protected int $id;
 
     /** @Column(type="string") */
