@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation\Relation;
 
-use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation

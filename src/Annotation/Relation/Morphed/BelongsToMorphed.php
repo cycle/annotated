@@ -7,9 +7,9 @@ namespace Cycle\Annotated\Annotation\Relation\Morphed;
 use Cycle\Annotated\Annotation\Relation\Inverse;
 use Cycle\Annotated\Annotation\Relation\Relation;
 use Cycle\Annotated\Annotation\Relation\Traits\InverseTrait;
-use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
