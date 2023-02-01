@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Annotation;
 
 use Cycle\ORM\Parser\Typecast;
-use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
@@ -29,7 +29,7 @@ final class Column
      * @param bool $primary Explicitly set column as a primary key.
      * @param bool $nullable Set column as nullable.
      * @param mixed|null $default Default column value.
-     * @param non-empty-string|null $typecast Typecast rule name.
+     * @param callable|non-empty-string|null $typecast Typecast rule name.
      *        Regarding the default Typecast handler {@see Typecast} the value can be `callable` or
      *        one of ("int"|"float"|"bool"|"datetime") based on column type.
      *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
@@ -37,9 +37,10 @@ final class Column
      * @param bool $castDefault
      */
     public function __construct(
-        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean', 'integer', 'tinyInteger', 'bigInteger',
+        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
+            'integer', 'tinyInteger', 'smallInteger', 'bigInteger',
             'string', 'text', 'tinyText', 'longText', 'double', 'float', 'decimal', 'datetime', 'date', 'time',
-            'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
+            'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json', 'uuid',
         ])]
         private string $type,
         private ?string $name = null,

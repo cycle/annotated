@@ -133,6 +133,8 @@ class TableInheritance implements GeneratorInterface
                 $parent->getInheritance()->setDiscriminator($annotation->getName());
             }
 
+            $parent->merge($entity);
+
             return $parent;
         }
         if ($inheritance instanceof Inheritance\JoinedTable) {
