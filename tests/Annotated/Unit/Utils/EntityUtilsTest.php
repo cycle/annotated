@@ -30,7 +30,7 @@ class EntityUtilsTest extends TestCase
 
     public function findParentDataProvider(): iterable
     {
-        $namespace = 'Cycle\Annotated\Tests\Fixtures\Fixtures19';
+        $namespace = 'Cycle\Annotated\Tests\Fixtures\Fixtures22';
         $readers = [
             'Attributed' => new AttributeReader(),
             'Annotated' => new AnnotationReader(),

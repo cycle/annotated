@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Annotated\Tests\Fixtures\Fixtures19\Attributed;
+namespace Cycle\Annotated\Tests\Fixtures\Fixtures22\Annotated;
 
 use Cycle\Annotated\Annotation\Entity;
 
-#[Entity]
+/** @Entity*/
 class LocalManager extends LocalSupplier
 {
 }
