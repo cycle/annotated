@@ -16,6 +16,7 @@ use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
 use Cycle\ORM\EntityManager;
 use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
@@ -192,11 +193,30 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertTrue(end($indexes)->isUnique());
     }
 
-    private function compile(ReaderInterface $reader): array
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testJtiParentColumns(ReaderInterface $reader): void
+    {
+        $schema = $this->compile($reader, 'Fixtures21');
+
+        $this->assertNotEmpty($schema);
+
+        $this->assertArrayHasKey(SchemaInterface::COLUMNS, $schema['person']);
+
+        // assert that parent doesn't have jti columns
+        $this->assertSame([
+            'id' => 'id',
+            'name' => 'name',
+            'type' => 'type',
+        ], $schema['person'][SchemaInterface::COLUMNS]);
+    }
+
+    private function compile(ReaderInterface $reader, string $fixtures = 'Fixtures16'): array
     {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
-                'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
+                'directories' => [sprintf(__DIR__ . '/../../../../Fixtures/%s', $fixtures)],
                 'exclude' => [],
             ])
         );
