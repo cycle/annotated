@@ -48,10 +48,6 @@ class EntityUtils
                 continue;
             }
 
-            if ($class->getDocComment() === false) {
-                continue;
-            }
-
             $ann = $this->reader->firstClassMetadata($class, Entity::class);
             if ($ann !== null) {
                 return $parent;
