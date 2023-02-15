@@ -24,6 +24,12 @@ final class Column
 
     /**
      * @param non-empty-string $type Column type. {@see \Cycle\Database\Schema\AbstractColumn::$mapping}
+     *        Column types `smallPrimary`, `timetz`, `timestamptz`, `interval`, `bitVarying`, `int4range`, `int8range`,
+     *        `numrange`, `tsrange`, `tstzrange`, `daterange`, `jsonb`, `point`, `line`, `lseg`, `box`, `path`,
+     *        `polygon`, `circle`, `cidr`, `inet`, `macaddr`, `macaddr8`, `tsvector`, `tsquery` are related
+     *         to the PostgreSQL only {@see \Cycle\Database\Driver\Postgres\Schema\PostgresColumn::$mapping}
+     *        Column type `datetime2` is related to the SQL Server only
+     *        {@see \Cycle\Database\Driver\SQLServer\Schema\SQLServerColumn::$mapping}
      * @param non-empty-string|null $name Column name. Defaults to the property name.
      * @param non-empty-string|null $property Property that belongs to column. For virtual columns.
      * @param bool $primary Explicitly set column as a primary key.
@@ -37,10 +43,12 @@ final class Column
      * @param bool $castDefault
      */
     public function __construct(
-        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
-            'integer', 'tinyInteger', 'smallInteger', 'bigInteger',
-            'string', 'text', 'tinyText', 'longText', 'double', 'float', 'decimal', 'datetime', 'date', 'time',
-            'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json', 'uuid',
+        #[ExpectedValues(values: ['primary', 'smallPrimary', 'bigPrimary', 'enum', 'boolean',
+            'integer', 'tinyInteger', 'smallInteger', 'bigInteger', 'string', 'text', 'tinyText', 'longText', 'double',
+            'float', 'decimal', 'datetime', 'datetime2', 'date', 'time', 'timestamp', 'binary', 'tinyBinary',
+            'longBinary', 'json', 'jsonb', 'uuid', 'timestamptz', 'timetz', 'bitVarying', 'bit', 'int4range',
+            'int8range', 'numrange', 'tsrange', 'tstzrange', 'daterange', 'point', 'line', 'lseg', 'box', 'path',
+            'polygon', 'circle', 'cidr', 'inet', 'macaddr', 'macaddr8', 'tsvector', 'tsquery', 'interval'
         ])]
         private string $type,
         private ?string $name = null,
