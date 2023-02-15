@@ -43,12 +43,16 @@ final class Column
      * @param bool $castDefault
      */
     public function __construct(
-        #[ExpectedValues(values: ['primary', 'smallPrimary', 'bigPrimary', 'enum', 'boolean',
+        #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
             'integer', 'tinyInteger', 'smallInteger', 'bigInteger', 'string', 'text', 'tinyText', 'longText', 'double',
-            'float', 'decimal', 'datetime', 'datetime2', 'date', 'time', 'timestamp', 'binary', 'tinyBinary',
-            'longBinary', 'json', 'jsonb', 'uuid', 'timestamptz', 'timetz', 'bitVarying', 'bit', 'int4range',
-            'int8range', 'numrange', 'tsrange', 'tstzrange', 'daterange', 'point', 'line', 'lseg', 'box', 'path',
-            'polygon', 'circle', 'cidr', 'inet', 'macaddr', 'macaddr8', 'tsvector', 'tsquery', 'interval',
+            'float', 'decimal', 'datetime', 'date', 'time', 'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
+            'uuid', 'bit',
+            // PostgreSQL
+            'smallPrimary', 'timetz', 'timestamptz', 'interval', 'bitVarying', 'int4range', 'int8range', 'numrange',
+            'tsrange', 'tstzrange', 'daterange', 'jsonb', 'point', 'line', 'lseg', 'box', 'path', 'polygon', 'circle',
+            'cidr', 'inet', 'macaddr', 'macaddr8', 'tsvector', 'tsquery',
+            // SQL Server
+            'datetime2',
         ])]
         private string $type,
         private ?string $name = null,
