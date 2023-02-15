@@ -48,7 +48,7 @@ final class Column
             'float', 'decimal', 'datetime', 'datetime2', 'date', 'time', 'timestamp', 'binary', 'tinyBinary',
             'longBinary', 'json', 'jsonb', 'uuid', 'timestamptz', 'timetz', 'bitVarying', 'bit', 'int4range',
             'int8range', 'numrange', 'tsrange', 'tstzrange', 'daterange', 'point', 'line', 'lseg', 'box', 'path',
-            'polygon', 'circle', 'cidr', 'inet', 'macaddr', 'macaddr8', 'tsvector', 'tsquery', 'interval'
+            'polygon', 'circle', 'cidr', 'inet', 'macaddr', 'macaddr8', 'tsvector', 'tsquery', 'interval',
         ])]
         private string $type,
         private ?string $name = null,
