@@ -9,14 +9,14 @@
         "php": ">=8.0",
         "cycle/orm": "^2.2.0",
         "cycle/schema-builder": "^2.3",
-        "doctrine/annotations": "^1.13 || ^2.0",
+        "doctrine/annotations": "^1.14.3 || ^2.0.1",
         "spiral/attributes": "^2.8|^3.0",
         "spiral/tokenizer": "^2.8|^3.0",
         "doctrine/inflector": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.18"
+        "phpunit/phpunit": "^9.6",
+        "vimeo/psalm": "^4.30"
     },
     "autoload": {
         "psr-4": {

@@ -14,13 +14,15 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @NamedArgumentConstructor
  * @Target({"PROPERTY", "ANNOTATION", "CLASS"})
  */
-#[
-    \Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE),
-    NamedArgumentConstructor
-]
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[NamedArgumentConstructor]
 final class Column
 {
     private bool $hasDefault = false;
+    /**
+     * @var array<non-empty-string, mixed> Other database specific attributes.
+     */
+    private array $attributes;
 
     /**
      * @param non-empty-string $type Column type. {@see \Cycle\Database\Schema\AbstractColumn::$mapping}
@@ -41,6 +43,8 @@ final class Column
      *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
      *        a relevant Typecast handler that supports the rule.
      * @param bool $castDefault
+     * @param mixed ...$attributes Other database specific attributes. Use named notation to define them.
+     *        For example: #[Column('smallInt', unsigned: true, zerofill: true)]
      */
     public function __construct(
         #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
@@ -62,10 +66,12 @@ final class Column
         private mixed $default = null,
         private mixed $typecast = null,
         private bool $castDefault = false,
+        mixed ...$attributes,
     ) {
         if ($default !== null) {
             $this->hasDefault = true;
         }
+        $this->attributes = $attributes;
     }
 
     public function getType(): ?string
@@ -111,5 +117,13 @@ final class Column
     public function getTypecast(): mixed
     {
         return $this->typecast;
+    }
+
+    /**
+     * @return array<non-empty-string, mixed>
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 }
