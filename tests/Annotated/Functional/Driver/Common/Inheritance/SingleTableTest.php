@@ -189,6 +189,7 @@ abstract class SingleTableTest extends BaseTest
 
     /**
      * @dataProvider columnDeclarationDataProvider
+     * @dataProvider tableColumnDeclarationDataProvider
      */
     public function testSingleTableInheritanceWithDifferentColumnDeclaration(
         string $directory,
@@ -246,7 +247,13 @@ abstract class SingleTableTest extends BaseTest
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
         ];
+    }
 
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function tableColumnDeclarationDataProvider(): \Traversable
+    {
         // Declaration via Table in the class
         yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', new AttributeReader()];
         yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', new AnnotationReader()];
