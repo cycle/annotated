@@ -236,7 +236,7 @@ abstract class SingleTableTest extends BaseTest
         yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', new AnnotationReader()];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
-            new SelectiveReader([new AttributeReader(), new AnnotationReader()])
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
         ];
 
         // Declaration via Column in the class
@@ -244,7 +244,7 @@ abstract class SingleTableTest extends BaseTest
         yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', new AnnotationReader()];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
-            new SelectiveReader([new AttributeReader(), new AnnotationReader()])
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
         ];
 
         // Declaration via Table in the class
@@ -252,7 +252,7 @@ abstract class SingleTableTest extends BaseTest
         yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', new AnnotationReader()];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn',
-            new SelectiveReader([new AttributeReader(), new AnnotationReader()])
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
         ];
     }
 }
