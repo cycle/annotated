@@ -44,7 +44,7 @@ final class MergeColumns implements GeneratorInterface
             $this->copy($e, $e->getScope());
 
             foreach ($registry->getChildren($e) as $child) {
-                $this->copy($e, $child->getClass());
+                $this->copy($child, $child->getClass());
             }
         }
 
@@ -67,18 +67,18 @@ final class MergeColumns implements GeneratorInterface
         }
 
         try {
-            /** @var Table|null $tableMeta */
-            $tableMeta = $this->reader->firstClassMetadata($class, Table::class);
-            /** @var Column[] $columnsMeta */
-            $columnsMeta = $this->reader->getClassMetadata($class, Column::class);
+            $columns = $class->getParentClass()
+                ? \array_merge($this->getColumns($class->getParentClass()), $this->getColumns($class))
+                : $this->getColumns($class);
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        $columns = $tableMeta === null ? [] : $tableMeta->getColumns();
-        foreach ($columnsMeta as $column) {
-            $columns[] = $column;
-        }
+        $columns = \array_filter(
+            $columns,
+            static fn (string $field): bool => !$e->getFields()->has($field),
+            \ARRAY_FILTER_USE_KEY
+        );
 
         if ($columns === []) {
             return;
@@ -86,5 +86,25 @@ final class MergeColumns implements GeneratorInterface
 
         // additional columns (mapped to local fields automatically)
         $this->generator->initColumns($e, $columns, $class);
+    }
+
+    private function getColumns(\ReflectionClass $class): array
+    {
+        $columns = [];
+
+        /** @var Table|null $table */
+        $table = $this->reader->firstClassMetadata($class, Table::class);
+        foreach ($table === null ? [] : $table->getColumns() as $name => $column) {
+            if (\is_numeric($name)) {
+                $name = $column->getProperty() ?? $column->getColumn();
+            }
+            $columns[$name] = $column;
+        }
+
+        foreach ($this->reader->getClassMetadata($class, Column::class) as $column) {
+            $columns[$column->getProperty() ?? $column->getColumn()] = $column;
+        }
+
+        return $columns;
     }
 }

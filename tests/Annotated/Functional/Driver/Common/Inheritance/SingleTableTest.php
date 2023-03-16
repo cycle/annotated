@@ -15,6 +15,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures16\Person;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
+use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Transaction;
@@ -26,6 +27,9 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -181,5 +185,74 @@ abstract class SingleTableTest extends BaseTest
 
         $this->assertArrayHasKey(SchemaInterface::PARENT, $schema['buyer']);
         $this->assertArrayHasKey(SchemaInterface::PARENT_KEY, $schema['buyer']);
+    }
+
+    /**
+     * @dataProvider columnDeclarationDataProvider
+     */
+    public function testSingleTableInheritanceWithDifferentColumnDeclaration(
+        string $directory,
+        ReaderInterface $reader
+    ): void {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [$directory],
+                'exclude' => [],
+            ])
+        );
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
+            new MergeColumns($reader),
+            new TableInheritance($reader),
+            new ResetTables(),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertNotEmpty($schema);
+
+        $this->assertArrayHasKey('comment.created', $schema['baseEvent'][SchemaInterface::CHILDREN]);
+        $this->assertArrayHasKey('comment.updated', $schema['baseEvent'][SchemaInterface::CHILDREN]);
+        $this->assertSame('action', $schema['baseEvent'][SchemaInterface::DISCRIMINATOR]);
+        $this->assertSame(
+            Relation::BELONGS_TO_MORPHED,
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][0]
+        );
+    }
+
+    public function columnDeclarationDataProvider(): \Traversable
+    {
+        // Declaration via Column in the property
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', new AttributeReader()];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', new AnnotationReader()];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()])
+        ];
+
+        // Declaration via Column in the class
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', new AttributeReader()];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', new AnnotationReader()];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()])
+        ];
+
+        // Declaration via Table in the class
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', new AttributeReader()];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', new AnnotationReader()];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn',
+            new SelectiveReader([new AttributeReader(), new AnnotationReader()])
+        ];
     }
 }
