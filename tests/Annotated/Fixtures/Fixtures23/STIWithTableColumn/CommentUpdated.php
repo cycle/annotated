@@ -12,8 +12,6 @@ use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
  * @Entity
  * @SingleTable(value="comment.updated")
  */
-#[Entity]
-#[SingleTable(value: 'comment.updated')]
 final class CommentUpdated extends BaseEvent
 {
     /**
@@ -24,11 +22,5 @@ final class CommentUpdated extends BaseEvent
      *     indexCreate=false
      * )
      */
-    #[BelongsToMorphed(
-        target: EventEmitterInterface::class,
-        innerKey: 'object_id',
-        morphKey: 'object_type',
-        indexCreate: false,
-    )]
     public EventEmitterInterface|Comment $object;
 }

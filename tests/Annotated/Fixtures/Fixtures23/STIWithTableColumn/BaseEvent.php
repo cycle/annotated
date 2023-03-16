@@ -17,14 +17,6 @@ use Cycle\Annotated\Annotation\Table;
  * })
  * @DiscriminatorColumn(name="action")
  */
-#[Entity]
-#[Table(
-    columns: [
-        new Column(type: 'primary', property: 'id'),
-        new Column(type: 'string', property: 'action')
-    ]
-)]
-#[DiscriminatorColumn(name: 'action')]
 abstract class BaseEvent
 {
     public int $id;
