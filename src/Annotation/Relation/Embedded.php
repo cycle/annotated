@@ -9,7 +9,9 @@ use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ *
  * @NamedArgumentConstructor
+ *
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
