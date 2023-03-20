@@ -223,9 +223,8 @@ abstract class SingleTableTest extends BaseTest
         ]);
 
         $this->assertNotEmpty($schema);
-
-        $this->assertSame([
-            'baseEvent' => [
+        $this->assertSame(
+            [
                 SchemaInterface::ENTITY => \sprintf(
                     'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\BaseEvent',
                     $namespace
@@ -259,11 +258,11 @@ abstract class SingleTableTest extends BaseTest
                             Relation::CASCADE => true,
                             Relation::NULLABLE => true,
                             Relation::OUTER_KEY => [
-                                'id'
+                                'id',
                             ],
                             Relation::INNER_KEY => 'object_id',
                             Relation::MORPH_KEY => 'object_type',
-                            1009 => 32
+                            1009 => 32,
                         ]
                     ]
                 ],
@@ -284,9 +283,12 @@ abstract class SingleTableTest extends BaseTest
                 ],
                 SchemaInterface::SCHEMA => [],
                 SchemaInterface::DISCRIMINATOR => 'action',
-                SchemaInterface::TYPECAST_HANDLER => null
+                SchemaInterface::TYPECAST_HANDLER => null,
             ],
-            'comment' => [
+            $schema['baseEvent']
+        );
+        $this->assertSame(
+            [
                 SchemaInterface::ENTITY => \sprintf(
                     'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\Comment',
                     $namespace
@@ -312,21 +314,22 @@ abstract class SingleTableTest extends BaseTest
                     'id' => 'int',
                 ],
                 SchemaInterface::SCHEMA => [],
-                SchemaInterface::TYPECAST_HANDLER => null
+                SchemaInterface::TYPECAST_HANDLER => null,
             ],
-            'commentCreated' => [
-                SchemaInterface::ENTITY => \sprintf(
-                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
-                    $namespace
-                )
-            ],
-            'commentUpdated' => [
-                SchemaInterface::ENTITY => \sprintf(
-                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
-                    $namespace
-                )
-            ]
-        ], $schema);
+            $schema['comment']
+        );
+        $this->assertSame([
+            SchemaInterface::ENTITY => \sprintf(
+                'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
+                $namespace
+            ),
+        ], $schema['commentCreated']);
+        $this->assertSame([
+            SchemaInterface::ENTITY => \sprintf(
+                'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
+                $namespace
+            ),
+        ], $schema['commentUpdated']);
     }
 
     public function columnDeclarationDataProvider(): \Traversable
@@ -335,48 +338,48 @@ abstract class SingleTableTest extends BaseTest
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
             new AttributeReader(),
-            'STIWithPropertyColumn'
+            'STIWithPropertyColumn',
         ];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
             new AnnotationReader(),
-            'STIWithPropertyColumn'
+            'STIWithPropertyColumn',
         ];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            'STIWithPropertyColumn'
+            'STIWithPropertyColumn',
         ];
 
         // Declaration via Column in the class
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
             new AttributeReader(),
-            'STIWithClassColumn'
+            'STIWithClassColumn',
         ];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
             new AnnotationReader(),
-            'STIWithClassColumn'
+            'STIWithClassColumn',
         ];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            'STIWithClassColumn'
+            'STIWithClassColumn',
         ];
 
         // Declaration via Table in the class
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn',
             new AnnotationReader(),
-            'STIWithTableColumn'
+            'STIWithTableColumn',
         ];
 
         // Declaration via columns in the Entity
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithEntityColumn',
             new AnnotationReader(),
-            'STIWithEntityColumn'
+            'STIWithEntityColumn',
         ];
     }
 }
