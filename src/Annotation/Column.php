@@ -11,7 +11,9 @@ use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ *
  * @NamedArgumentConstructor
+ *
  * @Target({"PROPERTY", "ANNOTATION", "CLASS"})
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
