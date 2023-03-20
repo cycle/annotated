@@ -263,8 +263,8 @@ abstract class SingleTableTest extends BaseTest
                             Relation::INNER_KEY => 'object_id',
                             Relation::MORPH_KEY => 'object_type',
                             1009 => 32,
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 SchemaInterface::CHILDREN => [
                     'comment.created' => \sprintf(
@@ -274,7 +274,7 @@ abstract class SingleTableTest extends BaseTest
                     'comment.updated' => \sprintf(
                         'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
                         $namespace
-                    )
+                    ),
                 ],
                 SchemaInterface::SCOPE => null,
                 SchemaInterface::TYPECAST => [
