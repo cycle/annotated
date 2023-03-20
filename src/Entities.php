@@ -71,6 +71,12 @@ final class Entities implements GeneratorInterface
             $this->generator->initColumns($e, $ann->getColumns(), $class);
 
             if ($this->utils->hasParent($e->getClass())) {
+                foreach ($this->utils->findParents($e->getClass()) as $parent) {
+                    // additional columns from parent class
+                    $ann = $this->reader->firstClassMetadata($parent, Entity::class);
+                    $this->generator->initColumns($e, $ann->getColumns(), $parent);
+                }
+
                 $children[] = $e;
                 continue;
             }

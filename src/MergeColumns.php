@@ -7,6 +7,7 @@ namespace Cycle\Annotated;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
@@ -21,11 +22,13 @@ final class MergeColumns implements GeneratorInterface
     private ReaderInterface $reader;
 
     private Configurator $generator;
+    private EntityUtils $utils;
 
-    public function __construct(DoctrineReader|ReaderInterface $reader = null)
+    public function __construct(DoctrineReader|ReaderInterface $reader = null, ?EntityUtils $utils = null)
     {
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
+        $this->utils = $utils ?? new EntityUtils($this->reader);
     }
 
     public function run(Registry $registry): Registry
@@ -67,9 +70,11 @@ final class MergeColumns implements GeneratorInterface
         }
 
         try {
-            $columns = $class->getParentClass()
-                ? \array_merge($this->getColumns($class->getParentClass()), $this->getColumns($class))
-                : $this->getColumns($class);
+            $columns = [];
+            foreach ($this->utils->findParents($class->getName()) as $parent) {
+                $columns = \array_merge($columns, $this->getColumns($parent));
+            }
+            $columns = \array_merge($columns, $this->getColumns($class));
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }

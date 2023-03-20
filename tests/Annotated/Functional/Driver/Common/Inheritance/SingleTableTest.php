@@ -15,9 +15,12 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures16\Person;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Cycle\Annotated\Tests\Traits\TableTrait;
+use Cycle\ORM\Mapper\Mapper;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
+use Cycle\ORM\Select\Repository;
+use Cycle\ORM\Select\Source;
 use Cycle\ORM\Transaction;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
@@ -192,7 +195,8 @@ abstract class SingleTableTest extends BaseTest
      */
     public function testSingleTableInheritanceWithDifferentColumnDeclaration(
         string $directory,
-        ReaderInterface $reader
+        ReaderInterface $reader,
+        string $namespace
     ): void {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
@@ -220,34 +224,159 @@ abstract class SingleTableTest extends BaseTest
 
         $this->assertNotEmpty($schema);
 
-        $this->assertArrayHasKey('comment.created', $schema['baseEvent'][SchemaInterface::CHILDREN]);
-        $this->assertArrayHasKey('comment.updated', $schema['baseEvent'][SchemaInterface::CHILDREN]);
-        $this->assertSame('action', $schema['baseEvent'][SchemaInterface::DISCRIMINATOR]);
-        $this->assertSame(
-            Relation::BELONGS_TO_MORPHED,
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][0]
-        );
+        $this->assertSame([
+            'baseEvent' => [
+                SchemaInterface::ENTITY => \sprintf(
+                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\BaseEvent',
+                    $namespace
+                ),
+                SchemaInterface::MAPPER => Mapper::class,
+                SchemaInterface::SOURCE => Source::class,
+                SchemaInterface::REPOSITORY => Repository::class,
+                SchemaInterface::DATABASE => 'default',
+                SchemaInterface::TABLE => 'base_events',
+                SchemaInterface::PRIMARY_KEY => [
+                    'id',
+                ],
+                SchemaInterface::FIND_BY_KEYS => [
+                    'id',
+                ],
+                SchemaInterface::COLUMNS => [
+                    'id' => 'id',
+                    'action' => 'action',
+                    'object_id' => 'object_id',
+                    'object_type' => 'object_type',
+                ],
+                SchemaInterface::RELATIONS => [
+                    'object' => [
+                        Relation::TYPE => Relation::BELONGS_TO_MORPHED,
+                        Relation::TARGET => \sprintf(
+                            'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\EventEmitterInterface',
+                            $namespace
+                        ),
+                        Relation::LOAD => Relation::LOAD_PROMISE,
+                        Relation::SCHEMA => [
+                            Relation::CASCADE => true,
+                            Relation::NULLABLE => true,
+                            Relation::OUTER_KEY => [
+                                'id'
+                            ],
+                            Relation::INNER_KEY => 'object_id',
+                            Relation::MORPH_KEY => 'object_type',
+                            1009 => 32
+                        ]
+                    ]
+                ],
+                SchemaInterface::CHILDREN => [
+                    'comment.created' => \sprintf(
+                        'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
+                        $namespace
+                    ),
+                    'comment.updated' => \sprintf(
+                        'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
+                        $namespace
+                    )
+                ],
+                SchemaInterface::SCOPE => null,
+                SchemaInterface::TYPECAST => [
+                    'id' => 'int',
+                    'object_id' => 'int',
+                ],
+                SchemaInterface::SCHEMA => [],
+                SchemaInterface::DISCRIMINATOR => 'action',
+                SchemaInterface::TYPECAST_HANDLER => null
+            ],
+            'comment' => [
+                SchemaInterface::ENTITY => \sprintf(
+                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\Comment',
+                    $namespace
+                ),
+                SchemaInterface::MAPPER => Mapper::class,
+                SchemaInterface::SOURCE => Source::class,
+                SchemaInterface::REPOSITORY => Repository::class,
+                SchemaInterface::DATABASE => 'default',
+                SchemaInterface::TABLE => 'comments',
+                SchemaInterface::PRIMARY_KEY => [
+                    'id',
+                ],
+                SchemaInterface::FIND_BY_KEYS => [
+                    'id',
+                ],
+                SchemaInterface::COLUMNS => [
+                    'id' => 'id',
+                    'body' => 'body',
+                ],
+                SchemaInterface::RELATIONS => [],
+                SchemaInterface::SCOPE => null,
+                SchemaInterface::TYPECAST => [
+                    'id' => 'int',
+                ],
+                SchemaInterface::SCHEMA => [],
+                SchemaInterface::TYPECAST_HANDLER => null
+            ],
+            'commentCreated' => [
+                SchemaInterface::ENTITY => \sprintf(
+                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
+                    $namespace
+                )
+            ],
+            'commentUpdated' => [
+                SchemaInterface::ENTITY => \sprintf(
+                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
+                    $namespace
+                )
+            ]
+        ], $schema);
     }
 
     public function columnDeclarationDataProvider(): \Traversable
     {
         // Declaration via Column in the property
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', new AttributeReader()];
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', new AnnotationReader()];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
+            new AttributeReader(),
+            'STIWithPropertyColumn'
+        ];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
+            new AnnotationReader(),
+            'STIWithPropertyColumn'
+        ];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
+            'STIWithPropertyColumn'
         ];
 
         // Declaration via Column in the class
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', new AttributeReader()];
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', new AnnotationReader()];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
+            new AttributeReader(),
+            'STIWithClassColumn'
+        ];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
+            new AnnotationReader(),
+            'STIWithClassColumn'
+        ];
         yield [
             __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
             new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
+            'STIWithClassColumn'
         ];
 
         // Declaration via Table in the class
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', new AnnotationReader()];
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn',
+            new AnnotationReader(),
+            'STIWithTableColumn'
+        ];
+
+        // Declaration via columns in the Entity
+        yield [
+            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithEntityColumn',
+            new AnnotationReader(),
+            'STIWithEntityColumn'
+        ];
     }
 }
