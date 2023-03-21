@@ -70,6 +70,7 @@ abstract class TypecastTest extends BaseTest
 
     /**
      * @dataProvider allReadersProvider
+     *
      * @requires PHP >= 8.1
      */
     public function testBackedEnum(ReaderInterface $reader)

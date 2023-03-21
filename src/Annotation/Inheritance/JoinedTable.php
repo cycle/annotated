@@ -10,7 +10,9 @@ use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ *
  * @NamedArgumentConstructor
+ *
  * @Target("CLASS")
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
