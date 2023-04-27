@@ -19,6 +19,9 @@ class ColumnTest extends TestCase
     #[Column('string(32)', size: 128)]
     private $column3;
 
+    #[Column('string(32)', readonlySchema: true)]
+    private mixed $column4;
+
     public function testOneAttribute(): void
     {
         $attr = $this->getAttribute('column1');
@@ -38,6 +41,20 @@ class ColumnTest extends TestCase
         $attr = $this->getAttribute('column3');
 
         $this->assertSame(['size' => 128], $attr->getAttributes());
+    }
+
+    public function testDefaultReadOnly(): void
+    {
+        $attr = $this->getAttribute('column1');
+
+        $this->assertFalse($attr->isReadonlySchema());
+    }
+
+    public function testReadOnly(): void
+    {
+        $attr = $this->getAttribute('column4');
+
+        $this->assertTrue($attr->isReadonlySchema());
     }
 
     private function getAttribute(string $field): Column

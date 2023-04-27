@@ -45,6 +45,7 @@ final class Column
      *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
      *        a relevant Typecast handler that supports the rule.
      * @param bool $castDefault
+     * @param bool $readonlySchema Set to true to disable schema synchronization for the assigned column.
      * @param mixed ...$attributes Other database specific attributes. Use named notation to define them.
      *        For example: #[Column('smallInt', unsigned: true, zerofill: true)]
      */
@@ -68,6 +69,7 @@ final class Column
         private mixed $default = null,
         private mixed $typecast = null,
         private bool $castDefault = false,
+        private bool $readonlySchema = false,
         mixed ...$attributes,
     ) {
         if ($default !== null) {
@@ -119,6 +121,11 @@ final class Column
     public function getTypecast(): mixed
     {
         return $this->typecast;
+    }
+
+    public function isReadonlySchema(): bool
+    {
+        return $this->readonlySchema;
     }
 
     /**

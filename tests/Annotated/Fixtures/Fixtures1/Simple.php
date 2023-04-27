@@ -66,4 +66,10 @@ class Simple implements LabelledInterface
      */
     #[MorphedHasMany(target: 'Label', outerKey: 'owner_id', morphKey: 'owner_role', indexCreate: false, collection: Collection\BaseCollection::class)] // phpcs:ignore
     protected $labels;
+
+    /**
+     * @Column(type="string", readonlySchema=true)
+     */
+    #[Column(type: 'string', readonlySchema: true)]
+    protected string $readOnlyColumn;
 }

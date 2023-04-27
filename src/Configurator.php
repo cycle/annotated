@@ -243,6 +243,10 @@ final class Configurator
             $field->getOptions()->set(\Cycle\Schema\Table\Column::OPT_CAST_DEFAULT, true);
         }
 
+        if ($column->isReadonlySchema()) {
+            $field->getAttributes()->set('readOnly', true);
+        }
+
         foreach ($column->getAttributes() as $k => $v) {
             $field->getAttributes()->set($k, $v);
         }
