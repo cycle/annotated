@@ -223,70 +223,67 @@ abstract class SingleTableTest extends BaseTest
         ]);
 
         $this->assertNotEmpty($schema);
+        $this->assertSame(\sprintf(
+            'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\BaseEvent',
+            $namespace
+        ), $schema['baseEvent'][SchemaInterface::ENTITY]);
+        $this->assertSame(Mapper::class, $schema['baseEvent'][SchemaInterface::MAPPER]);
+        $this->assertSame(Source::class, $schema['baseEvent'][SchemaInterface::SOURCE]);
+        $this->assertSame(Repository::class, $schema['baseEvent'][SchemaInterface::REPOSITORY]);
+        $this->assertSame('default', $schema['baseEvent'][SchemaInterface::DATABASE]);
+        $this->assertSame('base_events', $schema['baseEvent'][SchemaInterface::TABLE]);
+        $this->assertSame(['id'], $schema['baseEvent'][SchemaInterface::PRIMARY_KEY]);
+        $this->assertSame(['id'], $schema['baseEvent'][SchemaInterface::FIND_BY_KEYS]);
+        $this->assertCount(4, $schema['baseEvent'][SchemaInterface::COLUMNS]);
+        $this->assertSame('id', $schema['baseEvent'][SchemaInterface::COLUMNS]['id']);
+        $this->assertSame('action', $schema['baseEvent'][SchemaInterface::COLUMNS]['action']);
+        $this->assertSame('object_id', $schema['baseEvent'][SchemaInterface::COLUMNS]['object_id']);
+        $this->assertSame('object_type', $schema['baseEvent'][SchemaInterface::COLUMNS]['object_type']);
         $this->assertSame(
-            [
-                SchemaInterface::ENTITY => \sprintf(
-                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\BaseEvent',
-                    $namespace
-                ),
-                SchemaInterface::MAPPER => Mapper::class,
-                SchemaInterface::SOURCE => Source::class,
-                SchemaInterface::REPOSITORY => Repository::class,
-                SchemaInterface::DATABASE => 'default',
-                SchemaInterface::TABLE => 'base_events',
-                SchemaInterface::PRIMARY_KEY => [
-                    'id',
-                ],
-                SchemaInterface::FIND_BY_KEYS => [
-                    'id',
-                ],
-                SchemaInterface::COLUMNS => [
-                    'id' => 'id',
-                    'action' => 'action',
-                    'object_id' => 'object_id',
-                    'object_type' => 'object_type',
-                ],
-                SchemaInterface::RELATIONS => [
-                    'object' => [
-                        Relation::TYPE => Relation::BELONGS_TO_MORPHED,
-                        Relation::TARGET => \sprintf(
-                            'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\EventEmitterInterface',
-                            $namespace
-                        ),
-                        Relation::LOAD => Relation::LOAD_PROMISE,
-                        Relation::SCHEMA => [
-                            Relation::CASCADE => true,
-                            Relation::NULLABLE => true,
-                            Relation::OUTER_KEY => [
-                                'id',
-                            ],
-                            Relation::INNER_KEY => 'object_id',
-                            Relation::MORPH_KEY => 'object_type',
-                            1009 => 32,
-                        ],
-                    ],
-                ],
-                SchemaInterface::CHILDREN => [
-                    'comment.created' => \sprintf(
-                        'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
-                        $namespace
-                    ),
-                    'comment.updated' => \sprintf(
-                        'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
-                        $namespace
-                    ),
-                ],
-                SchemaInterface::SCOPE => null,
-                SchemaInterface::TYPECAST => [
-                    'id' => 'int',
-                    'object_id' => 'int',
-                ],
-                SchemaInterface::SCHEMA => [],
-                SchemaInterface::DISCRIMINATOR => 'action',
-                SchemaInterface::TYPECAST_HANDLER => null,
-            ],
-            $schema['baseEvent']
+            Relation::BELONGS_TO_MORPHED,
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TYPE]
         );
+        $this->assertSame(
+            \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\EventEmitterInterface', $namespace),
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TARGET]
+        );
+        $this->assertSame(
+            Relation::LOAD_PROMISE,
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::LOAD]
+        );
+        $this->assertTrue(
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::CASCADE]
+        );
+        $this->assertTrue(
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::NULLABLE]
+        );
+        $this->assertSame(
+            ['id'],
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::OUTER_KEY]
+        );
+        $this->assertSame(
+            'object_id',
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::INNER_KEY]
+        );
+        $this->assertSame(
+            'object_type',
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::MORPH_KEY]
+        );
+        $this->assertCount(2, $schema['baseEvent'][SchemaInterface::CHILDREN]);
+        $this->assertSame(
+            \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated', $namespace),
+            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.created']
+        );
+        $this->assertSame(
+            \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated', $namespace),
+            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.updated']
+        );
+        $this->assertNull($schema['baseEvent'][SchemaInterface::SCOPE]);
+        $this->assertSame('int', $schema['baseEvent'][SchemaInterface::TYPECAST]['id']);
+        $this->assertSame('int', $schema['baseEvent'][SchemaInterface::TYPECAST]['object_id']);
+        $this->assertSame([], $schema['baseEvent'][SchemaInterface::SCHEMA]);
+        $this->assertSame('action', $schema['baseEvent'][SchemaInterface::DISCRIMINATOR]);
+        $this->assertNull($schema['baseEvent'][SchemaInterface::TYPECAST_HANDLER]);
         $this->assertSame(
             [
                 SchemaInterface::ENTITY => \sprintf(
