@@ -36,12 +36,21 @@ class EntityUtils
      */
     public function findParent(string $class, bool $root = true): ?string
     {
-        /** @var class-string[] $parents */
-        $parents = class_parents($class);
+        /** @var \ReflectionClass[] $parents */
+        $parents = $this->findParents($class);
 
-        $parents = $root ? array_reverse($parents) : $parents;
+        $parents = $root ? \array_reverse($parents) : $parents;
 
-        foreach ($parents as $parent) {
+        return isset($parents[0]) ? $parents[0]->getName() : null;
+    }
+
+    public function findParents(string $class): array
+    {
+        $parents = [];
+        /** @var class-string[] $classParents */
+        $classParents = \class_parents($class);
+
+        foreach ($classParents as $parent) {
             try {
                 $class = new \ReflectionClass($parent);
             } catch (\ReflectionException) {
@@ -50,11 +59,11 @@ class EntityUtils
 
             $ann = $this->reader->firstClassMetadata($class, Entity::class);
             if ($ann !== null) {
-                return $parent;
+                $parents[] = $class;
             }
         }
 
-        return null;
+        return $parents;
     }
 
     public function tableName(string $role, int $namingStrategy = Entities::TABLE_NAMING_PLURAL): string
