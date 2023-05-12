@@ -43,14 +43,14 @@ class ColumnTest extends TestCase
         $this->assertSame(['size' => 128], $attr->getAttributes());
     }
 
-    public function testDefaultReadOnly(): void
+    public function testDefaultReadonlySchema(): void
     {
         $attr = $this->getAttribute('column1');
 
         $this->assertFalse($attr->isReadonlySchema());
     }
 
-    public function testReadOnly(): void
+    public function testReadonlySchema(): void
     {
         $attr = $this->getAttribute('column4');
 

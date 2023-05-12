@@ -294,7 +294,7 @@ abstract class TableTest extends BaseTest
     /**
      * @dataProvider allReadersProvider
      */
-    public function testReadOnly(ReaderInterface $reader): void
+    public function testReadonlySchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
         (new Entities($this->locator, $reader))->run($r);
@@ -305,6 +305,6 @@ abstract class TableTest extends BaseTest
 
         $schema = $r->getTableSchema($r->getEntity('simple'));
 
-        $this->assertTrue($schema->column('read_only_column')->isReadOnly());
+        $this->assertTrue($schema->column('read_only_column')->isReadonlySchema());
     }
 }

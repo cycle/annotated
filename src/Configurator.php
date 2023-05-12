@@ -244,7 +244,7 @@ final class Configurator
         }
 
         if ($column->isReadonlySchema()) {
-            $field->getAttributes()->set('readOnly', true);
+            $field->getAttributes()->set('readonlySchema', true);
         }
 
         foreach ($column->getAttributes() as $k => $v) {
