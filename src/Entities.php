@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated;
 
+use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Locator\EntityLocatorInterface;
 use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
@@ -24,6 +25,7 @@ final class Entities implements GeneratorInterface
     public const TABLE_NAMING_SINGULAR = 2;
     public const TABLE_NAMING_NONE = 3;
 
+    private ReaderInterface $reader;
     private Configurator $generator;
     private EntityUtils $utils;
 
@@ -32,9 +34,9 @@ final class Entities implements GeneratorInterface
         DoctrineReader|ReaderInterface $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
     ) {
-        $reader = ReaderFactory::create($reader);
-        $this->utils = new EntityUtils($reader);
-        $this->generator = new Configurator($reader, $tableNamingStrategy);
+        $this->reader = ReaderFactory::create($reader);
+        $this->utils = new EntityUtils($this->reader);
+        $this->generator = new Configurator($this->reader, $tableNamingStrategy);
     }
 
     public function run(Registry $registry): Registry
@@ -57,6 +59,12 @@ final class Entities implements GeneratorInterface
             $this->generator->initColumns($e, $entity->attribute->getColumns(), $entity->class);
 
             if ($this->utils->hasParent($e->getClass())) {
+                foreach ($this->utils->findParents($e->getClass()) as $parent) {
+                    // additional columns from parent class
+                    $ann = $this->reader->firstClassMetadata($parent, Entity::class);
+                    $this->generator->initColumns($e, $ann->getColumns(), $parent);
+                }
+
                 $children[] = $e;
                 continue;
             }
@@ -67,7 +75,7 @@ final class Entities implements GeneratorInterface
         }
 
         foreach ($children as $e) {
-            $registry->registerChild($registry->getEntity($this->utils->findParent($e->getClass())), $e);
+            $registry->registerChildWithoutMerge($registry->getEntity($this->utils->findParent($e->getClass())), $e);
         }
 
         return $this->normalizeNames($registry);
@@ -143,7 +151,7 @@ final class Entities implements GeneratorInterface
             return $name;
         }
 
-        if (! $registry->hasEntity($name)) {
+        if (!$registry->hasEntity($name)) {
             // point all relations to the parent
             foreach ($registry as $entity) {
                 foreach ($registry->getChildren($entity) as $child) {

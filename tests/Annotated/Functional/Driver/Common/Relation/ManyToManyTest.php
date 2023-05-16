@@ -74,7 +74,7 @@ abstract class ManyToManyTest extends BaseTest
         );
 
         // Check table
-        assertCount(3, $table->getIndexes());
+        assertCount(1, $table->getIndexes());
     }
 
     /**

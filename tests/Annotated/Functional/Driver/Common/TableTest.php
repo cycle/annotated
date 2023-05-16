@@ -156,7 +156,7 @@ abstract class TableTest extends BaseTest
     public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
     {
         $this->expectException(\Cycle\Annotated\Exception\AnnotationException::class);
-        $this->expectErrorMessage('Invalid index definition for `compositePost`. Column list can\'t be empty.');
+        $this->expectExceptionMessage('Invalid index definition for `compositePost`. Column list can\'t be empty.');
 
         $r = new Registry($this->dbal);
 
@@ -302,5 +302,22 @@ abstract class TableTest extends BaseTest
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
         $this->assertSame('with_table', $schema->getName());
+    }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testReadonlySchema(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
+        (new MergeColumns($reader))->run($r);
+        (new RenderTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('simple')));
+
+        $schema = $r->getTableSchema($r->getEntity('simple'));
+
+        $this->assertTrue($schema->column('read_only_column')->isReadonlySchema());
     }
 }
