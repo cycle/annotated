@@ -303,4 +303,21 @@ abstract class TableTest extends BaseTest
 
         $this->assertSame('with_table', $schema->getName());
     }
+
+    /**
+     * @dataProvider allReadersProvider
+     */
+    public function testReadonlySchema(ReaderInterface $reader): void
+    {
+        $r = new Registry($this->dbal);
+        (new Entities($this->locator, $reader))->run($r);
+        (new MergeColumns($reader))->run($r);
+        (new RenderTables())->run($r);
+
+        $this->assertTrue($r->hasTable($r->getEntity('simple')));
+
+        $schema = $r->getTableSchema($r->getEntity('simple'));
+
+        $this->assertTrue($schema->column('read_only_column')->isReadonlySchema());
+    }
 }

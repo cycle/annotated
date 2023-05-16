@@ -57,6 +57,12 @@ final class Entities implements GeneratorInterface
             $this->generator->initColumns($e, $entity->attribute->getColumns(), $entity->class);
 
             if ($this->utils->hasParent($e->getClass())) {
+                foreach ($this->utils->findParents($e->getClass()) as $parent) {
+                    // additional columns from parent class
+                    $ann = $this->reader->firstClassMetadata($parent, Entity::class);
+                    $this->generator->initColumns($e, $ann->getColumns(), $parent);
+                }
+
                 $children[] = $e;
                 continue;
             }
@@ -67,7 +73,7 @@ final class Entities implements GeneratorInterface
         }
 
         foreach ($children as $e) {
-            $registry->registerChild($registry->getEntity($this->utils->findParent($e->getClass())), $e);
+            $registry->registerChildWithoutMerge($registry->getEntity($this->utils->findParent($e->getClass())), $e);
         }
 
         return $this->normalizeNames($registry);
@@ -143,7 +149,7 @@ final class Entities implements GeneratorInterface
             return $name;
         }
 
-        if (! $registry->hasEntity($name)) {
+        if (!$registry->hasEntity($name)) {
             // point all relations to the parent
             foreach ($registry as $entity) {
                 foreach ($registry->getChildren($entity) as $child) {
