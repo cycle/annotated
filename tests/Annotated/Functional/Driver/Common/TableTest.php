@@ -310,7 +310,7 @@ abstract class TableTest extends BaseTest
     public function testReadonlySchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
-        (new Entities($this->locator, $reader))->run($r);
+        (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
