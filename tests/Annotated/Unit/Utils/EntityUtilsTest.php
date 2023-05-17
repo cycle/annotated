@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Unit\Utils;
 
 use Cycle\Annotated\Utils\EntityUtils;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
@@ -12,9 +13,7 @@ use Spiral\Attributes\ReaderInterface;
 
 class EntityUtilsTest extends TestCase
 {
-    /**
-     * @dataProvider findParentDataProvider
-     */
+    #[DataProvider('findParentDataProvider')]
     public function testFindParent(
         ReaderInterface $reader,
         string $child,
@@ -28,7 +27,7 @@ class EntityUtilsTest extends TestCase
         $this->assertEquals($expectedParent, $actualParent);
     }
 
-    public function findParentDataProvider(): iterable
+    public static function findParentDataProvider(): iterable
     {
         $namespace = 'Cycle\Annotated\Tests\Fixtures\Fixtures22';
         $readers = [

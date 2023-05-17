@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\SQLite;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\TableTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\TableTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlite
- */
-class TableTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-sqlite')]
+final class TableTest extends TableTestCase
 {
     public const DRIVER = 'sqlite';
 }

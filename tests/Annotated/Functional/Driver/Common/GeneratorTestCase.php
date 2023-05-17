@@ -19,6 +19,7 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\MergeReader;
@@ -26,7 +27,7 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class GeneratorTest extends BaseTest
+abstract class GeneratorTestCase extends BaseTestCase
 {
     public function testCreateEntitiesWithNullReader(): void
     {
@@ -87,9 +88,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testLocateAll(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -100,9 +99,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertTrue($r->hasEntity(Complete::class));
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testSimpleSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -122,9 +119,7 @@ abstract class GeneratorTest extends BaseTest
         $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testCompleteSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);

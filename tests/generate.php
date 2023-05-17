@@ -37,30 +37,30 @@ $databases = [
 
 echo "Generating test classes for all database types...\n";
 
-$classes = $tokenizer->classLocator()->getClasses(\Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest::class);
+$classes = $tokenizer->classLocator()->getClasses(\Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase::class);
 
-foreach ($classes as $class) {
-    foreach ($class->getMethods() as $method) {
+foreach ($classes as $baseClass) {
+    foreach ($baseClass->getMethods() as $method) {
         if ($method->isAbstract()) {
-            echo "Skip class {$class->getName()} with abstract methods.\n";
+            echo "Skip class {$baseClass->getName()} with abstract methods.\n";
             continue 2;
         }
     }
 
     if (
-        !$class->isAbstract()
+        !$baseClass->isAbstract()
         // Has abstract methods
-        || $class->getName() == \Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest::class
+        || $baseClass->getName() == \Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase::class
     ) {
         continue;
     }
 
-    echo "Found {$class->getName()}\n";
+    echo "Found {$baseClass->getName()}\n";
 
     $path = str_replace(
         [str_replace('\\', '/', __DIR__), 'Annotated/Functional/Driver/Common/'],
         '',
-        str_replace('\\', '/', $class->getFileName())
+        str_replace('\\', '/', \str_replace('TestCase', 'Test', $baseClass->getFileName()))
     );
 
     $path = ltrim($path, '/');
@@ -72,7 +72,7 @@ foreach ($classes as $class) {
         $namespace = str_replace(
             'Cycle\\Annotated\\Tests\\Functional\\Driver\\Common',
             $details['namespace'],
-            $class->getNamespaceName()
+            $baseClass->getNamespaceName()
         );
 
         if (!is_dir($dir)) {
@@ -90,22 +90,22 @@ declare(strict_types=1);
 namespace %s;
 
 // phpcs:ignore
-use %s as CommonClass;
+use %s;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-%s
- */
-class %s extends CommonClass
+#[Group('driver')]
+#[Group('driver-%s')]
+class %s extends %s
 {
     public const DRIVER = '%s';
 }
 
 PHP,
                 $namespace,
-                $class->getName(),
+                $baseClass->getName(),
                 $driver,
-                $class->getShortName(),
+                \str_replace('TestCase', 'Test', $baseClass->getShortName()),
+                $baseClass->getShortName(),
                 $driver
             )
         );

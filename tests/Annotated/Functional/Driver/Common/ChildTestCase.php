@@ -23,11 +23,12 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class ChildTest extends BaseTest
+abstract class ChildTestCase extends BaseTestCase
 {
     //  /**
     //   * @dataProvider allReadersProvider
@@ -51,9 +52,7 @@ abstract class ChildTest extends BaseTest
     //     $this->assertSame([Schema::ROLE => 'simple'], $schema[Third::class]);
     // }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testRelationToChild(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([

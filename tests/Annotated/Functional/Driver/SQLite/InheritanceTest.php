@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\SQLite;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\InheritanceTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\InheritanceTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlite
- */
-class InheritanceTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-sqlite')]
+final class InheritanceTest extends InheritanceTestCase
 {
     public const DRIVER = 'sqlite';
 }

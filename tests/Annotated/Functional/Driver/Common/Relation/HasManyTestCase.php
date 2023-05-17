@@ -8,7 +8,7 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\ORM\Relation;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\SchemaInterface as Schema;
@@ -20,16 +20,15 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class HasManyTest extends BaseTest
+abstract class HasManyTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);

@@ -8,7 +8,8 @@ use Cycle\Annotated\Entities;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Fixtures\Fixtures1\Collection\BaseCollection;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -19,13 +20,12 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 
-abstract class MorphedHasOneTest extends BaseTest
+abstract class MorphedHasManyTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -42,9 +42,20 @@ abstract class MorphedHasOneTest extends BaseTest
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('label', $schema['tag'][Schema::RELATIONS]);
-        $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['tag'][Schema::RELATIONS]['label'][Relation::TYPE]);
-        $this->assertSame('label', $schema['tag'][Schema::RELATIONS]['label'][Relation::TARGET]);
+        $this->assertArrayHasKey('labels', $schema['simple'][Schema::RELATIONS]);
+        $this->assertSame(
+            Relation::MORPHED_HAS_MANY,
+            $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE]
+        );
+        $this->assertSame('label', $schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET]);
+
+        $this->assertArrayHasKey('labels', $schema['withTable'][Schema::RELATIONS]);
+        $this->assertSame(
+            Relation::MORPHED_HAS_MANY,
+            $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TYPE]
+        );
+
+        $this->assertSame('label', $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TARGET]);
 
         $this->assertTrue(
             $this->dbal->database('default')
@@ -65,6 +76,11 @@ abstract class MorphedHasOneTest extends BaseTest
                 ->getDriver()
                 ->getSchema('labels')
                 ->hasIndex(['owner_id', 'owner_role'])
+        );
+
+        $this->assertSame(
+            BaseCollection::class,
+            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE] // phpcs:ignore
         );
     }
 }

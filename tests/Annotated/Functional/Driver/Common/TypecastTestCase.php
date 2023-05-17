@@ -23,17 +23,16 @@ use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\MergeColumns;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 use Cycle\Annotated\Tests\Fixtures\Fixtures19\BackedEnum;
 
-abstract class TypecastTest extends BaseTest
+abstract class TypecastTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
-    public function testEntityWithDefinedTypecastAsString(ReaderInterface $reader)
+    #[DataProvider('allReadersProvider')]
+    public function testEntityWithDefinedTypecastAsString(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
 
@@ -48,10 +47,8 @@ abstract class TypecastTest extends BaseTest
         );
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
-    public function testEntityWithDefinedTypecastAsArray(ReaderInterface $reader)
+    #[DataProvider('allReadersProvider')]
+    public function testEntityWithDefinedTypecastAsArray(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
 
@@ -70,12 +67,8 @@ abstract class TypecastTest extends BaseTest
         );
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     *
-     * @requires PHP >= 8.1
-     */
-    public function testBackedEnum(ReaderInterface $reader)
+    #[DataProvider('allReadersProvider')]
+    public function testBackedEnum(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../../../Fixtures/Fixtures19'],

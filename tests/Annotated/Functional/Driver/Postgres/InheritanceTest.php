@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Postgres;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\InheritanceTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\InheritanceTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-postgres
- */
-class InheritanceTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-postgres')]
+final class InheritanceTest extends InheritanceTestCase
 {
     public const DRIVER = 'postgres';
 }

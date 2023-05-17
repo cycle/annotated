@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\SQLServer;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\TypecastTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\TypecastTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlserver
- */
-class TypecastTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-sqlserver')]
+final class TypecastTest extends TypecastTestCase
 {
     public const DRIVER = 'sqlserver';
 }

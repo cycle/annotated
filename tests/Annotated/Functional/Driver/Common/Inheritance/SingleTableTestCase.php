@@ -15,7 +15,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures16\Customer;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Employee;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Person;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\Annotated\Tests\Traits\TableTrait;
 use Cycle\ORM\Mapper\Mapper;
 use Cycle\ORM\Relation;
@@ -32,6 +32,7 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\SelectiveReader;
@@ -39,7 +40,7 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class SingleTableTest extends BaseTest
+abstract class SingleTableTestCase extends BaseTestCase
 {
     use TableTrait;
 
@@ -58,9 +59,7 @@ abstract class SingleTableTest extends BaseTest
         ]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testTableInheritance(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(
@@ -153,9 +152,7 @@ abstract class SingleTableTest extends BaseTest
         $this->assertSame(1000, $loadedCeo->stocks);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testTableInheritanceSchema(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(
@@ -192,9 +189,7 @@ abstract class SingleTableTest extends BaseTest
         $this->assertArrayHasKey(SchemaInterface::PARENT_KEY, $schema['buyer']);
     }
 
-    /**
-     * @dataProvider columnDeclarationDataProvider
-     */
+    #[DataProvider('columnDeclarationDataProvider')]
     public function testSingleTableInheritanceWithDifferentColumnDeclaration(
         string $directory,
         ReaderInterface $reader,
@@ -331,7 +326,7 @@ abstract class SingleTableTest extends BaseTest
         ], $schema['commentUpdated']);
     }
 
-    public function columnDeclarationDataProvider(): \Traversable
+    public static function columnDeclarationDataProvider(): \Traversable
     {
         // Declaration via Column in the property
         yield [

@@ -9,7 +9,7 @@ use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Fixtures2\MarkedInterface;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -21,15 +21,14 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class InverseTest extends BaseTest
+abstract class InverseTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testBelongsToOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -63,9 +62,7 @@ abstract class InverseTest extends BaseTest
         $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['child'][Relation::TARGET]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testBelongsToMany(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -99,9 +96,7 @@ abstract class InverseTest extends BaseTest
         $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TARGET]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testHasOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -135,9 +130,7 @@ abstract class InverseTest extends BaseTest
         $this->assertSame('user', $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testHasOneInverseLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -175,9 +168,7 @@ abstract class InverseTest extends BaseTest
         $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['user'][Relation::LOAD]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testBelongsTo(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([

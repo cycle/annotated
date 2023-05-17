@@ -10,7 +10,7 @@ use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
@@ -21,15 +21,14 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class EmbeddedTest extends BaseTest
+abstract class EmbeddedTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testRelation(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -61,9 +60,7 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testRelationLazyLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -95,9 +92,7 @@ abstract class EmbeddedTest extends BaseTest
         $this->assertSame(Relation::LOAD_PROMISE, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testEmbeddedPrefix(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([

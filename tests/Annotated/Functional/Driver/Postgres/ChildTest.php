@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Postgres;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\ChildTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\ChildTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-postgres
- */
-class ChildTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-postgres')]
+final class ChildTest extends ChildTestCase
 {
     public const DRIVER = 'postgres';
 }

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\SQLite\Relation;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\InverseTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\InverseTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlite
- */
-class InverseTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-sqlite')]
+final class InverseTest extends InverseTestCase
 {
     public const DRIVER = 'sqlite';
 }

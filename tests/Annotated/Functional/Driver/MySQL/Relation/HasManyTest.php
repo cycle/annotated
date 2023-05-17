@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\MySQL\Relation;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\HasManyTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\HasManyTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-mysql
- */
-class HasManyTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-mysql')]
+final class HasManyTest extends HasManyTestCase
 {
     public const DRIVER = 'mysql';
 }
