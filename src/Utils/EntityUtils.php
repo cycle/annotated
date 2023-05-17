@@ -46,6 +46,7 @@ final class EntityUtils
 
     /**
      * @param class-string $class
+     *
      * @return \ReflectionClass[]
      */
     public function findParents(string $class): array
