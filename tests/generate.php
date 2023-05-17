@@ -95,7 +95,7 @@ use PHPUnit\Framework\Attributes\Group;
 
 #[Group('driver')]
 #[Group('driver-%s')]
-class %s extends %s
+final class %s extends %s
 {
     public const DRIVER = '%s';
 }
