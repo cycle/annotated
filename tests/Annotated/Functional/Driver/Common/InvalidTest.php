@@ -65,7 +65,7 @@ abstract class InvalidTest extends BaseTest
             : 'Some of required arguments [`type`] is missed on `Cycle\Annotated\Tests\Fixtures\Fixtures4\User.id.`';
 
         $this->expectException(AnnotationException::class);
-        $this->expectErrorMessage($message);
+        $this->expectExceptionMessage($message);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../../../Fixtures/Fixtures4'],
