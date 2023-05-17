@@ -13,10 +13,10 @@ use Spiral\Tokenizer\ClassesInterface;
 
 final class TokenizerEntityLocator implements EntityLocatorInterface
 {
-    private ReaderInterface $reader;
+    private readonly ReaderInterface $reader;
 
     public function __construct(
-        private ClassesInterface $classes,
+        private readonly ClassesInterface $classes,
         DoctrineReader|ReaderInterface $reader = null,
     ) {
         $this->reader = ReaderFactory::create($reader);

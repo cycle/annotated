@@ -19,24 +19,33 @@ abstract class Relation implements RelationInterface
     ) {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getType(): string
     {
         return static::TYPE;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getTarget(): ?string
     {
         return $this->target;
     }
 
-    public function getLoad(): ?string
+    /**
+     * @return non-empty-string
+     */
+    public function getLoad(): string
     {
         return $this->load;
     }
 
     public function getOptions(): array
     {
-        $options = get_object_vars($this);
+        $options = \get_object_vars($this);
         unset($options['target'], $options['inverse']);
 
         return $options;

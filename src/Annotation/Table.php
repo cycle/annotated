@@ -17,20 +17,22 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target({"CLASS", "ANNOTATION"})
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
-final class Table
+class Table
 {
     /**
      * @param Column[] $columns
-     * @param PrimaryKey|null $primary
      * @param Index[] $indexes
      */
     public function __construct(
-        private array $columns = [],
-        private ?PrimaryKey $primary = null,
-        private array $indexes = [],
+        protected array $columns = [],
+        protected ?PrimaryKey $primary = null,
+        protected array $indexes = [],
     ) {
     }
 
+    /**
+     * @return Column[]
+     */
     public function getColumns(): array
     {
         return $this->columns;
@@ -41,6 +43,9 @@ final class Table
         return $this->primary;
     }
 
+    /**
+     * @return Index[]
+     */
     public function getIndexes(): array
     {
         return $this->indexes;

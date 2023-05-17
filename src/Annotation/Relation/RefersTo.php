@@ -17,7 +17,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class RefersTo extends Relation
+class RefersTo extends Relation
 {
     use InverseTrait;
 
@@ -30,7 +30,7 @@ final class RefersTo extends Relation
      * @param array|non-empty-string|null $innerKey Inner key in parent entity.
      * @param array|non-empty-string|null $outerKey Outer key name. Defaults to {parentRole}_{innerKey}.
      * @param bool $fkCreate Set to true to automatically create FK on outerKey.
-     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string $fkAction FK onDelete and onUpdate action.
      * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create an index on outerKey.
@@ -47,7 +47,7 @@ final class RefersTo extends Relation
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
-        protected ?string $fkAction = 'CASCADE',
+        protected string $fkAction = 'CASCADE',
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */

@@ -17,7 +17,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class ManyToMany extends Relation
+class ManyToMany extends Relation
 {
     use InverseTrait;
 
@@ -38,7 +38,7 @@ final class ManyToMany extends Relation
      * @param class-string|non-empty-string|null $through Pivot entity.
      * @param array $throughWhere Where conditions applied to `through` entity.
      * @param bool $fkCreate Set to true to automatically create FK on thoughInnerKey and thoughOuterKey.
-     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string $fkAction FK onDelete and onUpdate action.
      * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create index on [thoughInnerKey, thoughOuterKey].
@@ -62,7 +62,7 @@ final class ManyToMany extends Relation
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
-        protected ?string $fkAction = 'CASCADE',
+        protected string $fkAction = 'CASCADE',
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */

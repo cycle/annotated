@@ -18,7 +18,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
 class SingleTable extends Inheritance
 {
     public function __construct(
-        private ?string $value = null
+        protected ?string $value = null
     ) {
         parent::__construct('single');
     }

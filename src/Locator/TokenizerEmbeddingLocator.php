@@ -13,14 +13,10 @@ use Spiral\Tokenizer\ClassesInterface;
 
 final class TokenizerEmbeddingLocator implements EmbeddingLocatorInterface
 {
-    /**
-     * @var Embedding[]
-     */
-    private array $embeddings = [];
-    private ReaderInterface $reader;
+    private readonly ReaderInterface $reader;
 
     public function __construct(
-        private ClassesInterface $classes,
+        private readonly ClassesInterface $classes,
         DoctrineReader|ReaderInterface $reader = null,
     ) {
         $this->reader = ReaderFactory::create($reader);
@@ -28,8 +24,7 @@ final class TokenizerEmbeddingLocator implements EmbeddingLocatorInterface
 
     public function getEmbeddings(): array
     {
-        $this->embeddings = [];
-
+        $embeddings = [];
         foreach ($this->classes->getClasses() as $class) {
             try {
                 $attribute = $this->reader->firstClassMetadata($class, Embeddable::class);
@@ -38,10 +33,10 @@ final class TokenizerEmbeddingLocator implements EmbeddingLocatorInterface
             }
 
             if ($attribute !== null) {
-                $this->embeddings[] = new Embedding($attribute, $class);
+                $embeddings[] = new Embedding($attribute, $class);
             }
         }
 
-        return $this->embeddings;
+        return $embeddings;
     }
 }

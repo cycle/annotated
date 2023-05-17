@@ -10,7 +10,7 @@ abstract class Inheritance
 {
     public function __construct(
         /** @Required() */
-        private string $type
+        protected string $type
     ) {
     }
 

@@ -21,20 +21,23 @@ class JoinedTable extends Inheritance
     /**
      * @param non-empty-string|null $outerKey Outer (parent) key name.
      * @param bool $fkCreate Set to true to automatically create FK on outerKey.
-     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string $fkAction FK onDelete and onUpdate action.
      */
     public function __construct(
-        private ?string $outerKey = null,
-        private bool $fkCreate = true,
+        protected ?string $outerKey = null,
+        protected bool $fkCreate = true,
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
-        private ?string $fkAction = 'CASCADE',
+        protected string $fkAction = 'CASCADE',
     ) {
         parent::__construct('joined');
     }
 
+    /**
+     * @return ?non-empty-string
+     */
     public function getOuterKey(): ?string
     {
         return $this->outerKey;
@@ -45,6 +48,9 @@ class JoinedTable extends Inheritance
         return $this->fkCreate;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getFkAction(): string
     {
         return $this->fkAction;

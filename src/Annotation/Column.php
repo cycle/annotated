@@ -18,13 +18,13 @@ use Spiral\Attributes\NamedArgumentConstructor;
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 #[NamedArgumentConstructor]
-final class Column
+class Column
 {
-    private bool $hasDefault = false;
+    protected bool $hasDefault = false;
     /**
      * @var array<non-empty-string, mixed> Other database specific attributes.
      */
-    private array $attributes;
+    protected array $attributes;
 
     /**
      * @param non-empty-string $type Column type. {@see \Cycle\Database\Schema\AbstractColumn::$mapping}
@@ -44,7 +44,6 @@ final class Column
      *        one of ("int"|"float"|"bool"|"datetime") based on column type.
      *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
      *        a relevant Typecast handler that supports the rule.
-     * @param bool $castDefault
      * @param bool $readonlySchema Set to true to disable schema synchronization for the assigned column.
      * @param mixed ...$attributes Other database specific attributes. Use named notation to define them.
      *        For example: #[Column('smallInt', unsigned: true, zerofill: true)]
@@ -61,15 +60,15 @@ final class Column
             // SQL Server
             'datetime2',
         ])]
-        private string $type,
-        private ?string $name = null,
-        private ?string $property = null,
-        private bool $primary = false,
-        private bool $nullable = false,
-        private mixed $default = null,
-        private mixed $typecast = null,
-        private bool $castDefault = false,
-        private bool $readonlySchema = false,
+        protected string $type,
+        protected ?string $name = null,
+        protected ?string $property = null,
+        protected bool $primary = false,
+        protected bool $nullable = false,
+        protected mixed $default = null,
+        protected mixed $typecast = null,
+        protected bool $castDefault = false,
+        protected bool $readonlySchema = false,
         mixed ...$attributes,
     ) {
         if ($default !== null) {
@@ -78,16 +77,25 @@ final class Column
         $this->attributes = $attributes;
     }
 
-    public function getType(): ?string
+    /**
+     * @return non-empty-string
+     */
+    public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getColumn(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getProperty(): ?string
     {
         return $this->property;

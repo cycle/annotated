@@ -6,18 +6,20 @@ namespace Cycle\Annotated\Utils;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Entities;
+use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Attributes\ReaderInterface;
 
 /**
  * @internal
  */
-class EntityUtils
+final class EntityUtils
 {
-    private \Doctrine\Inflector\Inflector $inflector;
+    private readonly Inflector $inflector;
 
-    public function __construct(private ReaderInterface $reader)
-    {
+    public function __construct(
+        private readonly ReaderInterface $reader
+    ) {
         $this->inflector = (new InflectorFactory())->build();
     }
 
@@ -36,14 +38,16 @@ class EntityUtils
      */
     public function findParent(string $class, bool $root = true): ?string
     {
-        /** @var \ReflectionClass[] $parents */
         $parents = $this->findParents($class);
-
         $parents = $root ? \array_reverse($parents) : $parents;
 
         return isset($parents[0]) ? $parents[0]->getName() : null;
     }
 
+    /**
+     * @param class-string $class
+     * @return \ReflectionClass[]
+     */
     public function findParents(string $class): array
     {
         $parents = [];

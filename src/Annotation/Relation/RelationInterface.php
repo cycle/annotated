@@ -6,8 +6,14 @@ namespace Cycle\Annotated\Annotation\Relation;
 
 interface RelationInterface
 {
+    /**
+     * @return non-empty-string
+     */
     public function getType(): string;
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getTarget(): ?string;
 
     /**

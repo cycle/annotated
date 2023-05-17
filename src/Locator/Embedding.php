@@ -9,8 +9,8 @@ use Cycle\Annotated\Annotation\Embeddable;
 final class Embedding
 {
     public function __construct(
-        public Embeddable $attribute,
-        public \ReflectionClass $class
+        public readonly Embeddable $attribute,
+        public readonly \ReflectionClass $class
     ) {
     }
 }
