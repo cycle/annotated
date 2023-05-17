@@ -121,7 +121,7 @@ abstract class TableTestCase extends BaseTestCase
         ]);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[DataProvider('singularReadersProvider')]
     public function testCompositePrimaryKey(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -143,7 +143,7 @@ abstract class TableTestCase extends BaseTestCase
         $this->assertEquals(['id', 'user_id'], $schema->getPrimaryKeys());
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[DataProvider('singularReadersProvider')]
     public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
     {
         $this->expectException(\Cycle\Annotated\Exception\AnnotationException::class);
@@ -185,7 +185,7 @@ abstract class TableTestCase extends BaseTestCase
         $this->assertTrue($schema->hasIndex(['status']));
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[DataProvider('singularReadersProvider')]
     public function testOrderedIndexes(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
