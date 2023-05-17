@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "cycle/orm": "^2.2.0",
         "cycle/schema-builder": "^2.4",
         "spiral/attributes": "^2.8|^3.0",
