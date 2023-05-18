@@ -189,11 +189,11 @@ abstract class SingleTableTestCase extends BaseTestCase
         $this->assertArrayHasKey(SchemaInterface::PARENT_KEY, $schema['buyer']);
     }
 
-    #[DataProvider('columnDeclarationDataProvider')]
+    #[DataProvider('columnDeclarationWithReadersDataProvider')]
     public function testSingleTableInheritanceWithDifferentColumnDeclaration(
         string $directory,
-        ReaderInterface $reader,
-        string $namespace
+        string $namespace,
+        ReaderInterface $reader
     ): void {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
@@ -329,51 +329,29 @@ abstract class SingleTableTestCase extends BaseTestCase
     public static function columnDeclarationDataProvider(): \Traversable
     {
         // Declaration via Column in the property
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
-            new AttributeReader(),
-            'STIWithPropertyColumn',
-        ];
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
-            new AnnotationReader(),
-            'STIWithPropertyColumn',
-        ];
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn',
-            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            'STIWithPropertyColumn',
-        ];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', 'STIWithPropertyColumn'];
 
         // Declaration via Column in the class
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
-            new AttributeReader(),
-            'STIWithClassColumn',
-        ];
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
-            new AnnotationReader(),
-            'STIWithClassColumn',
-        ];
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn',
-            new SelectiveReader([new AttributeReader(), new AnnotationReader()]),
-            'STIWithClassColumn',
-        ];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', 'STIWithClassColumn'];
 
         // Declaration via Table in the class
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn',
-            new AnnotationReader(),
-            'STIWithTableColumn',
-        ];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', 'STIWithTableColumn'];
 
         // Declaration via columns in the Entity
-        yield [
-            __DIR__ . '/../../../../Fixtures/Fixtures23/STIWithEntityColumn',
-            new AnnotationReader(),
-            'STIWithEntityColumn',
-        ];
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithEntityColumn', 'STIWithEntityColumn'];
+    }
+
+    /**
+     * Must return 12 elements - 4 declarations x 3 readers.
+     */
+    public static function columnDeclarationWithReadersDataProvider(): \Traversable
+    {
+        $readers = \iterator_to_array(static::allReadersProvider(), false);
+        $declarations = \iterator_to_array(static::columnDeclarationDataProvider());
+        foreach ($readers as $reader) {
+            foreach ($declarations as $declaration) {
+                yield \array_merge($declaration, $reader);
+            }
+        }
     }
 }

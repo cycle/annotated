@@ -13,6 +13,10 @@ use Cycle\Annotated\Annotation\Entity;
  *    @Column(type="string", property="body", nullable=true)
  * })
  */
+#[Entity(columns: [
+    new Column(type: 'primary', property: 'id'),
+    new Column(type: 'string', property: 'body', nullable: true)
+])]
 final class Comment implements EventEmitterInterface
 {
     public int $id;
