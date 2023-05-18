@@ -20,18 +20,17 @@ use Cycle\Schema\SchemaModifierInterface;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use Exception;
 use Spiral\Attributes\ReaderInterface;
 
 final class Configurator
 {
-    private ReaderInterface $reader;
-    private Inflector $inflector;
-    private EntityUtils $utils;
+    private readonly ReaderInterface $reader;
+    private readonly Inflector $inflector;
+    private readonly EntityUtils $utils;
 
     public function __construct(
         DoctrineReader|ReaderInterface $reader,
-        private int $tableNamingStrategy = Entities::TABLE_NAMING_PLURAL,
+        private readonly int $tableNamingStrategy = Entities::TABLE_NAMING_PLURAL,
     ) {
         $this->reader = ReaderFactory::create($reader);
         $this->inflector = (new InflectorFactory())->build();
@@ -56,8 +55,8 @@ final class Configurator
         );
 
         $typecast = $ann->getTypecast();
-        if (is_array($typecast)) {
-            $typecast = array_map(fn (string $value): string => $this->resolveName($value, $class), $typecast);
+        if (\is_array($typecast)) {
+            $typecast = \array_map(fn (string $value): string => $this->resolveName($value, $class), $typecast);
         } else {
             $typecast = $this->resolveName($typecast, $class);
         }
@@ -89,7 +88,7 @@ final class Configurator
         foreach ($class->getProperties() as $property) {
             try {
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             } catch (\ArgumentCountError $e) {
                 throw AnnotationRequiredArgumentsException::createFor($property, Column::class, $e);
@@ -112,12 +111,12 @@ final class Configurator
         foreach ($class->getProperties() as $property) {
             try {
                 $metadata = $this->reader->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             }
 
             foreach ($metadata as $meta) {
-                assert($meta instanceof RelationAnnotation\RelationInterface);
+                \assert($meta instanceof RelationAnnotation\RelationInterface);
 
                 if ($meta->getTarget() === null) {
                     throw new AnnotationException(
@@ -170,12 +169,12 @@ final class Configurator
     {
         try {
             $metadata = $this->reader->getClassMetadata($class, SchemaModifierInterface::class);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
 
         foreach ($metadata as $meta) {
-            assert($meta instanceof SchemaModifierInterface);
+            \assert($meta instanceof SchemaModifierInterface);
 
             // need relation definition
             $entity->addSchemaModifier($meta);
@@ -188,7 +187,7 @@ final class Configurator
     public function initColumns(EntitySchema $entity, array $columns, \ReflectionClass $class): void
     {
         foreach ($columns as $key => $column) {
-            $isNumericKey = is_numeric($key);
+            $isNumericKey = \is_numeric($key);
             $propertyName = $column->getProperty();
 
             if (!$isNumericKey && $propertyName !== null && $key !== $propertyName) {
@@ -198,9 +197,9 @@ final class Configurator
                 );
             }
 
-            $propertyName = $propertyName ?? ($isNumericKey ? null : $key);
+            $propertyName ??= $isNumericKey ? null : $key;
             $columnName = $column->getColumn() ?? $propertyName;
-            $propertyName = $propertyName ?? $columnName;
+            $propertyName ??= $columnName;
 
             if ($columnName === null) {
                 throw new AnnotationException(

@@ -9,8 +9,8 @@ use Cycle\Annotated\Annotation\Entity as Attribute;
 final class Entity
 {
     public function __construct(
-        public Attribute $attribute,
-        public \ReflectionClass $class
+        public readonly Attribute $attribute,
+        public readonly \ReflectionClass $class
     ) {
     }
 }

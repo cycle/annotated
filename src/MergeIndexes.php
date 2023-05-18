@@ -19,7 +19,7 @@ use Cycle\Database\Schema\AbstractTable;
  */
 final class MergeIndexes implements GeneratorInterface
 {
-    private ReaderInterface $reader;
+    private readonly ReaderInterface $reader;
 
     public function __construct(DoctrineReader|ReaderInterface $reader = null)
     {

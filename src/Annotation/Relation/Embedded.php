@@ -15,7 +15,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class Embedded extends Relation
+class Embedded extends Relation
 {
     protected const TYPE = 'embedded';
     protected ?string $embeddedPrefix = null;

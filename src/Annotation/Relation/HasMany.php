@@ -16,7 +16,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class HasMany extends Relation
+class HasMany extends Relation
 {
     use InverseTrait;
 
@@ -31,7 +31,7 @@ final class HasMany extends Relation
      * @param array $where Additional where condition to be applied for the relation.
      * @param array $orderBy Additional sorting rules.
      * @param bool $fkCreate Set to true to automatically create FK on outerKey.
-     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string $fkAction FK onDelete and onUpdate action.
      * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create an index on outerKey.
@@ -51,7 +51,7 @@ final class HasMany extends Relation
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
-        protected ?string $fkAction = 'CASCADE',
+        protected string $fkAction = 'CASCADE',
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */

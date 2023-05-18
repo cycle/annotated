@@ -17,7 +17,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class Inverse
+class Inverse
 {
     /**
      * @param non-empty-string $as Columns name that will represent relation
@@ -25,25 +25,31 @@ final class Inverse
      * @param int|non-empty-string|null $load Relation load approach.
      */
     public function __construct(
-        private string $as,
+        protected string $as,
         /**
          * @Enum({"hasOne", "belongsTo", "embedded", "hasMany", "manyToMany", "refersTo"}
          */
         #[ExpectedValues(values: ['hasOne', 'belongsTo', 'embedded', 'hasMany', 'manyToMany', 'refersTo'])]
-        private string $type,
+        protected string $type,
         /**
          * @Enum({"eager", "lazy", "promise"}
          */
         #[ExpectedValues(values: ['eager', 'lazy', 'promise', Relation::LOAD_EAGER, Relation::LOAD_PROMISE])]
-        private string|int|null $load = null,
+        protected string|int|null $load = null,
     ) {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->as;

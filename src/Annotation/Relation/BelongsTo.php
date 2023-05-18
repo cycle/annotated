@@ -17,7 +17,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class BelongsTo extends Relation
+class BelongsTo extends Relation
 {
     use InverseTrait;
 

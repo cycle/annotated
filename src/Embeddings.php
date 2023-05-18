@@ -18,11 +18,11 @@ use Spiral\Attributes\ReaderInterface;
  */
 final class Embeddings implements GeneratorInterface
 {
-    private ReaderInterface $reader;
-    private Configurator $generator;
+    private readonly ReaderInterface $reader;
+    private readonly Configurator $generator;
 
     public function __construct(
-        private EmbeddingLocatorInterface $locator,
+        private readonly EmbeddingLocatorInterface $locator,
         DoctrineReader|ReaderInterface $reader = null
     ) {
         $this->reader = ReaderFactory::create($reader);

@@ -19,8 +19,8 @@ use Spiral\Attributes\ReaderInterface;
 
 class TableInheritance implements GeneratorInterface
 {
-    private ReaderInterface $reader;
-    private EntityUtils $utils;
+    private readonly ReaderInterface $reader;
+    private readonly EntityUtils $utils;
 
     public function __construct(
         DoctrineReader|ReaderInterface $reader = null

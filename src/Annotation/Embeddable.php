@@ -15,7 +15,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("CLASS")
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
-final class Embeddable
+class Embeddable
 {
     /**
      * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
@@ -24,18 +24,24 @@ final class Embeddable
      * @param Column[] $columns Embedded entity columns.
      */
     public function __construct(
-        private ?string $role = null,
-        private ?string $mapper = null,
-        private string $columnPrefix = '',
-        private array $columns = [],
+        protected ?string $role = null,
+        protected ?string $mapper = null,
+        protected string $columnPrefix = '',
+        protected array $columns = [],
     ) {
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getRole(): ?string
     {
         return $this->role;
     }
 
+    /**
+     * @return class-string|null
+     */
     public function getMapper(): ?string
     {
         return $this->mapper;
@@ -46,6 +52,9 @@ final class Embeddable
         return $this->columnPrefix;
     }
 
+    /**
+     * @return Column[]
+     */
     public function getColumns(): array
     {
         return $this->columns;

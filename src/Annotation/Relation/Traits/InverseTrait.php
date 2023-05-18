@@ -8,7 +8,7 @@ use Cycle\Annotated\Annotation\Relation\Inverse;
 
 trait InverseTrait
 {
-    protected ?Inverse $inverse;
+    protected ?Inverse $inverse = null;
 
     public function getInverse(): ?Inverse
     {

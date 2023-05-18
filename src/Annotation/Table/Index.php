@@ -22,17 +22,23 @@ class Index
      * @param non-empty-string|null $name
      */
     public function __construct(
-        private array $columns,
-        private bool $unique = false,
-        private ?string $name = null,
+        protected array $columns,
+        protected bool $unique = false,
+        protected ?string $name = null,
     ) {
     }
 
+    /**
+     * @return non-empty-string[]
+     */
     public function getColumns(): array
     {
         return $this->columns;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getIndex(): ?string
     {
         return $this->name;

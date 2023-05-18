@@ -17,7 +17,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class HasOne extends Relation
+class HasOne extends Relation
 {
     use InverseTrait;
 
@@ -30,7 +30,7 @@ final class HasOne extends Relation
      * @param bool $cascade Automatically save related data with parent entity.
      * @param bool $nullable Defines if relation can be nullable (child can have no parent).
      * @param bool $fkCreate Set to true to automatically create FK on outerKey.
-     * @param non-empty-string|null $fkAction FK onDelete and onUpdate action.
+     * @param non-empty-string $fkAction FK onDelete and onUpdate action.
      * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create index on outerKey.
@@ -47,7 +47,7 @@ final class HasOne extends Relation
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
-        protected ?string $fkAction = 'CASCADE',
+        protected string $fkAction = 'CASCADE',
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */

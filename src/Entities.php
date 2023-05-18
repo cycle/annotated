@@ -25,12 +25,12 @@ final class Entities implements GeneratorInterface
     public const TABLE_NAMING_SINGULAR = 2;
     public const TABLE_NAMING_NONE = 3;
 
-    private ReaderInterface $reader;
-    private Configurator $generator;
-    private EntityUtils $utils;
+    private readonly ReaderInterface $reader;
+    private readonly Configurator $generator;
+    private readonly EntityUtils $utils;
 
     public function __construct(
-        private EntityLocatorInterface $locator,
+        private readonly EntityLocatorInterface $locator,
         DoctrineReader|ReaderInterface $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
     ) {

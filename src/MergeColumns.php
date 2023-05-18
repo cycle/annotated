@@ -19,10 +19,10 @@ use Spiral\Attributes\ReaderInterface;
  */
 final class MergeColumns implements GeneratorInterface
 {
-    private ReaderInterface $reader;
+    private readonly ReaderInterface $reader;
 
-    private Configurator $generator;
-    private EntityUtils $utils;
+    private readonly Configurator $generator;
+    private readonly EntityUtils $utils;
 
     public function __construct(DoctrineReader|ReaderInterface $reader = null, ?EntityUtils $utils = null)
     {

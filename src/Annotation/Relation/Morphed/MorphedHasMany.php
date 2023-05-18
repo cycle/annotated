@@ -18,7 +18,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class MorphedHasMany extends Relation
+class MorphedHasMany extends Relation
 {
     use InverseTrait;
 
@@ -28,15 +28,14 @@ final class MorphedHasMany extends Relation
      * @param non-empty-string $target
      * @param bool $cascade Automatically save related data with parent entity.
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
-     * @param array|string|null $innerKey Inner key in parent entity. Defaults to the primary key.
-     * @param array|string|null $outerKey Outer key name. Defaults to `{parentRole}_{innerKey}`.
-     * @param string $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
+     * @param array|non-empty-string|null $innerKey Inner key in parent entity. Defaults to the primary key.
+     * @param array|non-empty-string|null $outerKey Outer key name. Defaults to `{parentRole}_{innerKey}`.
+     * @param non-empty-string|null $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
      * @param int $morphKeyLength The length of morph key.
      * @param array $where Additional where condition to be applied for the relation.
      * @param bool $indexCreate Create an index on morphKey and innerKey.
-     * @param string|null $collection Collection that will contain loaded entities.
+     * @param non-empty-string|null $collection Collection that will contain loaded entities.
      * @param non-empty-string $load Relation load approach.
-     * @param Inverse|null $inverse
      */
     public function __construct(
         string $target,

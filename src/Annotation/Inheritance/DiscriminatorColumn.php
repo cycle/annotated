@@ -16,11 +16,17 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class DiscriminatorColumn
 {
+    /**
+     * @param non-empty-string $name
+     */
     public function __construct(
-        private string $name
+        protected string $name
     ) {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->name;

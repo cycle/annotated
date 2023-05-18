@@ -19,7 +19,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("PROPERTY")
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class BelongsToMorphed extends Relation
+class BelongsToMorphed extends Relation
 {
     use InverseTrait;
 
@@ -29,9 +29,9 @@ final class BelongsToMorphed extends Relation
      * @param non-empty-string $target
      * @param bool $cascade Automatically save related data with source entity.
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
-     * @param array|string|null $innerKey Inner key in source entity. Defaults to `{relationName}_{outerKey}`.
-     * @param array|string|null $outerKey Outer key in the related entity. Defaults to primary key.
-     * @param string $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
+     * @param array|non-empty-string|null $innerKey Inner key in source entity. Defaults to `{relationName}_{outerKey}`.
+     * @param array|non-empty-string|null $outerKey Outer key in the related entity. Defaults to primary key.
+     * @param non-empty-string|null $morphKey Name of key to store related entity role. Defaults to `{relationName}_role`.
      * @param int $morphKeyLength The length of morph key.
      * @param bool $indexCreate Create an index on morphKey and innerKey.
      * @param non-empty-string $load Relation load approach.

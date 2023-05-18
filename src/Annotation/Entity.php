@@ -15,7 +15,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target("CLASS")
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
-final class Entity
+class Entity
 {
     /**
      * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
@@ -31,36 +31,48 @@ final class Entity
      * @param Column[] $columns Entity columns.
      */
     public function __construct(
-        private ?string $role = null,
-        private ?string $mapper = null,
-        private ?string $repository = null,
-        private ?string $table = null,
-        private bool $readonlySchema = false,
-        private ?string $database = null,
-        private ?string $source = null,
-        private array|string|null $typecast = null,
-        private ?string $scope = null,
-        private array $columns = [],
+        protected ?string $role = null,
+        protected ?string $mapper = null,
+        protected ?string $repository = null,
+        protected ?string $table = null,
+        protected bool $readonlySchema = false,
+        protected ?string $database = null,
+        protected ?string $source = null,
+        protected array|string|null $typecast = null,
+        protected ?string $scope = null,
+        protected array $columns = [],
         /** @deprecated Use {@see $scope} instead */
-        private ?string $constrain = null,
+        protected ?string $constrain = null,
     ) {
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getRole(): ?string
     {
         return $this->role;
     }
 
+    /**
+     * @return class-string|null
+     */
     public function getMapper(): ?string
     {
         return $this->mapper;
     }
 
+    /**
+     * @return class-string|null
+     */
     public function getRepository(): ?string
     {
         return $this->repository;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getTable(): ?string
     {
         return $this->table;
@@ -71,30 +83,45 @@ final class Entity
         return $this->readonlySchema;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getDatabase(): ?string
     {
         return $this->database;
     }
 
+    /**
+     * @return class-string|null
+     */
     public function getSource(): ?string
     {
         return $this->source;
     }
 
+    /**
+     * @return class-string|null
+     */
     public function getScope(): ?string
     {
         return $this->scope ?? $this->constrain;
     }
 
+    /**
+     * @return Column[]
+     */
     public function getColumns(): array
     {
         return $this->columns;
     }
 
+    /**
+     * @return non-empty-string|non-empty-string[]|null
+     */
     public function getTypecast(): array|string|null
     {
-        if (is_array($this->typecast) && count($this->typecast) === 1) {
-            return reset($this->typecast);
+        if (\is_array($this->typecast) && \count($this->typecast) === 1) {
+            return \reset($this->typecast);
         }
 
         return $this->typecast;
