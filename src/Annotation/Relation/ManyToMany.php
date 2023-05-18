@@ -35,18 +35,19 @@ class ManyToMany extends Relation
      * @param bool $nullable Defines if the relation can be nullable (child can have no parent).
      * @param array $where Where conditions applied to a related entity.
      * @param array $orderBy Additional sorting rules.
-     * @param class-string|non-empty-string|null $through Pivot entity.
+     * @param class-string|non-empty-string $through Pivot entity.
      * @param array $throughWhere Where conditions applied to `through` entity.
-     * @param bool $fkCreate Set to true to automatically create FK on thoughInnerKey and thoughOuterKey.
+     * @param bool $fkCreate Set to true to automatically create FK on throughInnerKey and throughOuterKey.
      * @param non-empty-string $fkAction FK onDelete and onUpdate action.
      * @param non-empty-string|null $fkOnDelete FK onDelete action. It has higher priority than {@see $fkAction}.
      *        Defaults to {@see $fkAction}.
-     * @param bool $indexCreate Create index on [thoughInnerKey, thoughOuterKey].
+     * @param bool $indexCreate Create index on [throughInnerKey, throughOuterKey].
      * @param non-empty-string|null $collection Collection that will contain loaded entities.
      * @param non-empty-string $load Relation load approach.
      */
     public function __construct(
         string $target,
+        protected string $through,
         protected array|string|null $innerKey = null,
         protected array|string|null $outerKey = null,
         protected array|string|null $throughInnerKey = null,
@@ -55,7 +56,6 @@ class ManyToMany extends Relation
         protected bool $nullable = false,
         protected array $where = [],
         protected array $orderBy = [],
-        protected ?string $through = null,
         protected array $throughWhere = [],
         protected bool $fkCreate = true,
         /**
@@ -72,15 +72,7 @@ class ManyToMany extends Relation
         protected ?string $collection = null,
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
-        ?Inverse $inverse = null,
-        /** @deprecated */
-        protected ?string $though = null,
-        /** @deprecated */
-        protected array|string|null $thoughInnerKey = null,
-        /** @deprecated */
-        protected array|string|null $thoughOuterKey = null,
-        /** @deprecated */
-        protected array|null $thoughWhere = [],
+        ?Inverse $inverse = null
     ) {
         $this->inverse = $inverse;
 

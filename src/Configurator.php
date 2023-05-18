@@ -152,7 +152,7 @@ final class Configurator
                 foreach ($meta->getOptions() as $option => $value) {
                     $value = match ($option) {
                         'collection' => $this->resolveName($value, $class),
-                        'though', 'through' => $this->resolveName($value, $class),
+                        'through' => $this->resolveName($value, $class),
                         default => $value
                     };
 

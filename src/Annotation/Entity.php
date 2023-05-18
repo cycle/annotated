@@ -40,9 +40,7 @@ class Entity
         protected ?string $source = null,
         protected array|string|null $typecast = null,
         protected ?string $scope = null,
-        protected array $columns = [],
-        /** @deprecated Use {@see $scope} instead */
-        protected ?string $constrain = null,
+        protected array $columns = []
     ) {
     }
 
@@ -104,7 +102,7 @@ class Entity
      */
     public function getScope(): ?string
     {
-        return $this->scope ?? $this->constrain;
+        return $this->scope;
     }
 
     /**
