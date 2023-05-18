@@ -96,16 +96,6 @@ final class Entities implements GeneratorInterface
                 try {
                     $r->setTarget($this->resolveTarget($registry, $r->getTarget()));
 
-                    if ($r->getOptions()->has('though')) {
-                        $though = $r->getOptions()->get('though');
-                        if ($though !== null) {
-                            $r->getOptions()->set(
-                                'though',
-                                $this->resolveTarget($registry, $though)
-                            );
-                        }
-                    }
-
                     if ($r->getOptions()->has('through')) {
                         $through = $r->getOptions()->get('through');
                         if ($through !== null) {
