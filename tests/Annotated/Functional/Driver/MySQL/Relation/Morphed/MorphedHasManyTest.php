@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\MySQL\Relation\Morphed;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\Morphed\MorphedHasManyTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\Morphed\MorphedHasManyTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-mysql
- */
-class MorphedHasManyTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-mysql')]
+final class MorphedHasManyTest extends MorphedHasManyTestCase
 {
     public const DRIVER = 'mysql';
 }

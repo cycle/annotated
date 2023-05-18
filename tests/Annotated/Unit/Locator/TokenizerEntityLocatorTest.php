@@ -12,38 +12,27 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures1\Tag;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\Typecaster;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\UuidTypecaster;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\WithTable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tokenizer\ClassesInterface;
 
 final class TokenizerEntityLocatorTest extends TestCase
 {
-    /**
-     * @dataProvider classesDataProvider
-     */
-    public function testGetEntities(array $expected, ClassesInterface $classes): void
+    #[DataProvider('classesDataProvider')]
+    public function testGetEntities(array $expected, array $classes): void
     {
-        $locator = new TokenizerEntityLocator($classes);
+        $mock = $this->createMock(ClassesInterface::class);
+        $mock->method('getClasses')->willReturn($classes);
+
+        $locator = new TokenizerEntityLocator($mock);
 
         $this->assertEquals($expected, $locator->getEntities());
     }
 
-    public function classesDataProvider(): \Traversable
+    public static function classesDataProvider(): \Traversable
     {
-        $mock = $this->createMock(ClassesInterface::class);
-        $mock->method('getClasses')->willReturn([]);
-        yield [[], $mock];
-
-        $mock = $this->createMock(ClassesInterface::class);
-        $mock->method('getClasses')->willReturn([
-            AnotherClass::class => new \ReflectionClass(AnotherClass::class),
-        ]);
-        yield [[], $mock];
-
-        $mock = $this->createMock(ClassesInterface::class);
-        $mock->method('getClasses')->willReturn([
-            Tag::class => new \ReflectionClass(Tag::class),
-            WithTable::class => new \ReflectionClass(WithTable::class),
-        ]);
+        yield [[], []];
+        yield [[], [AnotherClass::class => new \ReflectionClass(AnotherClass::class)]];
         yield [
             [
                 new Entity(
@@ -55,7 +44,10 @@ final class TokenizerEntityLocatorTest extends TestCase
                     new \ReflectionClass(WithTable::class)
                 ),
             ],
-            $mock,
+            [
+                Tag::class => new \ReflectionClass(Tag::class),
+                WithTable::class => new \ReflectionClass(WithTable::class),
+            ],
         ];
     }
 }

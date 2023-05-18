@@ -12,7 +12,7 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\TableInheritance;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Executive;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\Annotated\Tests\Traits\TableTrait;
 use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
@@ -27,11 +27,12 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class JoinedTableTest extends BaseTest
+abstract class JoinedTableTestCase extends BaseTestCase
 {
     use TableTrait;
 
@@ -97,9 +98,7 @@ abstract class JoinedTableTest extends BaseTest
         );
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testTableInheritance(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -129,9 +128,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertNull($loadedExecutive->proxyFieldWithAnnotation);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testAddForeignKeys(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -163,9 +160,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertSame(['id'], reset($externalSuppliersFk)->getColumns());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testNotAddForeignKey(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -173,9 +168,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertCount(0, $this->dbal->database()->table('buyers')->getForeignKeys());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testAddIndex(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -195,9 +188,7 @@ abstract class JoinedTableTest extends BaseTest
         $this->assertTrue(end($indexes)->isUnique());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testJtiParentColumns(ReaderInterface $reader): void
     {
         $schema = $this->compile($reader, 'Fixtures21');

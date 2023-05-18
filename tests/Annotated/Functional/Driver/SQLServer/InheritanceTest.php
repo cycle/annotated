@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\SQLServer;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\InheritanceTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\InheritanceTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlserver
- */
-class InheritanceTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-sqlserver')]
+final class InheritanceTest extends InheritanceTestCase
 {
     public const DRIVER = 'sqlserver';
 }

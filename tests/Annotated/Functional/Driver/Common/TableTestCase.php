@@ -14,16 +14,15 @@ use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class TableTest extends BaseTest
+abstract class TableTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testColumnsRendered(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -45,9 +44,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame(['active', 'disabled'], $schema->column('status')->getEnumValues());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testColumnWithDifferentColumnNameAndProperty(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -64,9 +61,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame('status', $schema['withTable'][Schema::COLUMNS]['status_property']);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testColumnWithoutColumnName(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -126,9 +121,7 @@ abstract class TableTest extends BaseTest
         ]);
     }
 
-    /**
-     * @dataProvider singularReadersProvider
-     */
+    #[DataProvider('singularReadersProvider')]
     public function testCompositePrimaryKey(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -150,9 +143,7 @@ abstract class TableTest extends BaseTest
         $this->assertEquals(['id', 'user_id'], $schema->getPrimaryKeys());
     }
 
-    /**
-     * @dataProvider singularReadersProvider
-     */
+    #[DataProvider('singularReadersProvider')]
     public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
     {
         $this->expectException(\Cycle\Annotated\Exception\AnnotationException::class);
@@ -172,9 +163,7 @@ abstract class TableTest extends BaseTest
         (new MergeIndexes($reader))->run($r);
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testIndexes(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -196,9 +185,7 @@ abstract class TableTest extends BaseTest
         $this->assertTrue($schema->hasIndex(['status']));
     }
 
-    /**
-     * @dataProvider singularReadersProvider
-     */
+    #[DataProvider('singularReadersProvider')]
     public function testOrderedIndexes(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -224,9 +211,7 @@ abstract class TableTest extends BaseTest
         $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testNamingDefault(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -241,9 +226,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame('with_tables', $schema->getName());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testNamingPluralize(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -262,9 +245,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame('with_tables', $schema->getName());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testNamingSingular(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -283,9 +264,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame('with_table', $schema->getName());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testNamingNone(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -304,9 +283,7 @@ abstract class TableTest extends BaseTest
         $this->assertSame('with_table', $schema->getName());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testReadonlySchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Postgres\Relation;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\EmbeddedTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\EmbeddedTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-postgres
- */
-class EmbeddedTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-postgres')]
+final class EmbeddedTest extends EmbeddedTestCase
 {
     public const DRIVER = 'postgres';
 }

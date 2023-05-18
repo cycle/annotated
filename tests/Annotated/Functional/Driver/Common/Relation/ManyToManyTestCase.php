@@ -9,7 +9,7 @@ use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Collection\BaseCollection;
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\ORM\Relation;
 use Cycle\ORM\SchemaInterface;
@@ -22,6 +22,7 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
@@ -29,11 +30,9 @@ use Spiral\Tokenizer\Tokenizer;
 
 use function PHPUnit\Framework\assertCount;
 
-abstract class ManyToManyTest extends BaseTest
+abstract class ManyToManyTestCase extends BaseTestCase
 {
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testPivotPrimaryKeys(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -77,9 +76,7 @@ abstract class ManyToManyTest extends BaseTest
         assertCount(1, $table->getIndexes());
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -137,9 +134,7 @@ abstract class ManyToManyTest extends BaseTest
         );
     }
 
-    /**
-     * @dataProvider allReadersProvider
-     */
+    #[DataProvider('allReadersProvider')]
     public function testThoughRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);

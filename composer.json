@@ -15,8 +15,8 @@
     },
     "require-dev": {
         "doctrine/annotations": "^1.14.3 || ^2.0.1",
-        "phpunit/phpunit": "^9.6",
-        "vimeo/psalm": "^4.30"
+        "phpunit/phpunit": "^10.1",
+        "vimeo/psalm": "^5.11"
     },
     "autoload": {
         "psr-4": {

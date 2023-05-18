@@ -22,7 +22,7 @@ use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     // currently active driver
     public const DRIVER = null;
@@ -139,19 +139,16 @@ abstract class BaseTest extends TestCase
         return static::$driverCache[static::DRIVER] = $this->driver;
     }
 
-    public function singularReadersProvider(): array
+    public static function singularReadersProvider(): \Traversable
     {
-        return [
-            'Annotation reader' => [new AnnotationReader()],
-            'Attribute reader' => [new AttributeReader()],
-        ];
+        yield ['Annotation reader' => new AnnotationReader()];
+        yield ['Attribute reader' => new AttributeReader()];
     }
 
-    public function allReadersProvider(): array
+    public static function allReadersProvider(): \Traversable
     {
-        return array_merge($this->singularReadersProvider(), [
-            'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])],
-        ]);
+        yield from static::singularReadersProvider();
+        yield ['Selective reader' => new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
     }
 
     /**

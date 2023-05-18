@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Postgres\Relation;
 
 // phpcs:ignore
-use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\ManyToManyTest as CommonClass;
+use Cycle\Annotated\Tests\Functional\Driver\Common\Relation\ManyToManyTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-postgres
- */
-class ManyToManyTest extends CommonClass
+#[Group('driver')]
+#[Group('driver-postgres')]
+final class ManyToManyTest extends ManyToManyTestCase
 {
     public const DRIVER = 'postgres';
 }
