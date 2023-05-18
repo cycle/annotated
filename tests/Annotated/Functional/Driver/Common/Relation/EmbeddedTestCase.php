@@ -58,6 +58,7 @@ abstract class EmbeddedTestCase extends BaseTestCase
 
         $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
+        $this->assertTrue($r->getTableSchema($r->getEntity('user'))->hasIndex(['address_zipcode']));
     }
 
     #[DataProvider('allReadersProvider')]
@@ -90,6 +91,7 @@ abstract class EmbeddedTestCase extends BaseTestCase
 
         $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_PROMISE, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
+        $this->assertTrue($r->getTableSchema($r->getEntity('user:address:address'))->hasIndex(['address_zipcode']));
     }
 
     #[DataProvider('allReadersProvider')]

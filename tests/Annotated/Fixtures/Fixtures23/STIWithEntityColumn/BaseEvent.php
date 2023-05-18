@@ -15,6 +15,11 @@ use Cycle\Annotated\Annotation\Inheritance\DiscriminatorColumn;
  * })
  * @DiscriminatorColumn(name="action")
  */
+#[Entity(columns: [
+    new Column(type: 'primary', property: 'id'),
+    new Column(type: 'string', property: 'action')
+])]
+#[DiscriminatorColumn(name: 'action')]
 abstract class BaseEvent
 {
     public int $id;

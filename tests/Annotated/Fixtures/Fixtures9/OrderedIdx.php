@@ -22,8 +22,15 @@ use Cycle\Annotated\Annotation\Table\Index;
  * )
  */
 #[Entity]
-#[Index(columns: ['name', 'id DESC'])]
-#[Column(name: 'name', type: 'string')]
+#[Table(
+    columns: [
+        'name' => new Column(type: 'string'),
+        new Column(type: 'string', property: 'other_name')
+    ],
+    indexes: [
+        new Index(columns: ['name', 'id DESC'])
+    ]
+)]
 class OrderedIdx
 {
     /** @Column(type="primary") */

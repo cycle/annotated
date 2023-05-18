@@ -14,17 +14,24 @@ use Cycle\Annotated\Annotation\Table\Index;
  * @Table(indexes={@Index(columns={"zipcode"})})
  */
 #[Embeddable(role: 'address', columnPrefix: 'address_')]
+#[Table(indexes: [
+    new Index(columns: ['zipcode'])
+])]
 class Address
 {
     /** @Column(type="string") */
+    #[Column(type: 'string')]
     protected $city;
 
     /** @Column(type="string") */
+    #[Column(type: 'string')]
     protected $country;
 
     /** @Column(type="string") */
+    #[Column(type: 'string')]
     protected $address;
 
     /** @Column(type="int") */
+    #[Column(type: 'int')]
     protected $zipcode;
 }
