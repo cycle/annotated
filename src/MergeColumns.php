@@ -76,7 +76,7 @@ final class MergeColumns implements GeneratorInterface
             }
             $columns = \array_merge($columns, $this->getColumns($class));
         } catch (\Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         $columns = \array_filter(
@@ -97,17 +97,24 @@ final class MergeColumns implements GeneratorInterface
     {
         $columns = [];
 
+        $columnName = static function (Column $column): string {
+            $name = $column->getProperty() ?? $column->getColumn();
+            \assert(!empty($name));
+
+            return $name;
+        };
+
         /** @var Table|null $table */
         $table = $this->reader->firstClassMetadata($class, Table::class);
         foreach ($table === null ? [] : $table->getColumns() as $name => $column) {
             if (\is_numeric($name)) {
-                $name = $column->getProperty() ?? $column->getColumn();
+                $name = $columnName($column);
             }
             $columns[$name] = $column;
         }
 
         foreach ($this->reader->getClassMetadata($class, Column::class) as $column) {
-            $columns[$column->getProperty() ?? $column->getColumn()] = $column;
+            $columns[$columnName($column)] = $column;
         }
 
         return $columns;

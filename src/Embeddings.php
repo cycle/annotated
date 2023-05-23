@@ -50,9 +50,10 @@ final class Embeddings implements GeneratorInterface
     {
         foreach ($class->getProperties() as $property) {
             try {
+                /** @var object[] $ann */
                 $ann = $this->reader->getPropertyMetadata($property);
             } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             foreach ($ann as $ra) {

@@ -42,12 +42,13 @@ class TableInheritance implements GeneratorInterface
                 /** @var Inheritance $annotation */
                 if ($annotation = $this->parseMetadata($child, Inheritance::class)) {
                     $childClass = $child->getClass();
+                    \assert($childClass !== null);
 
                     // Child entities always have parent entity
                     do {
-                        $parent = $this->findParent(
+                        $parent = $this->getParent(
                             $registry,
-                            $this->utils->findParent($childClass, false)
+                            $this->utils->getParent($childClass, false)
                         );
 
                         if ($annotation instanceof Inheritance\JoinedTable) {
@@ -55,6 +56,7 @@ class TableInheritance implements GeneratorInterface
                         }
 
                         $childClass = $parent->getClass();
+                        \assert($childClass !== null);
                     } while ($this->parseMetadata($parent, Inheritance::class) !== null);
 
                     if ($entity = $this->initInheritance($annotation, $child, $parent)) {
@@ -64,21 +66,13 @@ class TableInheritance implements GeneratorInterface
 
                 // All child should be presented in a schema as separated entity
                 // Every child will be handled according its table inheritance type
+                \assert($child->getRole() !== null);
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
 
-                    $database = $child->getDatabase();
-                    $tableName = $child->getTableName();
-                    if ($entity->getInheritance() instanceof SingleTableInheritanceSchema) {
-                        $database = $parent->getDatabase();
-                        $tableName = $parent->getTableName();
+                    if (isset($parent)) {
+                        $this->linkChildTable($registry, $child, $parent, $entity);
                     }
-
-                    $registry->linkTable(
-                        $child,
-                        $database,
-                        $tableName,
-                    );
                 }
             }
         }
@@ -92,14 +86,18 @@ class TableInheritance implements GeneratorInterface
                 $this->removeStiExtraFields($entity, $allowedEntities);
             } elseif ($entity->getInheritance() instanceof JoinedTableInheritanceSchema) {
                 $this->removeJtiExtraFields($entity);
-                $this->addForeignKey($this->parseMetadata($entity, Inheritance::class), $entity, $registry);
+
+                $joinedTable = $this->parseMetadata($entity, Inheritance::class);
+                \assert($joinedTable instanceof Inheritance\JoinedTable);
+
+                $this->addForeignKey($joinedTable, $entity, $registry);
             }
         }
 
         return $registry;
     }
 
-    private function findParent(Registry $registry, string $role): ?EntitySchema
+    private function getParent(Registry $registry, string $role): EntitySchema
     {
         foreach ($registry as $entity) {
             if ($entity->getRole() === $role || $entity->getClass() === $role) {
@@ -114,7 +112,7 @@ class TableInheritance implements GeneratorInterface
             }
         }
 
-        return null;
+        throw new AnnotationException(\sprintf('The entity could not be found for the role `%s`.', $role));
     }
 
     private function initInheritance(
@@ -127,17 +125,23 @@ class TableInheritance implements GeneratorInterface
                 $parent->setInheritance(new SingleTableInheritanceSchema());
             }
 
-            $parent->getInheritance()->addChild(
-                $inheritance->getValue() ?? $entity->getRole(),
-                $entity->getClass()
-            );
+            $class =  $entity->getClass();
+            \assert($class !== null);
+
+            /** @var non-empty-string $discriminatorValue */
+            $discriminatorValue = $inheritance->getValue() ?? $entity->getRole();
+            \assert(!empty($discriminatorValue));
+
+            /** @var SingleTableInheritanceSchema $parentInheritance */
+            $parentInheritance = $parent->getInheritance();
+            $parentInheritance->addChild($discriminatorValue, $class);
 
             $entity->markAsChildOfSingleTableInheritance($parent->getClass());
 
             // Root STI may have a discriminator annotation
             /** @var Inheritance\DiscriminatorColumn $annotation */
             if ($annotation = $this->parseMetadata($parent, Inheritance\DiscriminatorColumn::class)) {
-                $parent->getInheritance()->setDiscriminator($annotation->getName());
+                $parentInheritance->setDiscriminator($annotation->getName());
             }
 
             $parent->merge($entity);
@@ -173,7 +177,7 @@ class TableInheritance implements GeneratorInterface
             assert($class !== null);
             return $this->reader->firstClassMetadata(new \ReflectionClass($class), $name);
         } catch (\Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -256,9 +260,12 @@ class TableInheritance implements GeneratorInterface
             // entity is STI child
             $parent = $parentSchema->getParent();
             if ($parent->isChildOfSingleTableInheritance()) {
-                return $this->getParentForForeignKey($this->findParent(
+                $parentClass = $parent->getClass();
+                \assert($parentClass !== null);
+
+                return $this->getParentForForeignKey($this->getParent(
                     $registry,
-                    $this->utils->findParent($parent->getClass(), false)
+                    $this->utils->getParent($parentClass, false)
                 ), $registry);
             }
 
@@ -284,5 +291,24 @@ class TableInheritance implements GeneratorInterface
         }
 
         return $parent->getPrimaryFields();
+    }
+
+    private function linkChildTable(
+        Registry $registry,
+        EntitySchema $child,
+        EntitySchema $parent,
+        ?EntitySchema $entity = null
+    ): void {
+        if ($entity !== null && $entity->getInheritance() instanceof SingleTableInheritanceSchema) {
+            $database = $parent->getDatabase();
+            /** @var non-empty-string $tableName */
+            $tableName = $parent->getTableName();
+        } else {
+            $database = $child->getDatabase();
+            /** @var non-empty-string $tableName */
+            $tableName = $child->getTableName();
+        }
+
+        $registry->linkTable($child, $database, $tableName);
     }
 }

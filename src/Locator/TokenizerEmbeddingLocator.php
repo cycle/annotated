@@ -29,7 +29,7 @@ final class TokenizerEmbeddingLocator implements EmbeddingLocatorInterface
             try {
                 $attribute = $this->reader->firstClassMetadata($class, Embeddable::class);
             } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             if ($attribute !== null) {

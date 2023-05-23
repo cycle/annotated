@@ -6,12 +6,15 @@ namespace Cycle\Annotated\Exception;
 
 class AnnotationRequiredArgumentsException extends AnnotationException
 {
+    /**
+     * @param class-string $annotationClass
+     */
     public static function createFor(\ReflectionProperty $property, string $annotationClass, \Throwable $e): static
     {
         $column = new \ReflectionClass($annotationClass);
 
         $requiredArguments = [];
-        foreach ($column->getConstructor()->getParameters() as $parameter) {
+        foreach ($column->getConstructor()?->getParameters() ?? [] as $parameter) {
             if (! $parameter->isOptional()) {
                 $requiredArguments[] = $parameter->getName();
             }
@@ -24,7 +27,7 @@ class AnnotationRequiredArgumentsException extends AnnotationException
                 $property->getDeclaringClass()->getName(),
                 $property->getName()
             ),
-            $e->getCode(),
+            (int) $e->getCode(),
             $e
         );
     }

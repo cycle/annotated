@@ -42,6 +42,7 @@ final class MergeIndexes implements GeneratorInterface
             $this->render($registry->getTableSchema($e), $e, $e->getScope());
 
             foreach ($registry->getChildren($e) as $child) {
+                \assert($child->getRole() !== null);
                 if (!$child->isChildOfSingleTableInheritance() && $registry->hasEntity($child->getRole())) {
                     $tableSchema = $registry->getTableSchema($child);
                 } else {
@@ -75,8 +76,8 @@ final class MergeIndexes implements GeneratorInterface
                 $indexSchema = $table->index($columns);
                 $indexSchema->unique($index->isUnique());
 
-                if ($index->getIndex() !== null) {
-                    $indexSchema->setName($index->getIndex());
+                if (($idx = $index->getIndex()) !== null) {
+                    $indexSchema->setName($idx);
                 }
             }
         }
@@ -108,7 +109,7 @@ final class MergeIndexes implements GeneratorInterface
             /** @var Table\Index[] $indexMeta */
             $indexMeta = $this->reader->getClassMetadata($reflection, Table\Index::class);
         } catch (\Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         $indexes = $tableMeta === null ? [] : $tableMeta->getIndexes();

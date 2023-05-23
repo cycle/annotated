@@ -15,7 +15,7 @@ class AnnotationWrongTypeArgumentException extends AnnotationException
                 $property->getName(),
                 $e->getMessage()
             ),
-            $e->getCode(),
+            (int) $e->getCode(),
             $e
         );
     }

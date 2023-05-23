@@ -42,7 +42,8 @@ final class Configurator
         $e = new EntitySchema();
         $e->setClass($class->getName());
 
-        $e->setRole($ann->getRole() ?? $this->inflector->camelize($class->getShortName()));
+        $role = $ann->getRole() ?? $this->inflector->camelize($class->getShortName());
+        $e->setRole($role);
 
         // representing classes
         $e->setMapper($this->resolveName($ann->getMapper(), $class));
@@ -50,14 +51,14 @@ final class Configurator
         $e->setSource($this->resolveName($ann->getSource(), $class));
         $e->setScope($this->resolveName($ann->getScope(), $class));
         $e->setDatabase($ann->getDatabase());
-        $e->setTableName(
-            $ann->getTable() ?? $this->utils->tableName($e->getRole(), $this->tableNamingStrategy)
-        );
+        $e->setTableName($ann->getTable() ?? $this->utils->tableName($role, $this->tableNamingStrategy));
 
         $typecast = $ann->getTypecast();
         if (\is_array($typecast)) {
+            /** @var non-empty-string[] $typecast */
             $typecast = \array_map(fn (string $value): string => $this->resolveName($value, $class), $typecast);
         } else {
+            /** @var non-empty-string|null $typecast */
             $typecast = $this->resolveName($typecast, $class);
         }
 
@@ -89,7 +90,7 @@ final class Configurator
             try {
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
             } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
             } catch (\ArgumentCountError $e) {
                 throw AnnotationRequiredArgumentsException::createFor($property, Column::class, $e);
             } catch (\TypeError $e) {
@@ -112,20 +113,21 @@ final class Configurator
             try {
                 $metadata = $this->reader->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
             } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             foreach ($metadata as $meta) {
                 \assert($meta instanceof RelationAnnotation\RelationInterface);
 
-                if ($meta->getTarget() === null) {
+                $target = $meta->getTarget();
+                if ($target === null) {
                     throw new AnnotationException(
                         "Relation target definition is required on `{$entity->getClass()}`.`{$property->getName()}`"
                     );
                 }
 
                 $relation = new Relation();
-                $relation->setTarget($this->resolveName($meta->getTarget(), $class));
+                $relation->setTarget($this->resolveName($target, $class));
                 $relation->setType($meta->getType());
 
                 $inverse = $meta->getInverse() ?? $this->reader->firstPropertyMetadata(
@@ -141,12 +143,13 @@ final class Configurator
                 }
 
                 if ($meta instanceof RelationAnnotation\Embedded && $meta->getPrefix() === null) {
+                    /** @var class-string $target */
+                    $target = $relation->getTarget();
                     /** @var Embeddable|null $embeddable */
-                    $embeddable = $this->reader->firstClassMetadata(
-                        new \ReflectionClass($relation->getTarget()),
-                        Embeddable::class
-                    );
-                    $meta->setPrefix($embeddable->getColumnPrefix());
+                    $embeddable = $this->reader->firstClassMetadata(new \ReflectionClass($target), Embeddable::class);
+                    if ($embeddable !== null) {
+                        $meta->setPrefix($embeddable->getColumnPrefix());
+                    }
                 }
 
                 foreach ($meta->getOptions() as $option => $value) {
@@ -170,7 +173,7 @@ final class Configurator
         try {
             $metadata = $this->reader->getClassMetadata($class, SchemaModifierInterface::class);
         } catch (\Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         foreach ($metadata as $meta) {
@@ -200,16 +203,11 @@ final class Configurator
             $propertyName ??= $isNumericKey ? null : $key;
             $columnName = $column->getColumn() ?? $propertyName;
             $propertyName ??= $columnName;
+            \assert(!empty($propertyName));
 
             if ($columnName === null) {
                 throw new AnnotationException(
                     "Column name definition is required on `{$entity->getClass()}`"
-                );
-            }
-
-            if ($column->getType() === null) {
-                throw new AnnotationException(
-                    "Column type definition is required on `{$entity->getClass()}`.`{$columnName}`"
                 );
             }
 
@@ -255,6 +253,8 @@ final class Configurator
 
     /**
      * Resolve class or role name relative to the current class.
+     *
+     * @psalm-return($name is string ? string : null)
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
     {

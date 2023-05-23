@@ -30,7 +30,7 @@ final class TokenizerEntityLocator implements EntityLocatorInterface
                 /** @var Attribute $attribute */
                 $attribute = $this->reader->firstClassMetadata($class, Attribute::class);
             } catch (\Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             if ($attribute !== null) {

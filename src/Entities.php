@@ -58,11 +58,15 @@ final class Entities implements GeneratorInterface
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $entity->attribute->getColumns(), $entity->class);
 
-            if ($this->utils->hasParent($e->getClass())) {
-                foreach ($this->utils->findParents($e->getClass()) as $parent) {
+            /** @var class-string $class */
+            $class = $e->getClass();
+            if ($this->utils->hasParent($class)) {
+                foreach ($this->utils->findParents($class) as $parent) {
                     // additional columns from parent class
                     $ann = $this->reader->firstClassMetadata($parent, Entity::class);
-                    $this->generator->initColumns($e, $ann->getColumns(), $parent);
+                    if ($ann !== null) {
+                        $this->generator->initColumns($e, $ann->getColumns(), $parent);
+                    }
                 }
 
                 $children[] = $e;
@@ -71,11 +75,17 @@ final class Entities implements GeneratorInterface
 
             // register entity (OR find parent)
             $registry->register($e);
-            $registry->linkTable($e, $e->getDatabase(), $e->getTableName());
+
+            $tableName = $e->getTableName();
+            \assert(!empty($tableName));
+            $registry->linkTable($e, $e->getDatabase(), $tableName);
         }
 
         foreach ($children as $e) {
-            $registry->registerChildWithoutMerge($registry->getEntity($this->utils->findParent($e->getClass())), $e);
+            $class = $e->getClass();
+            \assert($class !== null);
+
+            $registry->registerChildWithoutMerge($registry->getEntity($this->utils->getParent($class)), $e);
         }
 
         return $this->normalizeNames($registry);
@@ -118,12 +128,11 @@ final class Entities implements GeneratorInterface
                         }
                     }
                 } catch (RegistryException $ex) {
+                    /** @var non-empty-string $role */
+                    $role = $e->getRole();
+
                     throw new RelationException(
-                        sprintf(
-                            'Unable to resolve `%s`.`%s` relation target (not found or invalid)',
-                            $e->getRole(),
-                            $name
-                        ),
+                        \sprintf('Unable to resolve `%s`.`%s` relation target (not found or invalid)', $role, $name),
                         $ex->getCode(),
                         $ex
                     );
@@ -134,24 +143,31 @@ final class Entities implements GeneratorInterface
         return $registry;
     }
 
-    private function resolveTarget(Registry $registry, string $name): ?string
+    private function resolveTarget(Registry $registry, string $name): string
     {
         if (\interface_exists($name, true)) {
             // do not resolve interfaces
             return $name;
         }
 
+        $target = static function (EntitySchema $entity): string {
+            $role = $entity->getRole();
+            \assert($role !== null);
+
+            return $role;
+        };
+
         if (!$registry->hasEntity($name)) {
             // point all relations to the parent
             foreach ($registry as $entity) {
                 foreach ($registry->getChildren($entity) as $child) {
                     if ($child->getClass() === $name || $child->getRole() === $name) {
-                        return $entity->getRole();
+                        return $target($entity);
                     }
                 }
             }
         }
 
-        return $registry->getEntity($name)->getRole();
+        return $target($registry->getEntity($name));
     }
 }
