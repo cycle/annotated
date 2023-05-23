@@ -1,81 +1,273 @@
 # Cycle ORM - Annotated Entities
 
-[![Latest Stable Version](https://poser.pugx.org/cycle/annotated/version)](https://packagist.org/packages/cycle/annotated)
-[![Build Status](https://github.com/cycle/annotated/workflows/build/badge.svg)](https://github.com/cycle/annotated/actions)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cycle/annotated/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/cycle/annotated/?branch=3.x)
-[![Codecov](https://codecov.io/gh/cycle/annotated/graph/badge.svg)](https://codecov.io/gh/cycle/annotated)
+[![PHP Version Require](https://poser.pugx.org/cycle/annotated/require/php)](https://packagist.org/packages/cycle/annotated)
+[![Latest Stable Version](https://poser.pugx.org/cycle/annotated/v/stable)](https://packagist.org/packages/cycle/annotated)
+[![phpunit](https://github.com/cycle/annotated/actions/workflows/main.yml/badge.svg)](https://github.com/cycle/annotated/actions)
+[![psalm](https://github.com/cycle/annotated/actions/workflows/psalm.yml/badge.svg)](https://github.com/cycle/annotated/actions)
+[![psalm-level](https://shepherd.dev/github/cycle/annotated/level.svg)](https://shepherd.dev/github/cycle/annotated)
+[![Codecov](https://codecov.io/gh/cycle/annotated/branch/4.x/graph/badge.svg)](https://codecov.io/gh/cycle/annotated/)
+[![Total Downloads](https://poser.pugx.org/cycle/annotated/downloads)](https://packagist.org/packages/cycle/annotated)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
-## Simple example:
+<b>[Documentation](https://cycle-orm.dev/docs/annotated-prerequisites)</b> | [Cycle ORM](https://github.com/cycle/orm)
 
-#### Annotation definition
+The package provides the ability to define Cycle ORM schema using PHP attributes.
 
-```php
-/**
- * @Entity(
- *     role="user",
- *     repository="Repository/UserRepository",
- *     typecast="Typecast\AutoTypecaster"
- * )
- */
-class User
-{
-    /** @Column(type="primary") */
-    protected $id;
-    
-    /** @HasOne(target=Profile::class, load="eager") */
-    protected $profile;
-    
-    /** @HasMany(target=Post::class, load="lazy") */
-    protected $posts;
-   
-    /** 
-     * @ManyToMany(
-     *     target=Tag::class, 
-     *     through=TagMap::class, 
-     *     load="lazy", 
-     *     collection="Collection\BaseCollection"
-     * )
-     */
-    protected $tags;
-    
-    ...
-}
-```
-
-#### Attribute definition
+## Usage
 
 ```php
-#[Entity(
-    role: "user", 
-    repository: Repository/UserRepository::class, 
-    typecast: Typecast\Typecaster::class
-)]
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Column;
+
+#[Entity]
 class User
 {
     #[Column(type: 'primary')]
-    protected $id;
-    
-    #[HasOne(target: Profile::class, load: "eager")]
-    protected $profile;
-    
-    #[HasMany(target: Post::class, load: "lazy")]
-    protected $posts;
-   
-    #[ManyToMany(
-        target: Tag::class, 
-        through: TagMap::class, 
-        load: "lazy", 
-        collection: Collection\BaseCollection::class
-    )]
-    protected $tags;
-    
-    ...
+    private int $id;
+
+    #[Column(type: 'string(32)')]
+    private string $login;
+
+    #[Column(type: 'enum(active,disabled)')]
+    private string $status;
+
+    #[Column(type: 'decimal(5,5)')]
+    private $balance;
 }
 ```
 
-## STI/JTI:
+### Relations
 
-#### Single Table Inheritance
+#### HasOne
+
+```php
+use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Entity;
+
+#[Entity]
+class User
+{
+    // ...
+
+    #[HasOne(target: Address::class)]
+    public ?Address $address;
+}
+
+```
+
+> **Note**
+> Read more about [HasOne](https://cycle-orm.dev/docs/relation-has-one).
+
+#### HasMany
+
+```php
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasMany;
+
+#[Entity]
+class User
+{
+    // ...
+
+    #[HasMany(target: Post::class)]
+    private array $posts;
+}
+```
+
+> **Note**
+> Read more about [HasMany](https://cycle-orm.dev/docs/relation-has-many).
+
+#### BelongsTo
+
+```php
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+
+#[Entity]
+class Post
+{
+    // ...
+
+    #[BelongsTo(target: User::class)]
+    private User $user;
+}
+```
+
+> **Note**
+> Read more about [BelongsTo](https://cycle-orm.dev/docs/relation-belongs-to).
+
+#### RefersTo
+
+```php
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\RefersTo;
+use Cycle\Annotated\Annotation\Relation\HasMany;
+
+#[Entity]
+class User
+{
+    // ...
+
+    #[RefersTo(target: Comment::class)]
+    private ?Comment $lastComment;
+
+    #[HasMany(target: Comment::class)]
+    public array $comments;
+
+    // ...
+
+    public function addComment(Comment $c): void
+    {
+        $this->lastComment = $c;
+        $this->comments[] = $c;
+    }
+    
+    public function removeLastComment(): void
+    {
+        $this->lastComment = null;
+    }
+    
+    public function getLastComment(): ?Comment
+    {
+        return $this->lastComment;
+    }
+}
+```
+
+> **Note**
+> Read more about [RefersTo](https://cycle-orm.dev/docs/relation-refers-to).
+
+#### ManyToMany
+
+```php
+use Cycle\Annotated\Annotation\Relation\ManyToMany;
+use Cycle\Annotated\Annotation\Entity;
+
+#[Entity]
+class User
+{
+    // ...
+
+    #[ManyToMany(target: Tag::class, through: UserTag::class)]
+    protected array $tags;
+    
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+    
+    public function addTag(Tag $tag): void
+    {
+        $this->tags[] = $tag;
+    }
+    
+    public function removeTag(Tag $tag): void
+    {
+        $this->tags = array_filter($this->tags, static fn(Tag $t) => $t !== $tag);
+    }
+}
+```
+
+> **Note**
+> Read more about [ManyToMany](https://cycle-orm.dev/docs/relation-many-to-many).
+
+#### Embedded Entities
+
+```php
+use Cycle\Annotated\Annotation\Embeddable;
+use Cycle\Annotated\Annotation\Column;
+
+#[Embeddable]
+class UserCredentials
+{
+    #[Column(type: 'string(255)')]
+    public string $username;
+
+    #[Column(type: 'string')]
+    public string $password;
+}
+
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Relation\Embedded;
+
+#[Entity]
+class User
+{
+    #[Column(type: 'primary')]
+    public int $id;
+
+    #[Embedded(target: 'UserCredentials')]
+    public UserCredentials $credentials;
+
+    public function __construct()
+    {
+        $this->credentials = new UserCredentials();
+    }
+}
+```
+
+> **Note**
+> Read more about [Embedded Entities](https://cycle-orm.dev/docs/relation-embedded).
+
+#### BelongsToMorphed
+
+```php
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
+
+#[Entity]
+class Image
+{
+    // ...
+
+    #[BelongsToMorphed(taget: ImageHolderInterface::class)]
+    public ImageHolderInterface $imageHolder;
+}
+```
+
+> **Note**
+> Read more about [BelongsToMorphed](https://cycle-orm.dev/docs/relation-morphed#belongstomorphed).
+
+#### MorphedHasOne
+
+```php
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
+
+#[Entity]
+class User
+{
+    // ...
+
+    #[MorphedHasOne(target: Image::class)]
+    public $image;
+}
+```
+
+> **Note**
+> Read more about [MorphedHasOne](https://cycle-orm.dev/docs/relation-morphed#morphedhasone).
+
+#### MorphedHasMany
+
+```php
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany;
+
+#[Entity]
+class User
+{
+    // ...
+
+    #[MorphedHasMany(target: Image::class)]
+    public $images;
+}
+```
+
+> **Note**
+> Read more about [MorphedHasMany](https://cycle-orm.dev/docs/relation-morphed#morphedhasmany).
+
+### Single Table Inheritance
 
 ```php
 #[Entity]
@@ -106,7 +298,10 @@ class Customer extends Person
 }
 ```
 
-#### Joined Table Inheritance
+> **Note**
+> Read more about [Single Table Inheritance](https://cycle-orm.dev/docs/advanced-single-table-inheritance).
+
+### Joined Table Inheritance
 
 ```php
 #[Entity]
@@ -139,111 +334,10 @@ class Customer extends Person
 }
 ```
 
-#### Combined example
+> **Note**
+> Read more about [Joined Table Inheritance](https://cycle-orm.dev/docs/advanced-joined-table-inheritance).
 
-```php
-#[Entity]
-#[DiscriminatorColumn(name: 'type')]
-class Person
-{
-    #[Column(type: 'primary', primary: true)]
-    protected int $id;
+## License
 
-    #[Column(type: 'string')]
-    protected string $name;
-}
-
-#[Entity]
-#[InheritanceSingleTable]
-class Employee extends Person
-{
-    #[Column(type: 'int')]
-    protected int $salary;
-}
-
-#[Entity]
-#[InheritanceSingleTable(value: 'foo_customer')]
-class Customer extends Person
-{
-    #[Column(type: 'json')]
-    protected array $preferences;
-}
-
-#[Entity]
-#[InheritanceJoinedTable(outerKey: 'foo_id')]
-class Executive extends Employee
-{
-    #[Column(type: 'int')]
-    protected int $bonus;
-}
-```
-
-## Schema modifiers:
-
-#### Schema modifier example
-
-```php
-namespace App\SchemaModifiers;
-
-use Cycle\ORM\SchemaInterface;
-use Cycle\Schema\Registry;
-use Cycle\Schema\SchemaModifierInterface;
-
-#[\Attribute(\Attribute::TARGET_CLASS)]
-class MapperSegmentSchemaModifier implements SchemaModifierInterface
-{
-    private string $role;
-        
-    public function __construct(
-        private string $class
-    ) {
-    }
-
-    public function withRole(string $role): static
-    {
-        $this->role = $role;
-        return $this;
-    }
-
-    public function compute(Registry $registry): void 
-    {
-        // ...
-    }
-
-    public function render(Registry $registry): void 
-    {
-        // ...
-    }
-
-    public function modifySchema(array &$schema): void
-    {
-        $schema[SchemaInterface::MAPPER] = $this->class;
-    }
-}
-```
-
-#### Usage
-
-```php
-namespace App\Entities;
-
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
-use App\SchemaModifiers\MapperSegmentSchemaModifier;
-
-#[Entity]
-#[MapperSegmentSchemaModifier(class: SuperMapper::class)]
-class Post
-{
-    #[Column(type: 'integer', primary: true)]
-    protected int $id;
-
-    #[Column(type: 'string')]
-    protected string $name;
-}
-```
-
-License:
---------
 The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained
 by [Spiral Scout](https://spiralscout.com).
