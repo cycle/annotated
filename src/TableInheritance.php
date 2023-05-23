@@ -125,7 +125,7 @@ class TableInheritance implements GeneratorInterface
                 $parent->setInheritance(new SingleTableInheritanceSchema());
             }
 
-            $class =  $entity->getClass();
+            $class = $entity->getClass();
             \assert($class !== null);
 
             /** @var non-empty-string $discriminatorValue */
