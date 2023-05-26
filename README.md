@@ -176,6 +176,9 @@ class User
 ```php
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Relation\Embedded;
 
 #[Embeddable]
 class UserCredentials
@@ -186,10 +189,6 @@ class UserCredentials
     #[Column(type: 'string')]
     public string $password;
 }
-
-use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Relation\Embedded;
 
 #[Entity]
 class User
