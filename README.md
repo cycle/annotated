@@ -177,7 +177,6 @@ class User
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Relation\Embedded;
 
 #[Embeddable]
