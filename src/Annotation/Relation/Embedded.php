@@ -22,8 +22,8 @@ final class Embedded extends Relation
 
     /**
      * @param non-empty-string $target Entity to embed.
-     * @param non-empty-string $load Relation load approach.
-     * @param non-empty-string|null $prefix Prefix for embedded entity columns.
+     * @param 'eager'|'lazy' $load Relation load approach.
+     * @param string|null $prefix Prefix for embedded entity columns.
      */
     public function __construct(
         string $target,
