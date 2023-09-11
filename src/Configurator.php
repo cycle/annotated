@@ -269,6 +269,7 @@ final class Configurator
      * Resolve class or role name relative to the current class.
      *
      * @template TEntity of object
+     *
      * @psalm-return($name is class-string<TEntity>
      *     ? class-string<TEntity>
      *     : ($name is string ? string : null)
