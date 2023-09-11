@@ -66,13 +66,19 @@ class TableInheritance implements GeneratorInterface
 
                 // All child should be presented in a schema as separated entity
                 // Every child will be handled according its table inheritance type
-                \assert($child->getRole() !== null);
+                \assert($child->getRole() !== null && $entity !== null && isset($parent));
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
 
-                    if (isset($parent)) {
-                        $this->linkChildTable($registry, $child, $parent, $entity);
+                    $database = $child->getDatabase();
+                    $tableName = $child->getTableName();
+                    if ($entity->getInheritance() instanceof SingleTableInheritanceSchema) {
+                        $database = $parent->getDatabase();
+                        $tableName = $parent->getTableName();
                     }
+
+                    \assert(!empty($tableName));
+                    $registry->linkTable($child, $database, $tableName);
                 }
             }
         }
@@ -291,24 +297,5 @@ class TableInheritance implements GeneratorInterface
         }
 
         return $parent->getPrimaryFields();
-    }
-
-    private function linkChildTable(
-        Registry $registry,
-        EntitySchema $child,
-        EntitySchema $parent,
-        ?EntitySchema $entity = null
-    ): void {
-        if ($entity !== null && $entity->getInheritance() instanceof SingleTableInheritanceSchema) {
-            $database = $parent->getDatabase();
-            /** @var non-empty-string $tableName */
-            $tableName = $parent->getTableName();
-        } else {
-            $database = $child->getDatabase();
-            /** @var non-empty-string $tableName */
-            $tableName = $child->getTableName();
-        }
-
-        $registry->linkTable($child, $database, $tableName);
     }
 }
