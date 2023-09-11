@@ -143,6 +143,9 @@ final class Entities implements GeneratorInterface
         return $registry;
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function resolveTarget(Registry $registry, string $name): string
     {
         if (\interface_exists($name, true)) {

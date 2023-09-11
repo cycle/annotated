@@ -43,6 +43,7 @@ final class Configurator
         $e->setClass($class->getName());
 
         $role = $ann->getRole() ?? $this->inflector->camelize($class->getShortName());
+        \assert(!empty($role));
         $e->setRole($role);
 
         // representing classes
@@ -51,7 +52,10 @@ final class Configurator
         $e->setSource($this->resolveName($ann->getSource(), $class));
         $e->setScope($this->resolveName($ann->getScope(), $class));
         $e->setDatabase($ann->getDatabase());
-        $e->setTableName($ann->getTable() ?? $this->utils->tableName($role, $this->tableNamingStrategy));
+
+        $tableName = $ann->getTable() ?? $this->utils->tableName($role, $this->tableNamingStrategy);
+        \assert(!empty($tableName));
+        $e->setTableName($tableName);
 
         $typecast = $ann->getTypecast();
         if (\is_array($typecast)) {
@@ -76,7 +80,9 @@ final class Configurator
         $e = new EntitySchema();
         $e->setClass($class->getName());
 
-        $e->setRole($emb->getRole() ?? $this->inflector->camelize($class->getShortName()));
+        $role = $emb->getRole() ?? $this->inflector->camelize($class->getShortName());
+        \assert(!empty($role));
+        $e->setRole($role);
 
         // representing classes
         $e->setMapper($this->resolveName($emb->getMapper(), $class));
@@ -127,7 +133,11 @@ final class Configurator
                 }
 
                 $relation = new Relation();
-                $relation->setTarget($this->resolveName($target, $class));
+
+                $resolvedTarget = $this->resolveName($target, $class);
+                \assert(!empty($resolvedTarget));
+                $relation->setTarget($resolvedTarget);
+
                 $relation->setType($meta->getType());
 
                 $inverse = $meta->getInverse() ?? $this->reader->firstPropertyMetadata(
@@ -222,7 +232,11 @@ final class Configurator
         $field = new Field();
 
         $field->setType($column->getType());
-        $field->setColumn($columnPrefix . ($column->getColumn() ?? $this->inflector->tableize($name)));
+
+        $columnName = $columnPrefix . ($column->getColumn() ?? $this->inflector->tableize($name));
+        \assert(!empty($columnName));
+        $field->setColumn($columnName);
+
         $field->setPrimary($column->isPrimary());
 
         $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));
@@ -254,7 +268,11 @@ final class Configurator
     /**
      * Resolve class or role name relative to the current class.
      *
-     * @psalm-return($name is string ? string : null)
+     * @template TEntity of object
+     * @psalm-return($name is class-string<TEntity>
+     *     ? class-string<TEntity>
+     *     : ($name is string ? string : null)
+     * )
      */
     public function resolveName(?string $name, \ReflectionClass $class): ?string
     {
