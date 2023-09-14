@@ -7,6 +7,7 @@ namespace Cycle\Annotated;
 use Cycle\Annotated\Annotation\Inheritance;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Utils\EntityUtils;
+use Cycle\Schema\Definition\Entity;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Inheritance\JoinedTable as JoinedTableInheritanceSchema;
 use Cycle\Schema\Definition\Inheritance\SingleTable as SingleTableInheritanceSchema;
@@ -57,8 +58,8 @@ class TableInheritance implements GeneratorInterface
                         $childClass = $parent->getClass();
                     } while ($this->parseMetadata($parent, Inheritance::class) !== null);
 
-                    if ($entity = $this->initInheritance($annotation, $child, $parent)) {
-                        $found[] = $entity;
+                    if ($inheritanceEntity = $this->initInheritance($annotation, $child, $parent)) {
+                        $found[] = $inheritanceEntity;
                     }
                 }
 
@@ -67,17 +68,10 @@ class TableInheritance implements GeneratorInterface
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
 
-                    $database = $child->getDatabase();
-                    $tableName = $child->getTableName();
-                    if ($entity->getInheritance() instanceof SingleTableInheritanceSchema) {
-                        $database = $parent->getDatabase();
-                        $tableName = $parent->getTableName();
-                    }
-
                     $registry->linkTable(
                         $child,
-                        $database,
-                        $tableName,
+                        $this->getDatabase($child, $registry),
+                        $this->getTableName($child, $registry)
                     );
                 }
             }
@@ -284,5 +278,43 @@ class TableInheritance implements GeneratorInterface
         }
 
         return $parent->getPrimaryFields();
+    }
+
+    private function getTableName(Entity $child, Registry $registry): string
+    {
+        $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
+        if ($parent === null) {
+            return $child->getTableName();
+        }
+
+        $inheritance = $parent->getInheritance();
+        if (!$inheritance instanceof SingleTableInheritanceSchema) {
+            return $child->getTableName();
+        }
+        $entities = \array_map(
+            static fn (string $role) => $registry->getEntity($role)->getClass(),
+            $inheritance->getChildren()
+        );
+
+        return \in_array($child->getClass(), $entities, true) ? $parent->getTableName() : $child->getTableName();
+    }
+
+    private function getDatabase(Entity $child, Registry $registry): ?string
+    {
+        $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
+        if ($parent === null) {
+            return $child->getDatabase();
+        }
+
+        $inheritance = $parent->getInheritance();
+        if (!$inheritance instanceof SingleTableInheritanceSchema) {
+            return $child->getDatabase();
+        }
+        $entities = \array_map(
+            static fn (string $role) => $registry->getEntity($role)->getClass(),
+            $inheritance->getChildren()
+        );
+
+        return \in_array($child->getClass(), $entities, true) ? $parent->getDatabase() : $child->getDatabase();
     }
 }
