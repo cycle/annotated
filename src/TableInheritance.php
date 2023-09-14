@@ -283,9 +283,6 @@ class TableInheritance implements GeneratorInterface
     private function getTableName(Entity $child, Registry $registry): string
     {
         $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
-        if ($parent === null) {
-            return $child->getTableName();
-        }
 
         $inheritance = $parent->getInheritance();
         if (!$inheritance instanceof SingleTableInheritanceSchema) {
@@ -302,9 +299,6 @@ class TableInheritance implements GeneratorInterface
     private function getDatabase(Entity $child, Registry $registry): ?string
     {
         $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
-        if ($parent === null) {
-            return $child->getDatabase();
-        }
 
         $inheritance = $parent->getInheritance();
         if (!$inheritance instanceof SingleTableInheritanceSchema) {
