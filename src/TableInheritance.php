@@ -70,11 +70,10 @@ class TableInheritance implements GeneratorInterface
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
 
-                    $registry->linkTable(
-                        $child,
-                        $this->getDatabase($child, $registry),
-                        $this->getTableName($child, $registry)
-                    );
+                    $tableName = $this->getTableName($child, $registry);
+                    \assert(!empty($tableName));
+
+                    $registry->linkTable($child, $this->getDatabase($child, $registry), $tableName);
                 }
             }
         }
@@ -295,9 +294,12 @@ class TableInheritance implements GeneratorInterface
         return $parent->getPrimaryFields();
     }
 
-    private function getTableName(Entity $child, Registry $registry): string
+    private function getTableName(EntitySchema $child, Registry $registry): ?string
     {
-        $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
+        $childClass = $child->getClass();
+        \assert($childClass !== null);
+
+        $parent = $this->getParent($registry, $this->utils->getParent($childClass, false));
 
         $inheritance = $parent->getInheritance();
         if (!$inheritance instanceof SingleTableInheritanceSchema) {
@@ -308,12 +310,15 @@ class TableInheritance implements GeneratorInterface
             $inheritance->getChildren()
         );
 
-        return \in_array($child->getClass(), $entities, true) ? $parent->getTableName() : $child->getTableName();
+        return \in_array($childClass, $entities, true) ? $parent->getTableName() : $child->getTableName();
     }
 
-    private function getDatabase(Entity $child, Registry $registry): ?string
+    private function getDatabase(EntitySchema $child, Registry $registry): ?string
     {
-        $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
+        $childClass = $child->getClass();
+        \assert($childClass !== null);
+
+        $parent = $this->getParent($registry, $this->utils->getParent($childClass, false));
 
         $inheritance = $parent->getInheritance();
         if (!$inheritance instanceof SingleTableInheritanceSchema) {
@@ -324,6 +329,6 @@ class TableInheritance implements GeneratorInterface
             $inheritance->getChildren()
         );
 
-        return \in_array($child->getClass(), $entities, true) ? $parent->getDatabase() : $child->getDatabase();
+        return \in_array($childClass, $entities, true) ? $parent->getDatabase() : $child->getDatabase();
     }
 }
