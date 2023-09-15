@@ -7,7 +7,6 @@ namespace Cycle\Annotated;
 use Cycle\Annotated\Annotation\Inheritance;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Utils\EntityUtils;
-use Cycle\Schema\Definition\Entity;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Inheritance\JoinedTable as JoinedTableInheritanceSchema;
 use Cycle\Schema\Definition\Inheritance\SingleTable as SingleTableInheritanceSchema;
@@ -280,7 +279,7 @@ class TableInheritance implements GeneratorInterface
         return $parent->getPrimaryFields();
     }
 
-    private function getTableName(Entity $child, Registry $registry): string
+    private function getTableName(EntitySchema $child, Registry $registry): string
     {
         $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
 
@@ -296,7 +295,7 @@ class TableInheritance implements GeneratorInterface
         return \in_array($child->getClass(), $entities, true) ? $parent->getTableName() : $child->getTableName();
     }
 
-    private function getDatabase(Entity $child, Registry $registry): ?string
+    private function getDatabase(EntitySchema $child, Registry $registry): ?string
     {
         $parent = $this->findParent($registry, $this->utils->findParent($child->getClass(), false));
 
