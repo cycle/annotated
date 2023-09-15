@@ -14,6 +14,8 @@ use Cycle\Annotated\TableInheritance;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Ceo;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Customer;
 use Cycle\Annotated\Tests\Fixtures\Fixtures16\Employee;
+use Cycle\Annotated\Tests\Fixtures\Fixtures16\Executive;
+use Cycle\Annotated\Tests\Fixtures\Fixtures16\Person;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\GenerateRelations;
@@ -24,7 +26,9 @@ use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
@@ -128,5 +132,37 @@ abstract class InheritanceTestCase extends BaseTestCase
             'type' => 'type',
             'hidden' => 'hidden',
         ], $schema['beaver'][SchemaInterface::COLUMNS]);
+    }
+
+    public function testTableInheritanceWithIncorrectClassesOrder(): void
+    {
+        $r = new Registry($this->dbal);
+        $reader = new AttributeReader();
+        $locator = $this->createMock(ClassesInterface::class);
+        $locator
+            ->method('getClasses')
+            ->willReturn([
+                new \ReflectionClass(Employee::class),
+                new \ReflectionClass(Executive::class),
+                new \ReflectionClass(Person::class),
+            ]);
+
+        $schema = (new Compiler())->compile($r, [
+            new Embeddings($locator, $reader),
+            new Entities($locator, $reader),
+            new TableInheritance($reader),
+            new ResetTables(),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertSame('executives', $schema['executive'][SchemaInterface::TABLE]);
+        $this->assertNull($schema['employee'][SchemaInterface::TABLE] ?? null);
+        $this->assertSame('people', $schema['person'][SchemaInterface::TABLE]);
     }
 }
