@@ -148,8 +148,8 @@ abstract class InheritanceTestCase extends BaseTestCase
             ]);
 
         $schema = (new Compiler())->compile($r, [
-            new Embeddings($locator, $reader),
-            new Entities($locator, $reader),
+            new Embeddings(new TokenizerEmbeddingLocator($locator, $reader), $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new TableInheritance($reader),
             new ResetTables(),
             new MergeColumns($reader),
