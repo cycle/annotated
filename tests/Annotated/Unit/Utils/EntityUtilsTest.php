@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Unit\Utils;
 
+use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Annotated\Tests\Fixtures\Fixtures22\Attributed\Person;
 use Cycle\Annotated\Utils\EntityUtils;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +27,17 @@ class EntityUtilsTest extends TestCase
         $actualParent = $entityUtils->findParent($child, $root);
 
         $this->assertEquals($expectedParent, $actualParent);
+    }
+
+    public function testGetParentException(): void
+    {
+        $entityUtils = new EntityUtils(new AttributeReader());
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            \sprintf('The parent class could not be found for the class `%s`.', Person::class)
+        );
+        $entityUtils->getParent(Person::class);
     }
 
     public static function findParentDataProvider(): iterable

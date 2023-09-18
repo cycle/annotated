@@ -6,6 +6,7 @@ namespace Cycle\Annotated\Utils;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Exception\AnnotationException;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Attributes\ReaderInterface;
@@ -42,6 +43,22 @@ final class EntityUtils
         $parents = $root ? \array_reverse($parents) : $parents;
 
         return isset($parents[0]) ? $parents[0]->getName() : null;
+    }
+
+    /**
+     * @param class-string $class
+     *
+     * @return class-string
+     */
+    public function getParent(string $class, bool $root = true): string
+    {
+        $parent = $this->findParent($class, $root);
+
+        if ($parent === null) {
+            throw new AnnotationException(\sprintf('The parent class could not be found for the class `%s`.', $class));
+        }
+
+        return $parent;
     }
 
     /**
