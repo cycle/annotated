@@ -108,9 +108,9 @@ final class ForeignKeysConfigurator
     /**
      * @param array<non-empty-string>|null $innerKeys
      *
-     * @return array<non-empty-string>
-     *
      * @throws AnnotationException
+     *
+     * @return array<non-empty-string>
      */
     private function getInnerColumns(
         EntitySchema $entity,
@@ -136,9 +136,9 @@ final class ForeignKeysConfigurator
     /**
      * @param array<non-empty-string> $outerKeys
      *
-     * @return array<non-empty-string>
-     *
      * @throws AnnotationException
+     *
+     * @return array<non-empty-string>
      */
     private function getOuterColumns(array $outerKeys, EntitySchema $target): array
     {
