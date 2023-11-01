@@ -29,15 +29,19 @@ final class Entities implements GeneratorInterface
     private ReaderInterface $reader;
     private Configurator $generator;
     private EntityUtils $utils;
+    private ForeignKeysConfigurator $foreignKeysConfigurator;
 
     public function __construct(
         private ClassesInterface $locator,
         DoctrineReader|ReaderInterface $reader = null,
-        int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
+        int $tableNamingStrategy = self::TABLE_NAMING_PLURAL,
+        $foreignKeysConfigurator = null
     ) {
         $this->reader = ReaderFactory::create($reader);
         $this->utils = new EntityUtils($this->reader);
         $this->generator = new Configurator($this->reader, $tableNamingStrategy);
+        $this->foreignKeysConfigurator = $foreignKeysConfigurator
+            ?? new ForeignKeysConfigurator($this->utils, $this->reader);
     }
 
     public function run(Registry $registry): Registry
@@ -70,11 +74,19 @@ final class Entities implements GeneratorInterface
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $ann->getColumns(), $class);
 
+            // foreign keys
+            $this->foreignKeysConfigurator->addFromEntity($e, $ann);
+            $this->foreignKeysConfigurator->addFromClass($e, $class);
+
             if ($this->utils->hasParent($e->getClass())) {
                 foreach ($this->utils->findParents($e->getClass()) as $parent) {
                     // additional columns from parent class
                     $ann = $this->reader->firstClassMetadata($parent, Entity::class);
                     $this->generator->initColumns($e, $ann->getColumns(), $parent);
+
+                    // additional foreign keys from parent class
+                    $this->foreignKeysConfigurator->addFromEntity($e, $ann);
+                    $this->foreignKeysConfigurator->addFromClass($e, $parent);
                 }
 
                 $children[] = $e;
@@ -85,6 +97,9 @@ final class Entities implements GeneratorInterface
             $registry->register($e);
             $registry->linkTable($e, $e->getDatabase(), $e->getTableName());
         }
+
+        // register foreign keys
+        $this->foreignKeysConfigurator->configure($registry);
 
         foreach ($children as $e) {
             $registry->registerChildWithoutMerge($registry->getEntity($this->utils->findParent($e->getClass())), $e);
@@ -106,14 +121,14 @@ final class Entities implements GeneratorInterface
             // relations
             foreach ($e->getRelations() as $name => $r) {
                 try {
-                    $r->setTarget($this->resolveTarget($registry, $r->getTarget()));
+                    $r->setTarget($this->utils->resolveTarget($registry, $r->getTarget()));
 
                     if ($r->getOptions()->has('though')) {
                         $though = $r->getOptions()->get('though');
                         if ($though !== null) {
                             $r->getOptions()->set(
                                 'though',
-                                $this->resolveTarget($registry, $though)
+                                $this->utils->resolveTarget($registry, $though)
                             );
                         }
                     }
@@ -123,7 +138,7 @@ final class Entities implements GeneratorInterface
                         if ($through !== null) {
                             $r->getOptions()->set(
                                 'through',
-                                $this->resolveTarget($registry, $through)
+                                $this->utils->resolveTarget($registry, $through)
                             );
                         }
                     }
@@ -154,26 +169,5 @@ final class Entities implements GeneratorInterface
         }
 
         return $registry;
-    }
-
-    private function resolveTarget(Registry $registry, string $name): ?string
-    {
-        if (interface_exists($name, true)) {
-            // do not resolve interfaces
-            return $name;
-        }
-
-        if (!$registry->hasEntity($name)) {
-            // point all relations to the parent
-            foreach ($registry as $entity) {
-                foreach ($registry->getChildren($entity) as $child) {
-                    if ($child->getClass() === $name || $child->getRole() === $name) {
-                        return $entity->getRole();
-                    }
-                }
-            }
-        }
-
-        return $registry->getEntity($name)->getRole();
     }
 }

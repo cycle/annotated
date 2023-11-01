@@ -29,6 +29,7 @@ final class Entity
      * @param non-empty-string|non-empty-string[]|null $typecast
      * @param class-string|null $scope Class name of constraint to be applied to every entity query.
      * @param Column[] $columns Entity columns.
+     * @param ForeignKey[] $foreignKeys Entity foreign keys.
      */
     public function __construct(
         private ?string $role = null,
@@ -43,6 +44,7 @@ final class Entity
         private array $columns = [],
         /** @deprecated Use {@see $scope} instead */
         private ?string $constrain = null,
+        private array $foreignKeys = [],
     ) {
     }
 
@@ -89,6 +91,11 @@ final class Entity
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    public function getForeignKeys(): array
+    {
+        return $this->foreignKeys;
     }
 
     public function getTypecast(): array|string|null

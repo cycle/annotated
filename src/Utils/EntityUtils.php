@@ -6,6 +6,7 @@ namespace Cycle\Annotated\Utils;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Entities;
+use Cycle\Schema\Registry;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Attributes\ReaderInterface;
 
@@ -73,5 +74,26 @@ class EntityUtils
             Entities::TABLE_NAMING_SINGULAR => $this->inflector->singularize($this->inflector->tableize($role)),
             default => $this->inflector->tableize($role),
         };
+    }
+
+    public function resolveTarget(Registry $registry, string $name): ?string
+    {
+        if (\interface_exists($name, true)) {
+            // do not resolve interfaces
+            return $name;
+        }
+
+        if (!$registry->hasEntity($name)) {
+            // point all relations to the parent
+            foreach ($registry as $entity) {
+                foreach ($registry->getChildren($entity) as $child) {
+                    if ($child->getClass() === $name || $child->getRole() === $name) {
+                        return $entity->getRole();
+                    }
+                }
+            }
+        }
+
+        return $registry->getEntity($name)->getRole();
     }
 }
