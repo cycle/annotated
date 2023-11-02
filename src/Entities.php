@@ -29,19 +29,15 @@ final class Entities implements GeneratorInterface
     private ReaderInterface $reader;
     private Configurator $generator;
     private EntityUtils $utils;
-    private ForeignKeysConfigurator $foreignKeysConfigurator;
 
     public function __construct(
         private ClassesInterface $locator,
         DoctrineReader|ReaderInterface $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL,
-        $foreignKeysConfigurator = null
     ) {
         $this->reader = ReaderFactory::create($reader);
         $this->utils = new EntityUtils($this->reader);
         $this->generator = new Configurator($this->reader, $tableNamingStrategy);
-        $this->foreignKeysConfigurator = $foreignKeysConfigurator
-            ?? new ForeignKeysConfigurator($this->utils, $this->reader);
     }
 
     public function run(Registry $registry): Registry
@@ -71,22 +67,17 @@ final class Entities implements GeneratorInterface
             // schema modifiers
             $this->generator->initModifiers($e, $class);
 
+            // foreign keys
+            $this->generator->initForeignKeys($ann, $e, $class);
+
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $ann->getColumns(), $class);
-
-            // foreign keys
-            $this->foreignKeysConfigurator->addFromEntity($e, $ann);
-            $this->foreignKeysConfigurator->addFromClass($e, $class);
 
             if ($this->utils->hasParent($e->getClass())) {
                 foreach ($this->utils->findParents($e->getClass()) as $parent) {
                     // additional columns from parent class
                     $ann = $this->reader->firstClassMetadata($parent, Entity::class);
                     $this->generator->initColumns($e, $ann->getColumns(), $parent);
-
-                    // additional foreign keys from parent class
-                    $this->foreignKeysConfigurator->addFromEntity($e, $ann);
-                    $this->foreignKeysConfigurator->addFromClass($e, $parent);
                 }
 
                 $children[] = $e;
@@ -98,9 +89,6 @@ final class Entities implements GeneratorInterface
             $registry->linkTable($e, $e->getDatabase(), $e->getTableName());
         }
 
-        // register foreign keys
-        $this->foreignKeysConfigurator->configure($registry);
-
         foreach ($children as $e) {
             $registry->registerChildWithoutMerge($registry->getEntity($this->utils->findParent($e->getClass())), $e);
         }
@@ -110,7 +98,6 @@ final class Entities implements GeneratorInterface
 
     private function normalizeNames(Registry $registry): Registry
     {
-        // resolve all the relation target names into roles
         foreach ($this->locator->getClasses() as $class) {
             if (! $registry->hasEntity($class->getName())) {
                 continue;
@@ -118,7 +105,7 @@ final class Entities implements GeneratorInterface
 
             $e = $registry->getEntity($class->getName());
 
-            // relations
+            // resolve all the relation target names into roles
             foreach ($e->getRelations() as $name => $r) {
                 try {
                     $r->setTarget($this->utils->resolveTarget($registry, $r->getTarget()));
@@ -166,8 +153,40 @@ final class Entities implements GeneratorInterface
                     );
                 }
             }
+
+            // resolve foreign key table and column names
+            foreach ($e->getForeignKeys() as $foreignKey) {
+                $target = $this->utils->resolveTarget($registry, $foreignKey->getTable());
+                \assert(!empty($target), 'Unable to resolve foreign key target entity.');
+                $targetEntity = $registry->getEntity($target);
+
+                $foreignKey->setTable($targetEntity->getTableName());
+                $foreignKey->setInnerColumns($this->getColumnNames($e, $foreignKey->getInnerColumns()));
+                $foreignKey->setOuterColumns($this->getColumnNames($targetEntity, $foreignKey->getOuterColumns()));
+            }
         }
 
         return $registry;
+    }
+
+    /**
+     * @param array<non-empty-string> $columns
+     *
+     * @throws AnnotationException
+     *
+     * @return array<non-empty-string>
+     */
+    private function getColumnNames(EntitySchema $entity, array $columns): array
+    {
+        $names = [];
+        foreach ($columns as $name) {
+            $names[] = match (true) {
+                $entity->getFields()->has($name) => $entity->getFields()->get($name)->getColumn(),
+                $entity->getFields()->hasColumn($name) => $name,
+                default => throw new AnnotationException('Unable to resolve column name.'),
+            };
+        }
+
+        return $names;
     }
 }

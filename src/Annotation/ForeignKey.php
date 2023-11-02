@@ -21,8 +21,8 @@ class ForeignKey
 {
     public function __construct(
         public string $target,
-        protected array|string $outerKey,
-        protected array|string|null $innerKey = null,
+        public array|string $outerKey,
+        public array|string|null $innerKey = null,
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
@@ -30,15 +30,5 @@ class ForeignKey
         public string $action = 'CASCADE',
         public bool $indexCreate = true,
     ) {
-    }
-
-    public function getOuterKey(): array
-    {
-        return (array) $this->outerKey;
-    }
-
-    public function getInnerKey(): ?array
-    {
-        return $this->innerKey === null ? null : (array) $this->innerKey;
     }
 }
