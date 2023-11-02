@@ -108,14 +108,14 @@ final class Entities implements GeneratorInterface
             // resolve all the relation target names into roles
             foreach ($e->getRelations() as $name => $r) {
                 try {
-                    $r->setTarget($this->utils->resolveTarget($registry, $r->getTarget()));
+                    $r->setTarget($this->resolveTarget($registry, $r->getTarget()));
 
                     if ($r->getOptions()->has('though')) {
                         $though = $r->getOptions()->get('though');
                         if ($though !== null) {
                             $r->getOptions()->set(
                                 'though',
-                                $this->utils->resolveTarget($registry, $though)
+                                $this->resolveTarget($registry, $though)
                             );
                         }
                     }
@@ -125,7 +125,7 @@ final class Entities implements GeneratorInterface
                         if ($through !== null) {
                             $r->getOptions()->set(
                                 'through',
-                                $this->utils->resolveTarget($registry, $through)
+                                $this->resolveTarget($registry, $through)
                             );
                         }
                     }
@@ -156,7 +156,7 @@ final class Entities implements GeneratorInterface
 
             // resolve foreign key table and column names
             foreach ($e->getForeignKeys() as $foreignKey) {
-                $target = $this->utils->resolveTarget($registry, $foreignKey->getTable());
+                $target = $this->resolveTarget($registry, $foreignKey->getTable());
                 \assert(!empty($target), 'Unable to resolve foreign key target entity.');
                 $targetEntity = $registry->getEntity($target);
 
@@ -167,6 +167,27 @@ final class Entities implements GeneratorInterface
         }
 
         return $registry;
+    }
+
+    private function resolveTarget(Registry $registry, string $name): ?string
+    {
+        if (\interface_exists($name, true)) {
+            // do not resolve interfaces
+            return $name;
+        }
+
+        if (!$registry->hasEntity($name)) {
+            // point all relations to the parent
+            foreach ($registry as $entity) {
+                foreach ($registry->getChildren($entity) as $child) {
+                    if ($child->getClass() === $name || $child->getRole() === $name) {
+                        return $entity->getRole();
+                    }
+                }
+            }
+        }
+
+        return $registry->getEntity($name)->getRole();
     }
 
     /**
