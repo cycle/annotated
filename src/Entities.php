@@ -154,13 +154,13 @@ final class Entities implements GeneratorInterface
                 }
             }
 
-            // resolve foreign key table and column names
+            // resolve foreign key target and column names
             foreach ($e->getForeignKeys() as $foreignKey) {
-                $target = $this->resolveTarget($registry, $foreignKey->getTable());
+                $target = $this->resolveTarget($registry, $foreignKey->getTarget());
                 \assert(!empty($target), 'Unable to resolve foreign key target entity.');
                 $targetEntity = $registry->getEntity($target);
 
-                $foreignKey->setTable($targetEntity->getTableName());
+                $foreignKey->setTarget($target);
                 $foreignKey->setInnerColumns($this->getColumnNames($e, $foreignKey->getInnerColumns()));
                 $foreignKey->setOuterColumns($this->getColumnNames($targetEntity, $foreignKey->getOuterColumns()));
             }

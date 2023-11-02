@@ -276,7 +276,7 @@ final class Configurator
             }
 
             $fk = new ForeignKeySchema();
-            $fk->setTable($foreignKey->target);
+            $fk->setTarget($foreignKey->target);
             $fk->setInnerColumns((array) $foreignKey->innerKey);
             $fk->setOuterColumns((array) $foreignKey->outerKey);
             $fk->createIndex($foreignKey->indexCreate);
