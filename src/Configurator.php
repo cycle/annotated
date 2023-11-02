@@ -112,7 +112,6 @@ final class Configurator
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
         foreach ($class->getProperties() as $property) {
-
             $metadata = $this->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
 
             foreach ($metadata as $meta) {
@@ -339,9 +338,9 @@ final class Configurator
      *
      * @param class-string<T>|null
      *
-     * @return iterable<T>
-     *
      * @throws AnnotationException
+     *
+     * @return iterable<T>
      */
     private function getClassMetadata(\ReflectionClass $class, string $name): iterable
     {
@@ -357,9 +356,9 @@ final class Configurator
      *
      * @param class-string<T>|null $name
      *
-     * @return iterable<T>
-     *
      * @throws AnnotationException
+     *
+     * @return iterable<T>
      */
     private function getPropertyMetadata(\ReflectionProperty $property, string $name): iterable
     {
