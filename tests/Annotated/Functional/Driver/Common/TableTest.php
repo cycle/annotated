@@ -364,16 +364,16 @@ abstract class TableTest extends BaseTest
 
         yield [
             new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Class/DatabaseField'
+            '/Fixtures/Fixtures24/Class/DatabaseField',
         ];
         yield [
             new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
             '/Fixtures/Fixtures24/Class/PrimaryKey',
-            'id'
+            'id',
         ];
         yield [
             new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Class/PropertyName'
+            '/Fixtures/Fixtures24/Class/PropertyName',
         ];
 
         yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/DatabaseField'];
@@ -390,16 +390,16 @@ abstract class TableTest extends BaseTest
 
         yield [
             new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Property/DatabaseField'
+            '/Fixtures/Fixtures24/Property/DatabaseField',
         ];
         yield [
             new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
             '/Fixtures/Fixtures24/Property/PrimaryKey',
-            'id'
+            'id',
         ];
         yield [
             new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Property/PropertyName'
+            '/Fixtures/Fixtures24/Property/PropertyName',
         ];
     }
 }
