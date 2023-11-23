@@ -33,7 +33,7 @@ final class Entities implements GeneratorInterface
     public function __construct(
         private ClassesInterface $locator,
         DoctrineReader|ReaderInterface $reader = null,
-        int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
+        int $tableNamingStrategy = self::TABLE_NAMING_PLURAL,
     ) {
         $this->reader = ReaderFactory::create($reader);
         $this->utils = new EntityUtils($this->reader);
@@ -67,6 +67,9 @@ final class Entities implements GeneratorInterface
             // schema modifiers
             $this->generator->initModifiers($e, $class);
 
+            // foreign keys
+            $this->generator->initForeignKeys($ann, $e, $class);
+
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $ann->getColumns(), $class);
 
@@ -95,7 +98,6 @@ final class Entities implements GeneratorInterface
 
     private function normalizeNames(Registry $registry): Registry
     {
-        // resolve all the relation target names into roles
         foreach ($this->locator->getClasses() as $class) {
             if (! $registry->hasEntity($class->getName())) {
                 continue;
@@ -103,7 +105,7 @@ final class Entities implements GeneratorInterface
 
             $e = $registry->getEntity($class->getName());
 
-            // relations
+            // resolve all the relation target names into roles
             foreach ($e->getRelations() as $name => $r) {
                 try {
                     $r->setTarget($this->resolveTarget($registry, $r->getTarget()));
@@ -151,6 +153,20 @@ final class Entities implements GeneratorInterface
                     );
                 }
             }
+
+            // resolve foreign key target and column names
+            foreach ($e->getForeignKeys() as $foreignKey) {
+                $target = $this->resolveTarget($registry, $foreignKey->getTarget());
+                \assert(!empty($target), 'Unable to resolve foreign key target entity.');
+                $targetEntity = $registry->getEntity($target);
+
+                $foreignKey->setTarget($target);
+                $foreignKey->setInnerColumns($this->getColumnNames($e, $foreignKey->getInnerColumns()));
+
+                $foreignKey->setOuterColumns(empty($foreignKey->getOuterColumns())
+                    ? $targetEntity->getPrimaryFields()->getColumnNames()
+                    : $this->getColumnNames($targetEntity, $foreignKey->getOuterColumns()));
+            }
         }
 
         return $registry;
@@ -158,7 +174,7 @@ final class Entities implements GeneratorInterface
 
     private function resolveTarget(Registry $registry, string $name): ?string
     {
-        if (interface_exists($name, true)) {
+        if (\interface_exists($name, true)) {
             // do not resolve interfaces
             return $name;
         }
@@ -175,5 +191,26 @@ final class Entities implements GeneratorInterface
         }
 
         return $registry->getEntity($name)->getRole();
+    }
+
+    /**
+     * @param array<non-empty-string> $columns
+     *
+     * @throws AnnotationException
+     *
+     * @return array<non-empty-string>
+     */
+    private function getColumnNames(EntitySchema $entity, array $columns): array
+    {
+        $names = [];
+        foreach ($columns as $name) {
+            $names[] = match (true) {
+                $entity->getFields()->has($name) => $entity->getFields()->get($name)->getColumn(),
+                $entity->getFields()->hasColumn($name) => $name,
+                default => throw new AnnotationException('Unable to resolve column name.'),
+            };
+        }
+
+        return $names;
     }
 }

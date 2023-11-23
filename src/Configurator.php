@@ -7,12 +7,14 @@ namespace Cycle\Annotated;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
 use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
 use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
+use Cycle\Schema\Definition\ForeignKey as ForeignKeySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
@@ -110,11 +112,7 @@ final class Configurator
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
         foreach ($class->getProperties() as $property) {
-            try {
-                $metadata = $this->reader->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
-            } catch (Exception $e) {
-                throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
-            }
+            $metadata = $this->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
 
             foreach ($metadata as $meta) {
                 assert($meta instanceof RelationAnnotation\RelationInterface);
@@ -168,11 +166,7 @@ final class Configurator
 
     public function initModifiers(EntitySchema $entity, \ReflectionClass $class): void
     {
-        try {
-            $metadata = $this->reader->getClassMetadata($class, SchemaModifierInterface::class);
-        } catch (Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
-        }
+        $metadata = $this->getClassMetadata($class, SchemaModifierInterface::class);
 
         foreach ($metadata as $meta) {
             assert($meta instanceof SchemaModifierInterface);
@@ -254,6 +248,44 @@ final class Configurator
         return $field;
     }
 
+    public function initForeignKeys(Entity $ann, EntitySchema $entity, \ReflectionClass $class): void
+    {
+        $foreignKeys = [];
+        foreach ($ann->getForeignKeys() as $foreignKey) {
+            $foreignKeys[] = $foreignKey;
+        }
+
+        foreach ($this->getClassMetadata($class, ForeignKey::class) as $foreignKey) {
+            $foreignKeys[] = $foreignKey;
+        }
+
+        foreach ($class->getProperties() as $property) {
+            foreach ($this->getPropertyMetadata($property, ForeignKey::class) as $foreignKey) {
+                if ($foreignKey->innerKey === null) {
+                    $foreignKey->innerKey = [$property->getName()];
+                }
+                $foreignKeys[] = $foreignKey;
+            }
+        }
+
+        foreach ($foreignKeys as $foreignKey) {
+            if ($foreignKey->innerKey === null) {
+                throw new AnnotationException(
+                    "Inner column definition for the foreign key is required on `{$entity->getClass()}`"
+                );
+            }
+
+            $fk = new ForeignKeySchema();
+            $fk->setTarget($foreignKey->target);
+            $fk->setInnerColumns((array) $foreignKey->innerKey);
+            $fk->setOuterColumns((array) $foreignKey->outerKey);
+            $fk->createIndex($foreignKey->indexCreate);
+            $fk->setAction($foreignKey->action);
+
+            $entity->getForeignKeys()->set($fk);
+        }
+    }
+
     /**
      * Resolve class or role name relative to the current class.
      */
@@ -299,5 +331,41 @@ final class Configurator
         }
 
         return $typecast;
+    }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T>|null
+     *
+     * @throws AnnotationException
+     *
+     * @return iterable<T>
+     */
+    private function getClassMetadata(\ReflectionClass $class, string $name): iterable
+    {
+        try {
+            return $this->reader->getClassMetadata($class, $name);
+        } catch (\Exception $e) {
+            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T>|null $name
+     *
+     * @throws AnnotationException
+     *
+     * @return iterable<T>
+     */
+    private function getPropertyMetadata(\ReflectionProperty $property, string $name): iterable
+    {
+        try {
+            return $this->reader->getPropertyMetadata($property, $name);
+        } catch (\Exception $e) {
+            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }
