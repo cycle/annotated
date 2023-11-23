@@ -25,7 +25,7 @@ class ForeignKey
      *        is used on a property.
      * @param list<non-empty-string>|non-empty-string|null $outerKey Outer key in the target entity.
      *        Defaults to the primary key.
-     * @param 'NO ACTION'|'CASCADE'|'SET NULL' $action
+     * @param 'CASCADE'|'NO ACTION'|'SET null' $action
      * @param bool $indexCreate Note: MySQL and MSSQL might create an index for the foreign key automatically.
      */
     public function __construct(
