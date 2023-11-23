@@ -12,7 +12,7 @@ use Cycle\Annotated\Annotation\ForeignKey;
  * @Entity(role="from", table="from")
  * @ForeignKey(target="target", outerKey="outerKey", innerKey="innerKey")
  */
-#[ForeignKey(target: Target::class, outerKey: 'outerKey', innerKey: 'innerKey')]
+#[ForeignKey(target: Target::class, innerKey: 'innerKey', outerKey: 'outerKey')]
 #[Entity(role: 'from', table: 'from')]
 class PropertyName
 {

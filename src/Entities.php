@@ -162,7 +162,10 @@ final class Entities implements GeneratorInterface
 
                 $foreignKey->setTarget($target);
                 $foreignKey->setInnerColumns($this->getColumnNames($e, $foreignKey->getInnerColumns()));
-                $foreignKey->setOuterColumns($this->getColumnNames($targetEntity, $foreignKey->getOuterColumns()));
+
+                $foreignKey->setOuterColumns(empty($foreignKey->getOuterColumns())
+                    ? $targetEntity->getPrimaryFields()->getColumnNames()
+                    : $this->getColumnNames($targetEntity, $foreignKey->getOuterColumns()));
             }
         }
 

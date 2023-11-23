@@ -12,7 +12,7 @@ use Cycle\Annotated\Annotation\ForeignKey;
  * @Entity(role="from", table="from")
  * @ForeignKey(target="target", outerKey="outer_key", innerKey="inner_key")
  */
-#[ForeignKey(target: Target::class, outerKey: 'outer_key', innerKey: 'inner_key')]
+#[ForeignKey(target: Target::class, innerKey: 'inner_key', outerKey: 'outer_key')]
 #[Entity(role: 'from', table: 'from')]
 class DatabaseField
 {

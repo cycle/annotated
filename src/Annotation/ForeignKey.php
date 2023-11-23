@@ -19,10 +19,19 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[NamedArgumentConstructor]
 class ForeignKey
 {
+    /**
+     * @param non-empty-string $target Role or class name of the target entity.
+     * @param list<non-empty-string>|non-empty-string|null $innerKey You don't need to specify this if the attribute
+     *        is used on a property.
+     * @param list<non-empty-string>|non-empty-string|null $outerKey Outer key in the target entity.
+     *        Defaults to the primary key.
+     * @param 'NO ACTION'|'CASCADE'|'SET NULL' $action
+     * @param bool $indexCreate Note: MySQL and MSSQL might create an index for the foreign key automatically.
+     */
     public function __construct(
         public string $target,
-        public array|string $outerKey,
         public array|string|null $innerKey = null,
+        public array|string|null $outerKey = null,
         /**
          * @Enum({"NO ACTION", "CASCADE", "SET NULL"})
          */
