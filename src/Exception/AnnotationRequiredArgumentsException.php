@@ -15,7 +15,7 @@ class AnnotationRequiredArgumentsException extends AnnotationException
 
         $requiredArguments = [];
         foreach ($column->getConstructor()?->getParameters() ?? [] as $parameter) {
-            if (! $parameter->isOptional()) {
+            if (!$parameter->isOptional()) {
                 $requiredArguments[] = $parameter->getName();
             }
         }
