@@ -11,11 +11,14 @@ use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
+use Cycle\Schema\Generator\ForeignKeys;
 use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -146,7 +149,7 @@ abstract class TableTestCase extends BaseTestCase
     #[DataProvider('singularReadersProvider')]
     public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
     {
-        $this->expectException(\Cycle\Annotated\Exception\AnnotationException::class);
+        $this->expectException(AnnotationException::class);
         $this->expectExceptionMessage('Invalid index definition for `compositePost`. Column list can\'t be empty.');
 
         $r = new Registry($this->dbal);
@@ -296,5 +299,94 @@ abstract class TableTestCase extends BaseTestCase
         $schema = $r->getTableSchema($r->getEntity('simple'));
 
         $this->assertTrue($schema->column('read_only_column')->isReadonlySchema());
+    }
+
+    #[DataProvider('foreignKeyDirectoriesDataProvider')]
+    public function testForeignKeysAnnotationReader(
+        ReaderInterface $reader,
+        string $directory,
+        string $outerKey = 'outer_key'
+    ): void {
+        $tokenizer = new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [dirname(__DIR__, 3) . $directory],
+                'exclude' => [],
+            ])
+        );
+
+        $locator = $tokenizer->classLocator();
+        $registry = new Registry($this->dbal);
+
+        (new Compiler())->compile($registry, [
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
+            new MergeColumns($reader),
+            $t = new RenderTables(),
+            new MergeIndexes($reader),
+            new ForeignKeys(),
+        ]);
+
+        $t->getReflector()->run();
+
+        $foreignKeys = $registry->getTableSchema($registry->getEntity('from'))->getForeignKeys();
+        $expectedFk = array_shift($foreignKeys);
+
+        $this->assertStringContainsString('from', $expectedFk->getTable());
+        $this->assertStringContainsString('to', $expectedFk->getForeignTable());
+        $this->assertSame(['inner_key'], $expectedFk->getColumns());
+        $this->assertSame([$outerKey], $expectedFk->getForeignKeys());
+        $this->assertSame('CASCADE', $expectedFk->getDeleteRule());
+        $this->assertSame('CASCADE', $expectedFk->getUpdateRule());
+        $this->assertTrue($expectedFk->hasIndex());
+    }
+
+    public static function foreignKeyDirectoriesDataProvider(): \Traversable
+    {
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PropertyName'];
+
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/PropertyName'];
+
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Class/DatabaseField',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Class/PrimaryKey',
+            'id',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Class/PropertyName',
+        ];
+
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/DatabaseField'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/PrimaryKey', 'id'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/PropertyName'];
+
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/DatabaseField'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/PrimaryKey', 'id'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/PropertyName'];
+
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/DatabaseField'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/PrimaryKey', 'id'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/PropertyName'];
+
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Property/DatabaseField',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Property/PrimaryKey',
+            'id',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Property/PropertyName',
+        ];
     }
 }
