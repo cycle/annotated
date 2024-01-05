@@ -8,8 +8,8 @@ use Cycle\Annotated\ReaderFactory;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\MergeReader;
-use Spiral\Attributes\Composite\SelectiveReader;
 
 class ReaderFactoryTest extends TestCase
 {
@@ -17,7 +17,7 @@ class ReaderFactoryTest extends TestCase
     {
         $reader = ReaderFactory::create(null);
 
-        $this->assertInstanceOf(SelectiveReader::class, $reader);
+        $this->assertInstanceOf(AttributeReader::class, $reader);
     }
 
     public function testCreateFromDoctrineReader(): void
