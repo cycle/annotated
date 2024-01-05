@@ -113,6 +113,9 @@ class Entity
         return $this->columns;
     }
 
+    /**
+     * @return ForeignKey[]
+     */
     public function getForeignKeys(): array
     {
         return $this->foreignKeys;
