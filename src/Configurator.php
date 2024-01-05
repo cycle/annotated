@@ -354,7 +354,7 @@ final class Configurator
     /**
      * @template T
      *
-     * @param class-string<T>|null
+     * @param class-string<T> $name
      *
      * @throws AnnotationException
      *
@@ -365,14 +365,14 @@ final class Configurator
         try {
             return $this->reader->getClassMetadata($class, $name);
         } catch (\Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
     /**
      * @template T
      *
-     * @param class-string<T>|null $name
+     * @param class-string<T> $name
      *
      * @throws AnnotationException
      *
@@ -383,7 +383,7 @@ final class Configurator
         try {
             return $this->reader->getPropertyMetadata($property, $name);
         } catch (\Exception $e) {
-            throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
+            throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }

@@ -57,7 +57,7 @@ final class Entities implements GeneratorInterface
             $this->generator->initModifiers($e, $entity->class);
 
             // foreign keys
-            $this->generator->initForeignKeys($ann, $e, $class);
+            $this->generator->initForeignKeys($entity->attribute, $e, $entity->class);
 
             // additional columns (mapped to local fields automatically)
             $this->generator->initColumns($e, $entity->attribute->getColumns(), $entity->class);

@@ -301,9 +301,7 @@ abstract class TableTestCase extends BaseTestCase
         $this->assertTrue($schema->column('read_only_column')->isReadonlySchema());
     }
 
-    /**
-     * @dataProvider foreignKeyDirectoriesDataProvider
-     */
+    #[DataProvider('foreignKeyDirectoriesDataProvider')]
     public function testForeignKeysAnnotationReader(
         ReaderInterface $reader,
         string $directory,
@@ -317,11 +315,10 @@ abstract class TableTestCase extends BaseTestCase
         );
 
         $locator = $tokenizer->classLocator();
-
         $registry = new Registry($this->dbal);
 
         (new Compiler())->compile($registry, [
-            new Entities($locator, $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new MergeColumns($reader),
             $t = new RenderTables(),
             new MergeIndexes($reader),
@@ -342,7 +339,7 @@ abstract class TableTestCase extends BaseTestCase
         $this->assertTrue($expectedFk->hasIndex());
     }
 
-    public function foreignKeyDirectoriesDataProvider(): \Traversable
+    public static function foreignKeyDirectoriesDataProvider(): \Traversable
     {
         yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
         yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
