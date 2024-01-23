@@ -27,4 +27,13 @@ class Label
     /** @BelongsToMorphed(target="LabelledInterface", indexCreate=false) */
     #[BelongsToMorphed(target: 'LabelledInterface', indexCreate: false)]
     protected $owner;
+
+    #[Column(type: 'tinyInteger', unsigned: true)]
+    private int $unsigned = 1;
+
+    #[Column(type: 'tinyInteger', zerofill: true)]
+    private int $zerofill = 1;
+
+    #[Column(type: 'tinyInteger')]
+    private int $simple = 1;
 }
