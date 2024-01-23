@@ -8,7 +8,7 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures1\TestLogger;
 use Cycle\ORM\Config\RelationConfig;
 use Cycle\ORM\Factory;
 use Cycle\ORM\ORM;
-use Cycle\ORM\SchemaInterface;
+use Cycle\ORM\Schema;
 use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
@@ -27,27 +27,16 @@ abstract class BaseTestCase extends TestCase
     // currently active driver
     public const DRIVER = null;
     // tests configuration
-    public static $config;
+    public static array $config;
 
     // cross test driver cache
-    public static $driverCache = [];
+    public static array $driverCache = [];
 
-    protected static $lastORM;
-
-    /** @var Driver */
-    protected $driver;
-
-    /** @var DatabaseManager */
-    protected $dbal;
-
-    /** @var ORM */
-    protected $orm;
-
-    /** @var TestLogger */
-    protected $logger;
-
-    /** @var ClassesInterface */
-    protected $locator;
+    protected Driver $driver;
+    protected DatabaseManager $dbal;
+    protected ORM $orm;
+    protected TestLogger $logger;
+    protected ClassesInterface $locator;
 
     /**
      * Init all we need.
@@ -86,7 +75,7 @@ abstract class BaseTestCase extends TestCase
         $this->orm = new ORM(new Factory(
             $this->dbal,
             RelationConfig::getDefault()
-        ), new \Cycle\ORM\Schema([]));
+        ), new Schema([]));
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../../../Fixtures/Fixtures1'],
@@ -103,21 +92,6 @@ abstract class BaseTestCase extends TestCase
     {
         $this->disableProfiling();
         $this->dropDatabase($this->dbal->database('default'));
-        $this->orm = null;
-        $this->dbal = null;
-    }
-
-    /**
-     * Calculates missing parameters for typecasting.
-     *
-     * @param SchemaInterface $schema
-     *
-     * @return \Cycle\ORM\ORMInterface|ORM
-     */
-    public function withSchema(SchemaInterface $schema)
-    {
-        $this->orm = $this->orm->withSchema($schema);
-        return $this->orm;
     }
 
     /**
@@ -151,17 +125,11 @@ abstract class BaseTestCase extends TestCase
         yield ['Selective reader' => new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
     }
 
-    /**
-     * @return Database
-     */
     protected function getDatabase(): Database
     {
         return $this->dbal->database('default');
     }
 
-    /**
-     * @param Database|null $database
-     */
     protected function dropDatabase(Database $database = null): void
     {
         if (empty($database)) {
@@ -190,9 +158,7 @@ abstract class BaseTestCase extends TestCase
      */
     protected function enableProfiling(): void
     {
-        if (null !== $this->logger) {
-            $this->logger->display();
-        }
+        $this->logger->display();
     }
 
     /**
@@ -200,8 +166,6 @@ abstract class BaseTestCase extends TestCase
      */
     protected function disableProfiling(): void
     {
-        if (null !== $this->logger) {
-            $this->logger->hide();
-        }
+        $this->logger->hide();
     }
 }
