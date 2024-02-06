@@ -306,6 +306,9 @@ abstract class SingleTableTestCase extends BaseTestCase
                 ],
                 SchemaInterface::SCHEMA => [],
                 SchemaInterface::TYPECAST_HANDLER => null,
+                SchemaInterface::GENERATED_FIELDS => [
+                    'id' => SchemaInterface::GENERATED_DB,
+                ],
             ],
             $schema['comment']
         );

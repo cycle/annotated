@@ -8,14 +8,16 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
+use Cycle\Annotated\Annotation\Generated;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
+use Cycle\Annotated\Enum\GeneratedType;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
 use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
 use Cycle\Annotated\Utils\EntityUtils;
 use Cycle\Schema\Definition\Entity as EntitySchema;
-use Cycle\Schema\Definition\ForeignKey as ForeignKeySchema;
 use Cycle\Schema\Definition\Field;
+use Cycle\Schema\Definition\ForeignKey as ForeignKeySchema;
 use Cycle\Schema\Definition\Relation;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\SchemaModifierInterface;
@@ -232,6 +234,9 @@ final class Configurator
         $field->setColumn($columnName);
 
         $field->setPrimary($column->isPrimary());
+        if ($this->isDbGeneratedField($field)) {
+            $field->setGenerated(GeneratedType::Db->value);
+        }
 
         $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));
 
@@ -294,6 +299,20 @@ final class Configurator
             $fk->setAction($foreignKey->action);
 
             $entity->getForeignKeys()->set($fk);
+        }
+    }
+
+    public function initGeneratedFields(EntitySchema $entity, \ReflectionClass $class): void
+    {
+        foreach ($class->getProperties() as $property) {
+            try {
+                $generated = $this->reader->firstPropertyMetadata($property, Generated::class);
+                if ($generated !== null) {
+                    $entity->getFields()->get($property->getName())->setGenerated($generated->getType());
+                }
+            } catch (\Throwable $e) {
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
+            }
         }
     }
 
@@ -385,5 +404,14 @@ final class Configurator
         } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
         }
+    }
+
+    private function isDbGeneratedField(Field $field): bool
+    {
+        return $field->isPrimary()
+            || $field->getType() === 'serial'
+            || $field->getType() === 'smallserial'
+            || $field->getType() === 'serial'
+            || $field->getType() === 'bigserial';
     }
 }
