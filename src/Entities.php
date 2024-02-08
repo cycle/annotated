@@ -84,6 +84,9 @@ final class Entities implements GeneratorInterface
                 continue;
             }
 
+            // generated fields
+            $this->generator->initGeneratedFields($e, $class);
+
             // register entity (OR find parent)
             $registry->register($e);
             $registry->linkTable($e, $e->getDatabase(), $e->getTableName());
@@ -99,7 +102,7 @@ final class Entities implements GeneratorInterface
     private function normalizeNames(Registry $registry): Registry
     {
         foreach ($this->locator->getClasses() as $class) {
-            if (! $registry->hasEntity($class->getName())) {
+            if (!$registry->hasEntity($class->getName())) {
                 continue;
             }
 

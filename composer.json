@@ -7,8 +7,8 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
-        "cycle/orm": "^2.2.0",
-        "cycle/schema-builder": "^2.6",
+        "cycle/orm": "^2.7",
+        "cycle/schema-builder": "^2.8",
         "doctrine/annotations": "^1.14.3 || ^2.0.1",
         "spiral/attributes": "^2.8|^3.0",
         "spiral/tokenizer": "^2.8|^3.0",
