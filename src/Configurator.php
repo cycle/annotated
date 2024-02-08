@@ -408,8 +408,9 @@ final class Configurator
 
     private function isOnInsertGeneratedField(Field $field): bool
     {
-        return $field->isPrimary() || match ($field->getType()) {
-            'serial', 'bigserial', 'smallserial' => true
+        return match ($field->getType()) {
+            'serial', 'bigserial', 'smallserial' => true,
+            default => $field->isPrimary()
         };
     }
 }
