@@ -14,7 +14,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 #[NamedArgumentConstructor]
-class Generated
+class GeneratedValue
 {
     public function __construct(
         protected bool $beforeInsert = false,

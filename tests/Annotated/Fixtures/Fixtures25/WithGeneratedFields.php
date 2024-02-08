@@ -6,7 +6,7 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures25;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Generated;
+use Cycle\Annotated\Annotation\GeneratedValue;
 
 /**
  * @Entity(role="withGeneratedFields", table="with_generated_fields")
@@ -22,31 +22,31 @@ class WithGeneratedFields
 
     /**
      * @Column(type="datetime", name="created_at")
-     * @Generated(beforeInsert=true)
+     * @GeneratedValue(beforeInsert=true)
      */
     #[
         Column(type: 'datetime', name: 'created_at'),
-        Generated(beforeInsert: true)
+        GeneratedValue(beforeInsert: true)
     ]
     public \DateTimeImmutable $createdAt;
 
     /**
      * @Column(type="datetime", name="created_at_generated_by_database")
-     * @Generated(onInsert=true)
+     * @GeneratedValue(onInsert=true)
      */
     #[
         Column(type: 'datetime', name: 'created_at_generated_by_database'),
-        Generated(onInsert: true)
+        GeneratedValue(onInsert: true)
     ]
     public \DateTimeImmutable $createdAtGeneratedByDatabase;
 
     /**
      * @Column(type="datetime", name="created_at")
-     * @Generated(beforeInsert=true, beforeUpdate=true)
+     * @GeneratedValue(beforeInsert=true, beforeUpdate=true)
      */
     #[
         Column(type: 'datetime', name: 'updated_at'),
-        Generated(beforeInsert: true, beforeUpdate: true)
+        GeneratedValue(beforeInsert: true, beforeUpdate: true)
     ]
     public \DateTimeImmutable $updatedAt;
 }

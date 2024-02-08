@@ -8,7 +8,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
-use Cycle\Annotated\Annotation\Generated;
+use Cycle\Annotated\Annotation\GeneratedValue;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
@@ -306,7 +306,7 @@ final class Configurator
     {
         foreach ($class->getProperties() as $property) {
             try {
-                $generated = $this->reader->firstPropertyMetadata($property, Generated::class);
+                $generated = $this->reader->firstPropertyMetadata($property, GeneratedValue::class);
                 if ($generated !== null) {
                     $entity->getFields()->get($property->getName())->setGenerated($generated->getFlags());
                 }
