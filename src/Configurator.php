@@ -10,11 +10,11 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Annotation\Generated;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
-use Cycle\Annotated\Enum\GeneratedType;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
 use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
 use Cycle\Annotated\Utils\EntityUtils;
+use Cycle\ORM\Schema\GeneratedField;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
 use Cycle\Schema\Definition\ForeignKey as ForeignKeySchema;
@@ -234,8 +234,8 @@ final class Configurator
         $field->setColumn($columnName);
 
         $field->setPrimary($column->isPrimary());
-        if ($this->isDbGeneratedField($field)) {
-            $field->setGenerated(GeneratedType::Db->value);
+        if ($this->isOnInsertGeneratedField($field)) {
+            $field->setGenerated(GeneratedField::ON_INSERT);
         }
 
         $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));
@@ -406,7 +406,7 @@ final class Configurator
         }
     }
 
-    private function isDbGeneratedField(Field $field): bool
+    private function isOnInsertGeneratedField(Field $field): bool
     {
         return $field->isPrimary()
             || $field->getType() === 'serial'

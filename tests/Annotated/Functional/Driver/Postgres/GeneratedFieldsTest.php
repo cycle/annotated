@@ -8,10 +8,13 @@ namespace Cycle\Annotated\Tests\Functional\Driver\Postgres;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\Tests\Functional\Driver\Common\GeneratedFieldsTestCase;
+use Cycle\ORM\Schema\GeneratedField;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
@@ -21,7 +24,8 @@ final class GeneratedFieldsTest extends GeneratedFieldsTestCase
 {
     public const DRIVER = 'postgres';
 
-    public function testSerialGeneratedFields(): void
+    #[DataProvider('allReadersProvider')]
+    public function testSerialGeneratedFields(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../../../Fixtures/Fixtures25/PostgreSQL'],
@@ -33,17 +37,17 @@ final class GeneratedFieldsTest extends GeneratedFieldsTestCase
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
-            new Entities(new TokenizerEntityLocator($locator, $this->reader), $this->reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
         ]);
 
         $this->assertSame(
             [
-                'id' => SchemaInterface::GENERATED_DB,
-                'smallSerial' => SchemaInterface::GENERATED_DB,
-                'serial' => SchemaInterface::GENERATED_DB,
-                'bigSerial' => SchemaInterface::GENERATED_DB,
+                'id' => GeneratedField::ON_INSERT,
+                'smallSerial' => GeneratedField::ON_INSERT,
+                'serial' => GeneratedField::ON_INSERT,
+                'bigSerial' => GeneratedField::ON_INSERT,
             ],
-            $schema['generatedFieldsSerial'][SchemaInterface::GENERATED_FIELDS]
+            $schema['withGeneratedSerial'][SchemaInterface::GENERATED_FIELDS]
         );
     }
 }

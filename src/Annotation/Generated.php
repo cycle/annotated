@@ -4,27 +4,34 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Cycle\Annotated\Enum\GeneratedType;
+use Cycle\ORM\Schema\GeneratedField;
 use Spiral\Attributes\NamedArgumentConstructor;
 
+/**
+ * @Annotation
+ * @NamedArgumentConstructor
+ * @Target({"PROPERTY"})
+ */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 #[NamedArgumentConstructor]
 class Generated
 {
-    protected int $type = 0;
-
-    /**
-     * @param GeneratedType|int ...$type Generating type {@see GeneratedType}.
-     */
-    public function __construct(GeneratedType|int ...$type)
-    {
-        foreach ($type as $value) {
-            $this->type |= $value instanceof GeneratedType ? $value->value : $value;
-        }
+    public function __construct(
+        protected bool $beforeInsert = false,
+        protected bool $onInsert = false,
+        protected bool $beforeUpdate = false,
+    ) {
     }
 
-    public function getType(): int
+    public function getType(): ?int
     {
-        return $this->type;
+        if (!$this->beforeInsert && !$this->onInsert && !$this->beforeUpdate) {
+            return null;
+        }
+
+        return
+            ($this->beforeInsert ? GeneratedField::BEFORE_INSERT : 0) |
+            ($this->onInsert ? GeneratedField::ON_INSERT : 0) |
+            ($this->beforeUpdate ? GeneratedField::BEFORE_UPDATE : 0);
     }
 }
