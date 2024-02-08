@@ -9,9 +9,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
- *
  * @NamedArgumentConstructor
- *
  * @Target("ANNOTATION", "CLASS")
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]

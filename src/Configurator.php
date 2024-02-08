@@ -346,7 +346,7 @@ final class Configurator
     {
         try {
             return $this->reader->getClassMetadata($class, $name);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -364,7 +364,7 @@ final class Configurator
     {
         try {
             return $this->reader->getPropertyMetadata($property, $name);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
     }

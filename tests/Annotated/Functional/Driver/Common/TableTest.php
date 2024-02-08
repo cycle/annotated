@@ -157,7 +157,7 @@ abstract class TableTest extends BaseTest
      */
     public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
     {
-        $this->expectException(\Cycle\Annotated\Exception\AnnotationException::class);
+        $this->expectException(AnnotationException::class);
         $this->expectExceptionMessage('Invalid index definition for `compositePost`. Column list can\'t be empty.');
 
         $r = new Registry($this->dbal);
