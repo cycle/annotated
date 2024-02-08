@@ -84,6 +84,9 @@ final class Entities implements GeneratorInterface
                 continue;
             }
 
+            // generated fields
+            $this->generator->initGeneratedFields($e, $class);
+
             // register entity (OR find parent)
             $registry->register($e);
             $registry->linkTable($e, $e->getDatabase(), $e->getTableName());

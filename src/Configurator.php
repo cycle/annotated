@@ -8,11 +8,13 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
+use Cycle\Annotated\Annotation\GeneratedValue;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
 use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
 use Cycle\Annotated\Utils\EntityUtils;
+use Cycle\ORM\Schema\GeneratedField;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\ForeignKey as ForeignKeySchema;
 use Cycle\Schema\Definition\Field;
@@ -22,7 +24,6 @@ use Cycle\Schema\SchemaModifierInterface;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use Exception;
 use Spiral\Attributes\ReaderInterface;
 
 final class Configurator
@@ -91,7 +92,7 @@ final class Configurator
         foreach ($class->getProperties() as $property) {
             try {
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
             } catch (\ArgumentCountError $e) {
                 throw AnnotationRequiredArgumentsException::createFor($property, Column::class, $e);
@@ -221,6 +222,9 @@ final class Configurator
         $field->setType($column->getType());
         $field->setColumn($columnPrefix . ($column->getColumn() ?? $this->inflector->tableize($name)));
         $field->setPrimary($column->isPrimary());
+        if ($this->isOnInsertGeneratedField($field)) {
+            $field->setGenerated(GeneratedField::ON_INSERT);
+        }
 
         $field->setTypecast($this->resolveTypecast($column->getTypecast(), $class));
 
@@ -286,6 +290,20 @@ final class Configurator
         }
     }
 
+    public function initGeneratedFields(EntitySchema $entity, \ReflectionClass $class): void
+    {
+        foreach ($class->getProperties() as $property) {
+            try {
+                $generated = $this->reader->firstPropertyMetadata($property, GeneratedValue::class);
+                if ($generated !== null) {
+                    $entity->getFields()->get($property->getName())->setGenerated($generated->getFlags());
+                }
+            } catch (\Throwable $e) {
+                throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
+            }
+        }
+    }
+
     /**
      * Resolve class or role name relative to the current class.
      */
@@ -346,7 +364,7 @@ final class Configurator
     {
         try {
             return $this->reader->getClassMetadata($class, $name);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -364,8 +382,16 @@ final class Configurator
     {
         try {
             return $this->reader->getPropertyMetadata($property, $name);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new AnnotationException($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    private function isOnInsertGeneratedField(Field $field): bool
+    {
+        return match ($field->getType()) {
+            'serial', 'bigserial', 'smallserial' => true,
+            default => $field->isPrimary()
+        };
     }
 }

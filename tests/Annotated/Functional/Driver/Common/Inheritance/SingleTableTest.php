@@ -19,6 +19,7 @@ use Cycle\ORM\Mapper\Mapper;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
+use Cycle\ORM\Schema\GeneratedField;
 use Cycle\ORM\Select\Repository;
 use Cycle\ORM\Select\Source;
 use Cycle\ORM\Transaction;
@@ -312,6 +313,9 @@ abstract class SingleTableTest extends BaseTest
                 ],
                 SchemaInterface::SCHEMA => [],
                 SchemaInterface::TYPECAST_HANDLER => null,
+                SchemaInterface::GENERATED_FIELDS => [
+                    'id' => GeneratedField::ON_INSERT,
+                ],
             ],
             $schema['comment']
         );
