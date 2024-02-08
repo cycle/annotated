@@ -23,7 +23,7 @@ class Generated
     ) {
     }
 
-    public function getType(): ?int
+    public function getFlags(): ?int
     {
         if (!$this->beforeInsert && !$this->onInsert && !$this->beforeUpdate) {
             return null;

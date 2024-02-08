@@ -308,7 +308,7 @@ final class Configurator
             try {
                 $generated = $this->reader->firstPropertyMetadata($property, Generated::class);
                 if ($generated !== null) {
-                    $entity->getFields()->get($property->getName())->setGenerated($generated->getType());
+                    $entity->getFields()->get($property->getName())->setGenerated($generated->getFlags());
                 }
             } catch (\Throwable $e) {
                 throw new AnnotationException($e->getMessage(), (int) $e->getCode(), $e);
