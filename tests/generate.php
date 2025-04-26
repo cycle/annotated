@@ -3,7 +3,6 @@
 /**
  * 1. Create new test case class in folder `tests/Functional/Driver/Common` with content:
  *
- *
  *     namespace Cycle\Annotated\Tests\Functional\Driver\Common;
  *
  *     abstract class MyTest extends BaseTest {}

@@ -425,7 +425,7 @@ final class Configurator
             $metadata = \iterator_to_array(
                 $this->getPropertyMetadata($property, Obsolete::class),
             );
-            if ([] !== $metadata) {
+            if ($metadata !== []) {
                 continue;
             }
 
