@@ -6,10 +6,17 @@ namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
+use Cycle\Annotated\MergeColumns;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
+use Cycle\Schema\Generator\GenerateRelations;
+use Cycle\Schema\Generator\GenerateTypecast;
+use Cycle\Schema\Generator\RenderRelations;
 use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
+use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
@@ -34,8 +41,15 @@ abstract class ObsoleteTest extends BaseTestCase
 
         $schema = (new Compiler())->compile($r, [
             new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
+            new ResetTables(),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new ValidateEntities(),
             new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
             new SyncTables(),
+            new GenerateTypecast(),
         ]);
 
         $this->assertArrayNotHasKey('skype', $schema['user'][SchemaInterface::COLUMNS]);
