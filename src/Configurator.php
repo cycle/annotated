@@ -97,7 +97,7 @@ final class Configurator
 
     public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = ''): void
     {
-        foreach ($this->getActualProperties($class) as $property) {
+        foreach ($class->getProperties() as $property) {
             try {
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
             } catch (\Exception $e) {
@@ -114,13 +114,14 @@ final class Configurator
 
             $field = $this->initField($property->getName(), $column, $class, $columnPrefix);
             $field->setEntityClass($property->getDeclaringClass()->getName());
+            $field->setObsolete($this->isObsolete($property));
             $entity->getFields()->set($property->getName(), $field);
         }
     }
 
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
-        foreach ($this->getActualProperties($class) as $property) {
+        foreach ($class->getProperties() as $property) {
             $metadata = $this->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
 
             foreach ($metadata as $meta) {
@@ -173,6 +174,7 @@ final class Configurator
                     $relation->getOptions()->set($option, $value);
                 }
 
+                $relation->setObsolete($this->isObsolete($property));
                 // need relation definition
                 $entity->getRelations()->set($property->getName(), $relation);
             }
@@ -415,22 +417,8 @@ final class Configurator
         };
     }
 
-    /**
-     * @return \Generator<\ReflectionProperty>
-     */
-    private function getActualProperties(\ReflectionClass $class): \Generator
+    private function isObsolete(\ReflectionProperty $property): bool
     {
-        foreach ($class->getProperties() as $property) {
-            // Obsolete property must not be included in the scheme.
-            $metadata = $this->getPropertyMetadata($property, Obsolete::class);
-            if (!\is_array($metadata)) {
-                $metadata = \iterator_to_array($metadata);
-            }
-            if ($metadata !== []) {
-                continue;
-            }
-
-            yield $property;
-        }
+        return $this->reader->firstPropertyMetadata($property, Obsolete::class) !== null;
     }
 }

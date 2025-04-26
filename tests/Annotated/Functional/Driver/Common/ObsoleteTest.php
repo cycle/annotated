@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
+use Cycle\Annotated\Embeddings;
 use Cycle\Annotated\Entities;
+use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
@@ -40,6 +42,7 @@ abstract class ObsoleteTest extends BaseTestCase
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
+            new Embeddings(new TokenizerEmbeddingLocator($locator, $reader), $reader),
             new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
             new ResetTables(),
             new MergeColumns($reader),
@@ -52,7 +55,13 @@ abstract class ObsoleteTest extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
+        $this->assertArrayNotHasKey('user:address:address', $schema);
+        // user
         $this->assertArrayNotHasKey('skype', $schema['user'][SchemaInterface::COLUMNS]);
         $this->assertArrayNotHasKey('skype', $schema['user'][SchemaInterface::TYPECAST]);
+        $this->assertArrayNotHasKey('passport', $schema['user'][SchemaInterface::RELATIONS]);
+        $this->assertArrayNotHasKey('address', $schema['user'][SchemaInterface::RELATIONS]);
+        // passport
+        $this->assertArrayNotHasKey('user', $schema['passport'][SchemaInterface::RELATIONS]);
     }
 }
