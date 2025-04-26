@@ -7,7 +7,7 @@ namespace Cycle\Annotated\Annotation;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
- * Used to safely drop column from table which used in several services.For safely drop column from table which used in several services.
+ * For safely drop column from table which used in several services.
  * The property should not be displayed in schema but should remain in the tableThe property should not be in schema.
  *
  * @Annotation
