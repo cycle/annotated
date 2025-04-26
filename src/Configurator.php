@@ -422,9 +422,10 @@ final class Configurator
     {
         foreach ($class->getProperties() as $property) {
             // Obsolete property must not be included in the scheme.
-            $metadata = \iterator_to_array(
-                $this->getPropertyMetadata($property, Obsolete::class),
-            );
+            $metadata = $this->getPropertyMetadata($property, Obsolete::class);
+            if (!\is_array($metadata)) {
+                $metadata = \iterator_to_array($metadata);
+            }
             if ($metadata !== []) {
                 continue;
             }
