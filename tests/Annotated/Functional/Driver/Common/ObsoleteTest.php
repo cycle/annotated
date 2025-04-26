@@ -25,7 +25,7 @@ abstract class ObsoleteTest extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../Fixtures/Fixtures26'],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();
