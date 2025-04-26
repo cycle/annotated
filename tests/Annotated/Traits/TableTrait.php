@@ -14,7 +14,7 @@ trait TableTrait
         string $table,
         array $columns,
         array $fk = [],
-        array $pk = null,
+        ?array $pk = null,
         array $defaults = []
     ): void {
         $schema = $this->getDatabase()->table($table)->getSchema();

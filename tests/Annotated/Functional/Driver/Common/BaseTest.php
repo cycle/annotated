@@ -165,7 +165,7 @@ abstract class BaseTest extends TestCase
     /**
      * @param Database|null $database
      */
-    protected function dropDatabase(Database $database = null): void
+    protected function dropDatabase(?Database $database = null): void
     {
         if (empty($database)) {
             return;
