@@ -1,7 +1,31 @@
 <?php
 
+/**
+ * 1. Create new test case class in folder `tests/Functional/Driver/Common` with content:
+ *
+ *
+ *     namespace Cycle\Annotated\Tests\Functional\Driver\Common;
+ *
+ *     abstract class MyTest extends BaseTest {}
+ *
+ *
+ * 2. run this script
+ *
+ *
+ *     php generate.php
+ *
+ *
+ * 3. Don't forget commit newly created files:
+ *
+ *  - `tests/Functional/Driver/MySQL/MyTest`
+ *  - `tests/Functional/Driver/Postgres/MyTest`
+ *  - `tests/Functional/Driver/SQLite/MyTest`
+ *  - `tests/Functional/Driver/SQLServer/MyTest`
+ */
+
 declare(strict_types=1);
 
+use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Spiral\Tokenizer;
 
 error_reporting(E_ALL | E_STRICT);

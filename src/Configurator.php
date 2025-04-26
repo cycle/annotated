@@ -9,6 +9,7 @@ use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Annotation\GeneratedValue;
+use Cycle\Annotated\Annotation\Obsolete;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
@@ -96,7 +97,7 @@ final class Configurator
 
     public function initFields(EntitySchema $entity, \ReflectionClass $class, string $columnPrefix = ''): void
     {
-        foreach ($class->getProperties() as $property) {
+        foreach ($this->getActualProperties($class) as $property) {
             try {
                 $column = $this->reader->firstPropertyMetadata($property, Column::class);
             } catch (\Exception $e) {
@@ -119,7 +120,7 @@ final class Configurator
 
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
-        foreach ($class->getProperties() as $property) {
+        foreach ($this->getActualProperties($class) as $property) {
             $metadata = $this->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
 
             foreach ($metadata as $meta) {
@@ -412,5 +413,23 @@ final class Configurator
             'serial', 'bigserial', 'smallserial' => true,
             default => $field->isPrimary(),
         };
+    }
+
+    /**
+     * @return \Generator<\ReflectionProperty>
+     */
+    private function getActualProperties(\ReflectionClass $class): \Generator
+    {
+        foreach ($class->getProperties() as $property) {
+            // Obsolete property must not be included in the scheme.
+            $metadata = \iterator_to_array(
+                $this->getPropertyMetadata($property, Obsolete::class),
+            );
+            if ([] !== $metadata) {
+                continue;
+            }
+
+            yield $property;
+        }
     }
 }
