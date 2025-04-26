@@ -32,7 +32,7 @@ final class Entities implements GeneratorInterface
 
     public function __construct(
         private ClassesInterface $locator,
-        DoctrineReader|ReaderInterface $reader = null,
+        DoctrineReader|ReaderInterface|null $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL
     ) {
         $this->reader = ReaderFactory::create($reader);
