@@ -56,7 +56,8 @@ class User
     #[HasOne(target: Passport::class)]
     protected $passport;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->address = new Address();
     }
 }
