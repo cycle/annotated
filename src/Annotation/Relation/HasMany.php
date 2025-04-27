@@ -35,6 +35,7 @@ class HasMany extends Relation
      * @param bool $indexCreate Create an index on outerKey.
      * @param non-empty-string|null $collection Collection that will contain loaded entities.
      * @param non-empty-string $load Relation load approach.
+     * @param bool $obsolete The property should not be displayed in schema but must remains in the database.
      */
     public function __construct(
         string $target,
@@ -60,9 +61,10 @@ class HasMany extends Relation
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null,
+        bool $obsolete = false,
     ) {
         $this->inverse = $inverse;
 
-        parent::__construct($target, $load);
+        parent::__construct($target, $load, $obsolete);
     }
 }

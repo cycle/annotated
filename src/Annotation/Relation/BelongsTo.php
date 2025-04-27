@@ -33,6 +33,7 @@ class BelongsTo extends Relation
      *        Defaults to {@see $fkAction}.
      * @param bool $indexCreate Create an index on innerKey.
      * @param non-empty-string $load Relation load approach.
+     * @param bool $obsolete The property should not be displayed in schema but must remains in the database.
      */
     public function __construct(
         string $target,
@@ -55,9 +56,10 @@ class BelongsTo extends Relation
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
         ?Inverse $inverse = null,
+        bool $obsolete = false,
     ) {
         $this->inverse = $inverse;
 
-        parent::__construct($target, $load);
+        parent::__construct($target, $load, $obsolete);
     }
 }

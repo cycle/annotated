@@ -38,15 +38,8 @@ class Column
      * @param bool $primary Explicitly set column as a primary key.
      * @param bool $nullable Set column as nullable.
      * @param mixed|null $default Default column value.
-     * @param callable|non-empty-string|null $typecast Typecast rule name.
-     *        Regarding the default Typecast handler {@see Typecast} the value can be `callable` or
-     *        one of ("int"|"float"|"bool"|"datetime") based on column type.
-     *        If you want to use another rule you should add in the `typecast` argument of the {@see Entity} attribute
-     *        a relevant Typecast handler that supports the rule.
-     * @param bool $readonlySchema Set to true to disable schema synchronization for the assigned column.
-     * @param mixed ...$attributes Other database specific attributes. Use named notation to define them.
-     *        For example: #[Column('smallInt', unsigned: true, zerofill: true)]
-     */
+     * @param bool $obsolete The property should not be displayed in schema but must remains in the database.
+ */
     public function __construct(
         #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
             'integer', 'tinyInteger', 'smallInteger', 'bigInteger', 'string', 'text', 'tinyText', 'longText', 'double',
@@ -68,6 +61,7 @@ class Column
         protected mixed $typecast = null,
         protected bool $castDefault = false,
         protected bool $readonlySchema = false,
+        protected bool $obsolete = false,
         mixed ...$attributes,
     ) {
         if ($default !== null) {
@@ -133,6 +127,11 @@ class Column
     public function isReadonlySchema(): bool
     {
         return $this->readonlySchema;
+    }
+
+    public function isObsolete(): bool
+    {
+        return $this->obsolete;
     }
 
     /**

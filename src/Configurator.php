@@ -9,7 +9,6 @@ use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Annotation\GeneratedValue;
-use Cycle\Annotated\Annotation\Obsolete;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
@@ -114,7 +113,6 @@ final class Configurator
 
             $field = $this->initField($property->getName(), $column, $class, $columnPrefix);
             $field->setEntityClass($property->getDeclaringClass()->getName());
-            $field->setObsolete($this->isObsolete($property));
             $entity->getFields()->set($property->getName(), $field);
         }
     }
@@ -174,7 +172,6 @@ final class Configurator
                     $relation->getOptions()->set($option, $value);
                 }
 
-                $relation->setObsolete($this->isObsolete($property));
                 // need relation definition
                 $entity->getRelations()->set($property->getName(), $relation);
             }
@@ -263,6 +260,8 @@ final class Configurator
         foreach ($column->getAttributes() as $k => $v) {
             $field->getAttributes()->set($k, $v);
         }
+
+        $field->getAttributes()->set('obsolete', $column->isObsolete());
 
         return $field;
     }
@@ -415,10 +414,5 @@ final class Configurator
             'serial', 'bigserial', 'smallserial' => true,
             default => $field->isPrimary(),
         };
-    }
-
-    private function isObsolete(\ReflectionProperty $property): bool
-    {
-        return $this->reader->firstPropertyMetadata($property, Obsolete::class) !== null;
     }
 }

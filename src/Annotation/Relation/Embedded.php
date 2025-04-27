@@ -23,16 +23,18 @@ class Embedded extends Relation
      * @param non-empty-string $target Entity to embed.
      * @param 'eager'|'lazy' $load Relation load approach.
      * @param string|null $prefix Prefix for embedded entity columns.
+     * @param bool $obsolete The property should not be displayed in schema but must remains in the database.
      */
     public function __construct(
         string $target,
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'eager',
         ?string $prefix = null,
+        bool $obsolete = false,
     ) {
         $this->embeddedPrefix = $prefix;
 
-        parent::__construct($target, $load);
+        parent::__construct($target, $load, $obsolete);
     }
 
     public function getInverse(): ?Inverse

@@ -6,7 +6,6 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures26;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Obsolete;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 /**
@@ -24,10 +23,8 @@ class Passport
     protected $number;
 
     /**
-     * @Obsolete
-     * @BelongsTo(target=User::class)
+     * @BelongsTo(target=User::class, obsolete=true)
      */
-    #[Obsolete]
-    #[BelongsTo(target: User::class, innerKey: 'passport_id', outerKey: 'id')]
+    #[BelongsTo(target: User::class, innerKey: 'passport_id', outerKey: 'id', obsolete: true)]
     protected User $user;
 }

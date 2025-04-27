@@ -12,10 +12,12 @@ abstract class Relation implements RelationInterface
     /**
      * @param non-empty-string|null $target
      * @param non-empty-string $load
+     * @param bool $obsolete The property should not be displayed in schema but must remains in the database. Useful for the further safe DROP COLUMN.
      */
     public function __construct(
         protected ?string $target,
         protected string $load = 'lazy',
+        protected bool $obsolete = false,
     ) {}
 
     /**

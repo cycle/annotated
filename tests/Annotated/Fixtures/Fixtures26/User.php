@@ -6,9 +6,9 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures26;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Obsolete;
 use Cycle\Annotated\Annotation\Relation\Embedded;
 use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Relation\RefersTo;
 
 /**
  * @Entity(table="user")
@@ -18,46 +18,35 @@ class User
 {
     /** @Column(type="primary") */
     #[Column(type: 'primary')]
-    protected $id;
-
-    /** @Column(type="string") */
-    #[Column(type: 'string')]
-    protected $name;
+    public $id;
 
     /**
-     * @Obsolete
-     * @Column(type="integer", nullable=true)
+     * @Column(type="integer", nullable=true, obsolete=true)
      *
      * @deprecated Since May 5, 2025
      */
-    #[Obsolete]
-    #[Column(type: 'string', nullable: true)]
-    protected $skype = null;
+    #[Column(type: 'string', nullable: true, obsolete:true)]
+    public $skype = null;
 
     /**
-     * There is must not be problems with it.
+     * @Embedded(target=Address::class, obsolete=true)
      */
-    #[Obsolete]
-    protected $secret;
+    #[Embedded(target: Address::class, obsolete: true)]
+    public Address $address;
 
     /**
-     * @Obsolete
-     * @Embedded(target=Address::class)
+     * @HasOne(target=Passport::class, obsolete=true)
      */
-    #[Obsolete]
-    #[Embedded(target: Address::class)]
-    protected Address $address;
+    #[HasOne(target: Passport::class, obsolete: true)]
+    public Passport $passport;
 
-    /**
-     * @Obsolete
-     * @HasOne(target=Passport::class)
-     */
-    #[Obsolete]
-    #[HasOne(target: Passport::class)]
-    protected $passport;
+    /** @RefersTo(target=City::class, innerKey="born_city_id", outerKey="id", obsolete=true) */
+    #[RefersTo(target: City::class, innerKey: 'born_city_id', outerKey: 'id', obsolete: true)]
+    public City $bornCity;
 
-    public function __construct()
+    public function __construct(City $bornCity)
     {
         $this->address = new Address();
+        $this->bornCity = $bornCity;
     }
 }
