@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
-use Cycle\ORM\Parser\Typecast;
 use Doctrine\Common\Annotations\Annotation\Target;
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Attributes\NamedArgumentConstructor;
@@ -39,7 +38,7 @@ class Column
      * @param bool $nullable Set column as nullable.
      * @param mixed|null $default Default column value.
      * @param bool $obsolete The property should not be displayed in schema but must remains in the database.
- */
+     */
     public function __construct(
         #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
             'integer', 'tinyInteger', 'smallInteger', 'bigInteger', 'string', 'text', 'tinyText', 'longText', 'double',
