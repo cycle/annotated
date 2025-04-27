@@ -61,7 +61,10 @@ abstract class ObsoleteTest extends BaseTestCase
         $this->assertArrayNotHasKey('skype', $schema['user'][SchemaInterface::TYPECAST]);
         $this->assertArrayNotHasKey('passport', $schema['user'][SchemaInterface::RELATIONS]);
         $this->assertArrayNotHasKey('address', $schema['user'][SchemaInterface::RELATIONS]);
+        $this->assertArrayNotHasKey('bornCity', $schema['user'][SchemaInterface::RELATIONS]);
         // passport
         $this->assertArrayNotHasKey('user', $schema['passport'][SchemaInterface::RELATIONS]);
+        // city
+        $this->assertArrayNotHasKey('bornUsers', $schema['city'][SchemaInterface::RELATIONS]);
     }
 }
