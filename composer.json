@@ -61,16 +61,6 @@
             "Cycle\\Annotated\\Tests\\": "tests/Annotated/"
         }
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/gam6itko/cycle-orm.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/gam6itko/schema-builder.git"
-        }
-    ],
     "scripts": {
         "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
         "cs:fix": "php-cs-fixer fix -v",
