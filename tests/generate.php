@@ -24,7 +24,6 @@
 
 declare(strict_types=1);
 
-use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTest;
 use Spiral\Tokenizer;
 
 error_reporting(E_ALL | E_STRICT);
