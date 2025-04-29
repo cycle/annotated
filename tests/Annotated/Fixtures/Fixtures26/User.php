@@ -25,7 +25,7 @@ class User
      *
      * @deprecated Since May 5, 2025
      */
-    #[Column(type: 'string', nullable: true, obsolete:true)]
+    #[Column(type: 'string', nullable: true, obsolete: true)]
     public $skype = null;
 
     /**
