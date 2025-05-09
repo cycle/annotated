@@ -15,17 +15,19 @@
         </classConstructor>
         <!-- innerKey: -->
         <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="1" targetInArray="value">
-            <properties xpath="$containingClass"/>
-        </classConstructor>
-        <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="1">
-            <properties xpath="$containingClass"/>
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
         </classConstructor>
         <!-- outerKey: -->
         <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="2" targetInArray="value">
-            <properties xpath="$argument[0]"/>
-        </classConstructor>
-        <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="2">
-            <properties xpath="$argument[0]"/>
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
         </classConstructor>
     </definitions>
 </meta-storm>
