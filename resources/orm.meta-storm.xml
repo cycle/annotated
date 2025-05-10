@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta-storm xmlns="meta-storm">
+    <definitions>
+        <!-- ORM Interface -->
+        <classMethod class="\Cycle\ORM\Service\EntityFactoryInterface" method="make" argument="1" targetInArray="key" targetValue="false">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classMethod>
+    </definitions>
+</meta-storm>
