@@ -14,6 +14,10 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <PossiblyUnusedMethod errorLevel="suppress"/>
+        <ClassMustBeFinal errorLevel="suppress"/>
+        <UnusedClass errorLevel="suppress"/>
+        <MissingOverrideAttribute errorLevel="suppress"/>
         <MissingClassConstType errorLevel="suppress"/>
         <UndefinedAttributeClass>
             <errorLevel type="suppress">

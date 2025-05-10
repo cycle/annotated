@@ -40,6 +40,7 @@ $drivers = [
             database: 'tempdb',
             host: '127.0.0.1',
             port: 11433,
+            trustServerCertificate: true,
             user: 'SA',
             password: 'YourStrong!Passw0rd',
         ),

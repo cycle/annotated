@@ -121,9 +121,6 @@
     </InvalidClassConstantType>
   </file>
   <file src="src/Annotation/Relation/Relation.php">
-    <MixedInferredReturnType>
-      <code><![CDATA[non-empty-string]]></code>
-    </MixedInferredReturnType>
     <MixedReturnStatement>
       <code><![CDATA[static::TYPE]]></code>
     </MixedReturnStatement>
