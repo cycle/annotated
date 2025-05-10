@@ -47,7 +47,7 @@
     "require-dev": {
         "doctrine/annotations": "^1.14.3 || ^2.0.1",
         "phpunit/phpunit": "^10.1",
-        "vimeo/psalm": "^5.26",
+        "vimeo/psalm": "^5.26 || ^6.0",
         "spiral/code-style": "^2.2",
         "spiral/dumper": "^3.3"
     },
