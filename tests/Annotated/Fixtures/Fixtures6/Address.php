@@ -19,9 +19,9 @@ use Cycle\Annotated\Annotation\Table\Index;
 ])]
 class Address
 {
-    /** @Column(type="string") */
-    #[Column(type: 'string')]
-    protected $city;
+    /** @Column(type="string", typecast="city") */
+    #[Column(type: 'string', typecast: CityTypecast::NAME)]
+    protected City $city;
 
     /** @Column(type="string") */
     #[Column(type: 'string')]

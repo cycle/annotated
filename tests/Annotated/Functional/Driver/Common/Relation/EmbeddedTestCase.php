@@ -10,6 +10,7 @@ use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
+use Cycle\Annotated\Tests\Fixtures\Fixtures6\CityTypecast;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
@@ -55,6 +56,9 @@ abstract class EmbeddedTestCase extends BaseTestCase
 
         $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
         $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
+
+        $this->assertSame(CityTypecast::class, $schema['user'][Schema::TYPECAST_HANDLER][0]);
+        $this->assertSame(CityTypecast::class, $schema['user:address:address'][Schema::TYPECAST_HANDLER][0]);
 
         $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
         $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
