@@ -20,12 +20,14 @@ class Embeddable
      * @param class-string|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}.
      * @param string $columnPrefix Custom prefix for embeddable entity columns.
      * @param Column[] $columns Embedded entity columns.
+     * @param non-empty-string|non-empty-string[]|null $typecast Typecasts for embeddable entity columns.
      */
     public function __construct(
         protected ?string $role = null,
         protected ?string $mapper = null,
         protected string $columnPrefix = '',
         protected array $columns = [],
+        protected array|string|null $typecast = null,
     ) {}
 
     /**
@@ -55,5 +57,13 @@ class Embeddable
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    /**
+     * @return non-empty-string|non-empty-string[]|null
+     */
+    public function getTypecast(): array|string|null
+    {
+        return $this->typecast;
     }
 }

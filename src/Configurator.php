@@ -90,6 +90,7 @@ final class Configurator
 
         // representing classes
         $e->setMapper($this->resolveName($emb->getMapper(), $class));
+        $e->setTypecast($this->resolveTypecast($emb->getTypecast(), $class));
 
         return $e;
     }

@@ -10,6 +10,7 @@ use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
 use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
+use Cycle\Annotated\Tests\Fixtures\Fixtures26\CityTypecast;
 use Cycle\Annotated\Tests\Functional\Driver\Common\BaseTestCase;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema;
@@ -136,5 +137,33 @@ abstract class EmbeddedTestCase extends BaseTestCase
 
         $this->assertSame($address, $schema['user:address:address'][Schema::COLUMNS]);
         $this->assertSame($workAddress, $schema['user:address:workAddress'][Schema::COLUMNS]);
+    }
+
+    #[DataProvider('allReadersProvider')]
+    public function testEmbeddedTypecast(ReaderInterface $reader): void
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures26'],
+            'exclude' => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Embeddings(new TokenizerEmbeddingLocator($locator, $reader), $reader),
+            new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
+            new ResetTables(),
+            new MergeColumns($reader),
+            new GenerateRelations(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($reader),
+            new SyncTables(),
+            new GenerateTypecast(),
+        ]);
+
+        $this->assertSame(CityTypecast::class, $schema['user:address:address'][Schema::TYPECAST_HANDLER][0]);
     }
 }
