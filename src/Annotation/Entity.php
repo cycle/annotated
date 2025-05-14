@@ -29,7 +29,7 @@ class Entity
      * @param non-empty-string|null $database Database name. Defaults to null (default database).
      * @param class-string<Source>|null $source Entity source class (internal).
      *        Defaults to {@see \Cycle\ORM\Select\Source}
-     * @param non-empty-string|non-empty-string[]|null $typecast Typecasts for entity columns.
+     * @param non-empty-string|non-empty-string[]|null $typecast Typecast handlers for entity columns.
      * @param class-string<Scope>|null $scope Class name of constraint to be applied to every entity query.
      * @param Column[] $columns Entity columns.
      * @param ForeignKey[] $foreignKeys Entity foreign keys.
