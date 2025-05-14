@@ -90,7 +90,18 @@ final class Configurator
 
         // representing classes
         $e->setMapper($this->resolveName($emb->getMapper(), $class));
-        $e->setTypecast($this->resolveTypecast($emb->getTypecast(), $class));
+
+        $typecast = $emb->getTypecast();
+
+        if (\is_array($typecast)) {
+            /** @var non-empty-string[] $typecast */
+            $typecast = \array_map(fn(string $value): string => $this->resolveName($value, $class), $typecast);
+        } else {
+            /** @var non-empty-string|null $typecast */
+            $typecast = $this->resolveName($typecast, $class);
+        }
+
+        $e->setTypecast($typecast);
 
         return $e;
     }
