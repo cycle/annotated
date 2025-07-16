@@ -51,7 +51,7 @@ class Column
         #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
             'integer', 'tinyInteger', 'smallInteger', 'bigInteger', 'string', 'text', 'tinyText', 'longText', 'double',
             'float', 'decimal', 'datetime', 'date', 'time', 'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
-            'uuid', 'bit',
+            'snowflake', 'ulid', 'uuid', 'bit',
             // PostgreSQL
             'smallPrimary', 'timetz', 'timestamptz', 'interval', 'bitVarying', 'int4range', 'int8range', 'numrange',
             'tsrange', 'tstzrange', 'daterange', 'jsonb', 'point', 'line', 'lseg', 'box', 'path', 'polygon', 'circle',
