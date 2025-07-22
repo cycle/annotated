@@ -43,7 +43,7 @@ final class CityTypecast implements CastableInterface, UncastableInterface
                 continue;
             }
 
-            $data[$column] = (string)$value;
+            $data[$column] = (string) $value;
         }
 
         return $data;
