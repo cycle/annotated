@@ -143,9 +143,6 @@ class Column
         return $this->attributes;
     }
 
-    /**
-     * @param array<non-empty-string, mixed> $attributes
-     */
     protected function setAttributes(array $attributes): void
     {
         if ($this->type === 'enum' && isset($attributes['values'])) {
