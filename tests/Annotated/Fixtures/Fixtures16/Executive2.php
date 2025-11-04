@@ -13,6 +13,4 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable
  */
 #[Entity]
 #[InheritanceJoinedTable(outerKey: 'foo_id')]
-class Executive2 extends Executive
-{
-}
+class Executive2 extends Executive {}

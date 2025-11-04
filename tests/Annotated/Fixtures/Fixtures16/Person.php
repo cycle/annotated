@@ -25,10 +25,6 @@ class Person
     #[Column(type: 'string')]
     public string $type;
 
-    /** @Column(type="primary", name="id") */
-    #[Column(type: 'primary', name: 'id')]
-    protected int $foo_id;
-
     /** @Column(type="int", nullable=true, typecast="int") */
     #[Column(type: 'int', nullable: true, typecast: 'int')]
     public ?int $tool_id;
@@ -36,6 +32,10 @@ class Person
     /** @HasOne(target=Tool::class, innerKey="id", outerKey="tool_id", nullable=true) */
     #[HasOne(target: Tool::class, innerKey: 'id', outerKey: 'tool_id', nullable: true)]
     public Tool $tool;
+
+    /** @Column(type="primary", name="id") */
+    #[Column(type: 'primary', name: 'id')]
+    protected int $foo_id;
 
     public function getFooId(): int
     {
