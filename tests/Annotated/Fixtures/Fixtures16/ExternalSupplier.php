@@ -13,6 +13,4 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable
  */
 #[Entity(table: 'external_suppliers')]
 #[InheritanceJoinedTable(outerKey: 'custom_id')]
-class ExternalSupplier extends Supplier
-{
-}
+class ExternalSupplier extends Supplier {}

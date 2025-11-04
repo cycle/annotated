@@ -13,10 +13,6 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity]
 class Person
 {
-    /** @Column(type="primary") */
-    #[Column(type: 'primary')]
-    protected int $id;
-
     /** @Column(type="string") */
     #[Column(type: 'string')]
     public string $name;
@@ -24,4 +20,8 @@ class Person
     /** @Column(type="string") */
     #[Column(type: 'string')]
     public string $type;
+
+    /** @Column(type="primary") */
+    #[Column(type: 'primary')]
+    protected int $id;
 }

@@ -46,12 +46,12 @@ abstract class BelongsToMorphedTestCase extends BaseTestCase
         $this->assertArrayHasKey('owner', $schema['label'][Schema::RELATIONS]);
         $this->assertSame(
             Relation::BELONGS_TO_MORPHED,
-            $schema['label'][Schema::RELATIONS]['owner'][Relation::TYPE]
+            $schema['label'][Schema::RELATIONS]['owner'][Relation::TYPE],
         );
 
         $this->assertSame(
             LabelledInterface::class,
-            $schema['label'][Schema::RELATIONS]['owner'][Relation::TARGET]
+            $schema['label'][Schema::RELATIONS]['owner'][Relation::TARGET],
         );
 
         $this->assertSame(SomeConstrain::class, $schema['label'][Schema::SCOPE]);

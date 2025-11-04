@@ -15,31 +15,6 @@ use Spiral\Attributes\ReaderInterface;
 
 class EntityUtilsTest extends TestCase
 {
-    #[DataProvider('findParentDataProvider')]
-    public function testFindParent(
-        ReaderInterface $reader,
-        string $child,
-        bool $root,
-        ?string $expectedParent
-    ): void {
-        $entityUtils = new EntityUtils($reader);
-
-        $actualParent = $entityUtils->findParent($child, $root);
-
-        $this->assertEquals($expectedParent, $actualParent);
-    }
-
-    public function testGetParentException(): void
-    {
-        $entityUtils = new EntityUtils(new AttributeReader());
-
-        $this->expectException(AnnotationException::class);
-        $this->expectExceptionMessage(
-            \sprintf('The parent class could not be found for the class `%s`.', Person::class)
-        );
-        $entityUtils->getParent(Person::class);
-    }
-
     public static function findParentDataProvider(): iterable
     {
         $namespace = 'Cycle\Annotated\Tests\Fixtures\Fixtures22';
@@ -69,5 +44,30 @@ class EntityUtilsTest extends TestCase
             yield "$readerType 3rd Level Not Root"
                 => [$reader, "$namespace\\$readerType\\LocalManager", false, "$namespace\\$readerType\\LocalSupplier"];
         }
+    }
+
+    #[DataProvider('findParentDataProvider')]
+    public function testFindParent(
+        ReaderInterface $reader,
+        string $child,
+        bool $root,
+        ?string $expectedParent,
+    ): void {
+        $entityUtils = new EntityUtils($reader);
+
+        $actualParent = $entityUtils->findParent($child, $root);
+
+        $this->assertEquals($expectedParent, $actualParent);
+    }
+
+    public function testGetParentException(): void
+    {
+        $entityUtils = new EntityUtils(new AttributeReader());
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            \sprintf('The parent class could not be found for the class `%s`.', Person::class),
+        );
+        $entityUtils->getParent(Person::class);
     }
 }

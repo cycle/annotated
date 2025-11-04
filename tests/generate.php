@@ -60,7 +60,7 @@ foreach ($classes as $baseClass) {
     $path = str_replace(
         [str_replace('\\', '/', __DIR__), 'Annotated/Functional/Driver/Common/'],
         '',
-        str_replace('\\', '/', \str_replace('TestCase', 'Test', $baseClass->getFileName()))
+        str_replace('\\', '/', \str_replace('TestCase', 'Test', $baseClass->getFileName())),
     );
 
     $path = ltrim($path, '/');
@@ -72,7 +72,7 @@ foreach ($classes as $baseClass) {
         $namespace = str_replace(
             'Cycle\\Annotated\\Tests\\Functional\\Driver\\Common',
             $details['namespace'],
-            $baseClass->getNamespaceName()
+            $baseClass->getNamespaceName(),
         );
 
         if (!is_dir($dir)) {
@@ -106,8 +106,8 @@ PHP,
                 $driver,
                 \str_replace('TestCase', 'Test', $baseClass->getShortName()),
                 $baseClass->getShortName(),
-                $driver
-            )
+                $driver,
+            ),
         );
     }
 }

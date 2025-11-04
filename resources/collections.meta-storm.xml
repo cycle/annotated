@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta-storm xmlns="meta-storm">
+    <collections>
+        <attributeArgument
+            name="cycle/orm:entity-role"
+            class="\Cycle\Annotated\Annotation\Entity"
+            argument="0"
+        />
+        <attributeClass
+            name="cycle/orm:entity-class"
+            class="\Cycle\Annotated\Annotation\Entity"
+        />
+        <attributeClass
+            name="cycle/orm:entity-embeddable-class"
+            class="\Cycle\Annotated\Annotation\Embeddable"
+        />
+    </collections>
+</meta-storm>

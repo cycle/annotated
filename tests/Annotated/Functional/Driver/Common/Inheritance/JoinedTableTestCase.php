@@ -36,68 +36,6 @@ abstract class JoinedTableTestCase extends BaseTestCase
 {
     use TableTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->makeTable(
-            table: 'people',
-            columns: [
-                'id' => 'primary',
-                'type' => 'string',
-                'name' => 'string',
-                'salary' => 'float',
-                'preferences' => 'string',
-                'bar' => 'string',
-                'stocks' => 'int',
-            ]
-        );
-
-        $this->makeTable(
-            table: 'executives',
-            columns: [
-                'id' => 'int',
-                'bonus' => 'float',
-                'proxy' => 'string',
-                'hidden' => 'string',
-            ],
-            pk: ['id']
-        );
-
-        $this->makeTable(
-            table: 'suppliers',
-            columns: [
-                'id' => 'int',
-                'custom_id' => 'int',
-            ],
-            pk: ['id']
-        );
-
-        $this->makeTable(
-            table: 'external_suppliers',
-            columns: [
-                'id' => 'int',
-            ],
-            pk: ['id']
-        );
-
-        $this->makeTable(
-            table: 'local_suppliers',
-            columns: [
-                'id' => 'int',
-            ],
-            pk: ['id']
-        );
-
-        $this->makeTable(
-            table: 'buyers',
-            columns: [
-                'id' => 'int',
-            ],
-            pk: ['id']
-        );
-    }
-
     #[DataProvider('allReadersProvider')]
     public function testTableInheritance(ReaderInterface $reader): void
     {
@@ -176,7 +114,7 @@ abstract class JoinedTableTestCase extends BaseTestCase
         $indexes = $this->dbal->database()->table('suppliers')->getIndexes();
 
         // remove pk index
-        $indexes = array_filter($indexes, fn (AbstractIndex $index) => $index->getColumns() !== ['id']);
+        $indexes = array_filter($indexes, fn(AbstractIndex $index) => $index->getColumns() !== ['id']);
 
         // one index added automatically, one added manual
         $this->assertCount(2, $indexes);
@@ -198,11 +136,73 @@ abstract class JoinedTableTestCase extends BaseTestCase
         $this->assertArrayHasKey(SchemaInterface::COLUMNS, $schema['person']);
 
         // assert that parent doesn't have jti columns
-        $this->assertSame([
+        $this->assertEquals([
             'id' => 'id',
             'name' => 'name',
             'type' => 'type',
         ], $schema['person'][SchemaInterface::COLUMNS]);
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->makeTable(
+            table: 'people',
+            columns: [
+                'id' => 'primary',
+                'type' => 'string',
+                'name' => 'string',
+                'salary' => 'float',
+                'preferences' => 'string',
+                'bar' => 'string',
+                'stocks' => 'int',
+            ],
+        );
+
+        $this->makeTable(
+            table: 'executives',
+            columns: [
+                'id' => 'int',
+                'bonus' => 'float',
+                'proxy' => 'string',
+                'hidden' => 'string',
+            ],
+            pk: ['id'],
+        );
+
+        $this->makeTable(
+            table: 'suppliers',
+            columns: [
+                'id' => 'int',
+                'custom_id' => 'int',
+            ],
+            pk: ['id'],
+        );
+
+        $this->makeTable(
+            table: 'external_suppliers',
+            columns: [
+                'id' => 'int',
+            ],
+            pk: ['id'],
+        );
+
+        $this->makeTable(
+            table: 'local_suppliers',
+            columns: [
+                'id' => 'int',
+            ],
+            pk: ['id'],
+        );
+
+        $this->makeTable(
+            table: 'buyers',
+            columns: [
+                'id' => 'int',
+            ],
+            pk: ['id'],
+        );
     }
 
     private function compile(ReaderInterface $reader, string $fixtures = 'Fixtures16'): array
@@ -211,7 +211,7 @@ abstract class JoinedTableTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [sprintf(__DIR__ . '/../../../../Fixtures/%s', $fixtures)],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();

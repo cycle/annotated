@@ -13,10 +13,10 @@ class AnnotationWrongTypeArgumentException extends AnnotationException
                 'Some of arguments has a wrong type on `%s.%s.`. Error: `%s`',
                 $property->getDeclaringClass()->getName(),
                 $property->getName(),
-                $e->getMessage()
+                $e->getMessage(),
             ),
             (int) $e->getCode(),
-            $e
+            $e,
         );
     }
 }

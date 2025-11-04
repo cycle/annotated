@@ -16,6 +16,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
 class Embedded extends Relation
 {
     protected const TYPE = 'embedded';
+
     protected ?string $embeddedPrefix = null;
 
     /**

@@ -47,7 +47,7 @@ final class GeneratedFieldsTest extends GeneratedFieldsTestCase
                 'serial' => GeneratedField::ON_INSERT,
                 'bigSerial' => GeneratedField::ON_INSERT,
             ],
-            $schema['withGeneratedSerial'][SchemaInterface::GENERATED_FIELDS]
+            $schema['withGeneratedSerial'][SchemaInterface::GENERATED_FIELDS],
         );
     }
 }

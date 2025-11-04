@@ -36,7 +36,7 @@ abstract class SchemaModifiersTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../Fixtures/Fixtures17'],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();

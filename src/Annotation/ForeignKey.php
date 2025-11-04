@@ -36,6 +36,5 @@ class ForeignKey
         #[ExpectedValues(values: ['NO ACTION', 'CASCADE', 'SET NULL'])]
         public string $action = 'CASCADE',
         public bool $indexCreate = true,
-    ) {
-    }
+    ) {}
 }

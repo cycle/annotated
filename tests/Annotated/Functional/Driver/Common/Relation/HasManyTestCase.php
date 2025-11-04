@@ -45,7 +45,7 @@ abstract class HasManyTestCase extends BaseTestCase
                 new MergeIndexes($reader),
                 new SyncTables(),
                 new GenerateTypecast(),
-            ]
+            ],
         );
 
         $this->assertArrayHasKey('many', $schema['simple'][Schema::RELATIONS]);
@@ -53,15 +53,15 @@ abstract class HasManyTestCase extends BaseTestCase
         $this->assertSame('withTable', $schema['simple'][Schema::RELATIONS]['many'][Relation::TARGET]);
         $this->assertSame(
             ['id' => ['>=' => 1]],
-            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE]
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE],
         );
         $this->assertSame(
             ['id' => 'DESC'],
-            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY]
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY],
         );
         $this->assertSame(
             'bar',
-            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
+            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE],
         );
     }
 
@@ -103,14 +103,14 @@ abstract class HasManyTestCase extends BaseTestCase
 
             $this->assertSame(Relation::HAS_MANY, $relation[Relation::TYPE], "$name: relation type");
             $this->assertSame(
-                (array)$innerKey,
-                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
-                "$name: Inner Key"
+                (array) $innerKey,
+                (array) $relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key",
             );
             $this->assertSame(
-                (array)$outerKey,
-                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
-                "$name: Outer Key"
+                (array) $outerKey,
+                (array) $relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key",
             );
         }
     }

@@ -25,8 +25,7 @@ class Table
         protected array $columns = [],
         protected ?PrimaryKey $primary = null,
         protected array $indexes = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @return Column[]

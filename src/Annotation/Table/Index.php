@@ -23,8 +23,7 @@ class Index
         protected array $columns,
         protected bool $unique = false,
         protected ?string $name = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return non-empty-string[]

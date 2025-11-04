@@ -12,9 +12,7 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable
  * @InheritanceJoinedTable(outerKey="index_id")
  */
 #[Entity(
-    table: 'local_suppliers'
+    table: 'local_suppliers',
 )]
 #[InheritanceJoinedTable(outerKey: 'index_id')]
-class LocalSupplier extends Supplier
-{
-}
+class LocalSupplier extends Supplier {}

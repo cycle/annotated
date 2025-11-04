@@ -49,21 +49,21 @@ abstract class MorphedHasOneTestCase extends BaseTestCase
             $this->dbal->database('default')
                 ->getDriver()
                 ->getSchema('labels')
-                ->hasColumn('owner_id')
+                ->hasColumn('owner_id'),
         );
 
         $this->assertTrue(
             $this->dbal->database('default')
                 ->getDriver()
                 ->getSchema('labels')
-                ->hasColumn('owner_role')
+                ->hasColumn('owner_role'),
         );
 
         $this->assertFalse(
             $this->dbal->database('default')
                 ->getDriver()
                 ->getSchema('labels')
-                ->hasIndex(['owner_id', 'owner_role'])
+                ->hasIndex(['owner_id', 'owner_role']),
         );
     }
 }

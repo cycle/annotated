@@ -26,17 +26,45 @@ abstract class BaseTestCase extends TestCase
 {
     // currently active driver
     public const DRIVER = null;
+
     // tests configuration
     public static array $config;
 
     // cross test driver cache
     public static array $driverCache = [];
-
     protected Driver $driver;
     protected DatabaseManager $dbal;
     protected ORM $orm;
     protected TestLogger $logger;
     protected ClassesInterface $locator;
+
+    public static function singularReadersProvider(): \Traversable
+    {
+        yield ['Annotation reader' => new AnnotationReader()];
+        yield ['Attribute reader' => new AttributeReader()];
+    }
+
+    public static function allReadersProvider(): \Traversable
+    {
+        yield from static::singularReadersProvider();
+        yield ['Selective reader' => new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
+    }
+
+    public function getDriver(): Driver
+    {
+        if (isset(static::$driverCache[static::DRIVER])) {
+            return static::$driverCache[static::DRIVER];
+        }
+
+        $config = self::$config[static::DRIVER];
+        if (!isset($this->driver)) {
+            $this->driver = $config->driver::create($config);
+        }
+
+        $this->driver->setProfiling(true);
+
+        return static::$driverCache[static::DRIVER] = $this->driver;
+    }
 
     /**
      * Init all we need.
@@ -49,13 +77,13 @@ abstract class BaseTestCase extends TestCase
         $this->dbal->addDatabase(new Database(
             'default',
             '',
-            $this->getDriver()
+            $this->getDriver(),
         ));
 
         $this->dbal->addDatabase(new Database(
             'secondary',
             'secondary_',
-            $this->getDriver()
+            $this->getDriver(),
         ));
 
         $this->logger = new TestLogger();
@@ -74,7 +102,7 @@ abstract class BaseTestCase extends TestCase
 
         $this->orm = new ORM(new Factory(
             $this->dbal,
-            RelationConfig::getDefault()
+            RelationConfig::getDefault(),
         ), new Schema([]));
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -94,43 +122,12 @@ abstract class BaseTestCase extends TestCase
         $this->dropDatabase($this->dbal->database('default'));
     }
 
-    /**
-     * @return Driver
-     */
-    public function getDriver(): Driver
-    {
-        if (isset(static::$driverCache[static::DRIVER])) {
-            return static::$driverCache[static::DRIVER];
-        }
-
-        $config = self::$config[static::DRIVER];
-        if (!isset($this->driver)) {
-            $this->driver = $config->driver::create($config);
-        }
-
-        $this->driver->setProfiling(true);
-
-        return static::$driverCache[static::DRIVER] = $this->driver;
-    }
-
-    public static function singularReadersProvider(): \Traversable
-    {
-        yield 'Annotation reader' => [new AnnotationReader()];
-        yield 'Attribute reader' => [new AttributeReader()];
-    }
-
-    public static function allReadersProvider(): \Traversable
-    {
-        yield from static::singularReadersProvider();
-        yield 'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
-    }
-
     protected function getDatabase(): Database
     {
         return $this->dbal->database('default');
     }
 
-    protected function dropDatabase(Database $database = null): void
+    protected function dropDatabase(?Database $database = null): void
     {
         if (empty($database)) {
             return;

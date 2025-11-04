@@ -39,7 +39,7 @@ abstract class GeneratedFieldsTestCase extends BaseTestCase
                 'createdAtGeneratedByDatabase' => GeneratedField::ON_INSERT,
                 'updatedAt' => GeneratedField::BEFORE_INSERT | GeneratedField::BEFORE_UPDATE,
             ],
-            $schema['withGeneratedFields'][SchemaInterface::GENERATED_FIELDS]
+            $schema['withGeneratedFields'][SchemaInterface::GENERATED_FIELDS],
         );
     }
 }

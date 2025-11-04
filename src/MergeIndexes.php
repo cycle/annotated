@@ -21,7 +21,7 @@ final class MergeIndexes implements GeneratorInterface
 {
     private readonly ReaderInterface $reader;
 
-    public function __construct(DoctrineReader|ReaderInterface $reader = null)
+    public function __construct(DoctrineReader|ReaderInterface|null $reader = null)
     {
         $this->reader = ReaderFactory::create($reader);
     }
@@ -63,7 +63,7 @@ final class MergeIndexes implements GeneratorInterface
         foreach ($indexes as $index) {
             if ($index->getColumns() === []) {
                 throw new AnnotationException(
-                    "Invalid index definition for `{$entity->getRole()}`. Column list can't be empty."
+                    "Invalid index definition for `{$entity->getRole()}`. Column list can't be empty.",
                 );
             }
 
@@ -81,6 +81,27 @@ final class MergeIndexes implements GeneratorInterface
                 }
             }
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function mapColumns(Entity $entity, array $columns): array
+    {
+        $result = [];
+
+        foreach ($columns as $expression) {
+            [$column, $order] = AbstractIndex::parseColumn($expression);
+
+            $mappedName = $entity->getFields()->has($column)
+                ? $entity->getFields()->get($column)->getColumn()
+                : $column;
+
+            // Re-construct `column ORDER` with mapped column name
+            $result[] = $order ? "$mappedName $order" : $mappedName;
+        }
+
+        return $result;
     }
 
     /**
@@ -127,26 +148,5 @@ final class MergeIndexes implements GeneratorInterface
         }
 
         $this->renderIndexes($table, $entity, $indexes);
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function mapColumns(Entity $entity, array $columns): array
-    {
-        $result = [];
-
-        foreach ($columns as $expression) {
-            [$column, $order] = AbstractIndex::parseColumn($expression);
-
-            $mappedName = $entity->getFields()->has($column)
-                ? $entity->getFields()->get($column)->getColumn()
-                : $column;
-
-            // Re-construct `column ORDER` with mapped column name
-            $result[] = $order ? "$mappedName $order" : $mappedName;
-        }
-
-        return $result;
     }
 }

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta-storm xmlns="meta-storm">
+    <definitions>
+        <!-- Belongs To -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\BelongsTo" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\BelongsTo" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\BelongsTo" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Has Many -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\HasMany" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\HasMany" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\HasMany" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Has One -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\HasOne" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\HasOne" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\HasOne" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Refers To -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\RefersTo" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\RefersTo" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\RefersTo" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Many To Many -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\ManyToMany" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\ManyToMany" argument="1">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- target innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\ManyToMany" argument="2" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- target outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\ManyToMany" argument="3" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- through innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\ManyToMany" argument="4" targetInArray="value">
+            <properties xpath="$argument[1]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- through outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\ManyToMany" argument="5" targetInArray="value">
+            <properties xpath="$argument[1]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Belongs To Morphed -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed" argument="1">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Morphed Has Many -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany" argument="1">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Morphed Has One -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne" argument="1">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
+        <!-- Embedded -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Embedded" argument="0">
+            <collection name="cycle/orm:entity-embeddable-class" argument="0" />
+        </classConstructor>
+    </definitions>
+</meta-storm>

@@ -11,6 +11,6 @@ enum BackedEnumWrapper: string
 
     public static function typecast(mixed $value): self
     {
-        return self::tryFrom((string)$value);
+        return self::tryFrom((string) $value);
     }
 }

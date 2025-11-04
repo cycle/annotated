@@ -10,7 +10,6 @@ final class Entity
 {
     public function __construct(
         public readonly Attribute $attribute,
-        public readonly \ReflectionClass $class
-    ) {
-    }
+        public readonly \ReflectionClass $class,
+    ) {}
 }

@@ -39,7 +39,7 @@ class Post
         throughInnerKey: ['id1', 'id2'],
         throughOuterKey: ['id3', 'id4'],
         through: Context::class,
-        indexCreate: false
+        indexCreate: false,
     )]
     protected array $tags = [];
 }

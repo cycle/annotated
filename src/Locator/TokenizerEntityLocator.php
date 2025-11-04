@@ -17,7 +17,7 @@ final class TokenizerEntityLocator implements EntityLocatorInterface
 
     public function __construct(
         private readonly ClassesInterface $classes,
-        DoctrineReader|ReaderInterface $reader = null,
+        DoctrineReader|ReaderInterface|null $reader = null,
     ) {
         $this->reader = ReaderFactory::create($reader);
     }

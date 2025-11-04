@@ -34,8 +34,7 @@ class Inverse
          */
         #[ExpectedValues(values: ['eager', 'lazy', 'promise', Relation::LOAD_EAGER, Relation::LOAD_PROMISE])]
         protected string|int|null $load = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return non-empty-string
@@ -58,7 +57,7 @@ class Inverse
         return match ($this->load) {
             'eager', Relation::LOAD_EAGER => Relation::LOAD_EAGER,
             'promise', 'lazy', Relation::LOAD_PROMISE => Relation::LOAD_PROMISE,
-            default => null
+            default => null,
         };
     }
 }

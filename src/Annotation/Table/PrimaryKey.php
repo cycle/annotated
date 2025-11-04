@@ -23,7 +23,7 @@ class PrimaryKey extends Index
         parent::__construct(
             columns: $columns,
             unique: $unique,
-            name: $name
+            name: $name,
         );
     }
 }

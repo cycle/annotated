@@ -13,6 +13,4 @@ use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable
  */
 #[Entity]
 #[InheritanceJoinedTable(fkCreate: false, outerKey: 'foo_id')]
-class Buyer extends Person
-{
-}
+class Buyer extends Person {}

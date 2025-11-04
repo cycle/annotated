@@ -15,9 +15,14 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class SingleTable extends Inheritance
 {
+    protected ?string $value;
+
     public function __construct(
-        protected ?string $value = null
+        string|int|float|\Stringable|\BackedEnum|null $value = null,
     ) {
+        $this->value = $value === null
+            ? null
+            : (string) ($value instanceof \BackedEnum ? $value->value : $value);
         parent::__construct('single');
     }
 

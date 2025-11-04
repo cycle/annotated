@@ -142,7 +142,7 @@ abstract class GeneratorTestCase extends BaseTestCase
 
         $this->assertSame(
             'username',
-            $r->getEntity('eComplete')->getFields()->get('name')->getColumn()
+            $r->getEntity('eComplete')->getFields()->get('name')->getColumn(),
         );
 
         $this->assertFalse($r->getEntity('eComplete')->getFields()->has('ignored'));

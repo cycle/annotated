@@ -43,7 +43,7 @@ abstract class TypecastTestCase extends BaseTestCase
 
         $this->assertSame(
             Typecaster::class,
-            $schema['simple'][Schema::TYPECAST_HANDLER]
+            $schema['simple'][Schema::TYPECAST_HANDLER],
         );
     }
 
@@ -63,7 +63,7 @@ abstract class TypecastTestCase extends BaseTestCase
                 UuidTypecaster::class,
                 'foo',
             ],
-            $schema['tag'][Schema::TYPECAST_HANDLER]
+            $schema['tag'][Schema::TYPECAST_HANDLER],
         );
     }
 
@@ -98,7 +98,7 @@ abstract class TypecastTestCase extends BaseTestCase
                 'be' => BackedEnum::class,
                 'bew' => [BackedEnumWrapper::class, 'typecast'],
             ],
-            $schema['booking'][SchemaInterface::TYPECAST]
+            $schema['booking'][SchemaInterface::TYPECAST],
         );
     }
 }

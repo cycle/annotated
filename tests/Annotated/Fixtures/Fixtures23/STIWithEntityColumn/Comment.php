@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Entity;
  */
 #[Entity(columns: [
     new Column(type: 'primary', property: 'id'),
-    new Column(type: 'string', property: 'body', nullable: true)
+    new Column(type: 'string', property: 'body', nullable: true),
 ])]
 final class Comment implements EventEmitterInterface
 {

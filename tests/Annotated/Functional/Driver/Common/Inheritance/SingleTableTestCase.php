@@ -42,19 +42,33 @@ abstract class SingleTableTestCase extends BaseTestCase
 {
     use TableTrait;
 
-    public function setUp(): void
+    public static function columnDeclarationDataProvider(): \Traversable
     {
-        parent::setUp();
+        // Declaration via Column in the property
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', 'STIWithPropertyColumn'];
 
-        $this->makeTable('people', [
-            'id' => 'primary',
-            'type' => 'string',
-            'name' => 'string',
-            'salary' => 'float',
-            'preferences' => 'string',
-            'bar' => 'string',
-            'stocks' => 'int',
-        ]);
+        // Declaration via Column in the class
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', 'STIWithClassColumn'];
+
+        // Declaration via Table in the class
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', 'STIWithTableColumn'];
+
+        // Declaration via columns in the Entity
+        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithEntityColumn', 'STIWithEntityColumn'];
+    }
+
+    /**
+     * Must return 12 elements - 4 declarations x 3 readers.
+     */
+    public static function columnDeclarationWithReadersDataProvider(): \Traversable
+    {
+        $readers = \iterator_to_array(static::allReadersProvider(), false);
+        $declarations = \iterator_to_array(static::columnDeclarationDataProvider());
+        foreach ($readers as $reader) {
+            foreach ($declarations as $declaration) {
+                yield \array_merge($declaration, $reader);
+            }
+        }
     }
 
     #[DataProvider('allReadersProvider')]
@@ -64,7 +78,7 @@ abstract class SingleTableTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures16'],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();
@@ -157,7 +171,7 @@ abstract class SingleTableTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures20'],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();
@@ -191,13 +205,13 @@ abstract class SingleTableTestCase extends BaseTestCase
     public function testSingleTableInheritanceWithDifferentColumnDeclaration(
         string $directory,
         string $namespace,
-        ReaderInterface $reader
+        ReaderInterface $reader,
     ): void {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
                 'directories' => [$directory],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();
@@ -220,7 +234,7 @@ abstract class SingleTableTestCase extends BaseTestCase
         $this->assertNotEmpty($schema);
         $this->assertSame(\sprintf(
             'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\BaseEvent',
-            $namespace
+            $namespace,
         ), $schema['baseEvent'][SchemaInterface::ENTITY]);
         $this->assertSame(Mapper::class, $schema['baseEvent'][SchemaInterface::MAPPER]);
         $this->assertSame(Source::class, $schema['baseEvent'][SchemaInterface::SOURCE]);
@@ -236,42 +250,42 @@ abstract class SingleTableTestCase extends BaseTestCase
         $this->assertSame('object_type', $schema['baseEvent'][SchemaInterface::COLUMNS]['object_type']);
         $this->assertSame(
             Relation::BELONGS_TO_MORPHED,
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TYPE]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TYPE],
         );
         $this->assertSame(
             \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\EventEmitterInterface', $namespace),
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TARGET]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TARGET],
         );
         $this->assertSame(
             Relation::LOAD_PROMISE,
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::LOAD]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::LOAD],
         );
         $this->assertTrue(
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::CASCADE]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::CASCADE],
         );
         $this->assertTrue(
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::NULLABLE]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::NULLABLE],
         );
         $this->assertSame(
             ['id'],
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::OUTER_KEY]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::OUTER_KEY],
         );
         $this->assertSame(
             'object_id',
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::INNER_KEY]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::INNER_KEY],
         );
         $this->assertSame(
             'object_type',
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::MORPH_KEY]
+            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::MORPH_KEY],
         );
         $this->assertCount(2, $schema['baseEvent'][SchemaInterface::CHILDREN]);
         $this->assertSame(
             \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated', $namespace),
-            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.created']
+            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.created'],
         );
         $this->assertSame(
             \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated', $namespace),
-            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.updated']
+            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.updated'],
         );
         $this->assertNull($schema['baseEvent'][SchemaInterface::SCOPE]);
         $this->assertSame('int', $schema['baseEvent'][SchemaInterface::TYPECAST]['id']);
@@ -283,7 +297,7 @@ abstract class SingleTableTestCase extends BaseTestCase
             [
                 SchemaInterface::ENTITY => \sprintf(
                     'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\Comment',
-                    $namespace
+                    $namespace,
                 ),
                 SchemaInterface::MAPPER => Mapper::class,
                 SchemaInterface::SOURCE => Source::class,
@@ -304,6 +318,7 @@ abstract class SingleTableTestCase extends BaseTestCase
                 SchemaInterface::SCOPE => null,
                 SchemaInterface::TYPECAST => [
                     'id' => 'int',
+                    'body' => 'string',
                 ],
                 SchemaInterface::SCHEMA => [],
                 SchemaInterface::TYPECAST_HANDLER => null,
@@ -311,48 +326,34 @@ abstract class SingleTableTestCase extends BaseTestCase
                     'id' => GeneratedField::ON_INSERT,
                 ],
             ],
-            $schema['comment']
+            $schema['comment'],
         );
         $this->assertSame([
             SchemaInterface::ENTITY => \sprintf(
                 'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
-                $namespace
+                $namespace,
             ),
         ], $schema['commentCreated']);
         $this->assertSame([
             SchemaInterface::ENTITY => \sprintf(
                 'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
-                $namespace
+                $namespace,
             ),
         ], $schema['commentUpdated']);
     }
 
-    public static function columnDeclarationDataProvider(): \Traversable
+    public function setUp(): void
     {
-        // Declaration via Column in the property
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithPropertyColumn', 'STIWithPropertyColumn'];
+        parent::setUp();
 
-        // Declaration via Column in the class
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithClassColumn', 'STIWithClassColumn'];
-
-        // Declaration via Table in the class
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithTableColumn', 'STIWithTableColumn'];
-
-        // Declaration via columns in the Entity
-        yield [__DIR__ . '/../../../../Fixtures/Fixtures23/STIWithEntityColumn', 'STIWithEntityColumn'];
-    }
-
-    /**
-     * Must return 12 elements - 4 declarations x 3 readers.
-     */
-    public static function columnDeclarationWithReadersDataProvider(): \Traversable
-    {
-        $readers = \iterator_to_array(static::allReadersProvider(), false);
-        $declarations = \iterator_to_array(static::columnDeclarationDataProvider());
-        foreach ($readers as $reader) {
-            foreach ($declarations as $declaration) {
-                yield \array_merge($declaration, $reader);
-            }
-        }
+        $this->makeTable('people', [
+            'id' => 'primary',
+            'type' => 'string',
+            'name' => 'string',
+            'salary' => 'float',
+            'preferences' => 'string',
+            'bar' => 'string',
+            'stocks' => 'int',
+        ]);
     }
 }

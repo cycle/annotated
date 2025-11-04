@@ -7,6 +7,4 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures22\Annotated;
 use Cycle\Annotated\Annotation\Entity;
 
 /** @Entity*/
-class LocalManager extends LocalSupplier
-{
-}
+class LocalManager extends LocalSupplier {}

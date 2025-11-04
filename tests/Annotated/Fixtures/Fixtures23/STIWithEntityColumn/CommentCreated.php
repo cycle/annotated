@@ -28,7 +28,7 @@ final class CommentCreated extends BaseEvent
         target: EventEmitterInterface::class,
         innerKey: 'object_id',
         morphKey: 'object_type',
-        indexCreate: false
+        indexCreate: false,
     )]
     public EventEmitterInterface|Comment $object;
 }

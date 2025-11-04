@@ -23,7 +23,7 @@ final class Embeddings implements GeneratorInterface
 
     public function __construct(
         private readonly EmbeddingLocatorInterface $locator,
-        DoctrineReader|ReaderInterface $reader = null
+        DoctrineReader|ReaderInterface|null $reader = null,
     ) {
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
@@ -59,7 +59,7 @@ final class Embeddings implements GeneratorInterface
             foreach ($ann as $ra) {
                 if ($ra instanceof RelationInterface) {
                     throw new AnnotationException(
-                        "Relations are not allowed within embeddable entities in `{$entity->getClass()}`"
+                        "Relations are not allowed within embeddable entities in `{$entity->getClass()}`",
                     );
                 }
             }

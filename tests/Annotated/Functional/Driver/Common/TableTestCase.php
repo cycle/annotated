@@ -25,6 +25,57 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class TableTestCase extends BaseTestCase
 {
+    public static function foreignKeyDirectoriesDataProvider(): \Traversable
+    {
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PropertyName'];
+
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/PropertyName'];
+
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Class/DatabaseField',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Class/PrimaryKey',
+            'id',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Class/PropertyName',
+        ];
+
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/DatabaseField'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/PrimaryKey', 'id'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/PropertyName'];
+
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/DatabaseField'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/PrimaryKey', 'id'];
+        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/PropertyName'];
+
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/DatabaseField'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/PrimaryKey', 'id'];
+        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/PropertyName'];
+
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Property/DatabaseField',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Property/PrimaryKey',
+            'id',
+        ];
+        yield [
+            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
+            '/Fixtures/Fixtures24/Property/PropertyName',
+        ];
+    }
+
     #[DataProvider('allReadersProvider')]
     public function testColumnsRendered(ReaderInterface $reader): void
     {
@@ -57,7 +108,7 @@ abstract class TableTestCase extends BaseTestCase
                 new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
                 new MergeColumns($reader),
                 new RenderTables(),
-            ]
+            ],
         );
         $this->assertArrayHasKey('withTable', $schema);
         $this->assertArrayHasKey('status_property', $schema['withTable'][Schema::COLUMNS]);
@@ -74,7 +125,7 @@ abstract class TableTestCase extends BaseTestCase
                 new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader),
                 new MergeColumns($reader),
                 new RenderTables(),
-            ]
+            ],
         );
         $this->assertArrayHasKey('withTable', $schema);
         $this->assertArrayHasKey('no_column_name', $schema['withTable'][Schema::COLUMNS]);
@@ -114,7 +165,7 @@ abstract class TableTestCase extends BaseTestCase
         $this->expectException(AnnotationException::class);
         $this->expectExceptionMessage(
             'Can not use name "name1" for Column of the `badEntity` role, because the '
-            . '"property" field of the metadata class has already been set to "name2".'
+            . '"property" field of the metadata class has already been set to "name2".',
         );
 
         (new Compiler())->compile($r, [
@@ -236,7 +287,7 @@ abstract class TableTestCase extends BaseTestCase
         (new Entities(
             new TokenizerEntityLocator($this->locator, $reader),
             $reader,
-            Entities::TABLE_NAMING_PLURAL
+            Entities::TABLE_NAMING_PLURAL,
         ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
@@ -255,7 +306,7 @@ abstract class TableTestCase extends BaseTestCase
         (new Entities(
             new TokenizerEntityLocator($this->locator, $reader),
             $reader,
-            Entities::TABLE_NAMING_SINGULAR
+            Entities::TABLE_NAMING_SINGULAR,
         ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
@@ -274,7 +325,7 @@ abstract class TableTestCase extends BaseTestCase
         (new Entities(
             new TokenizerEntityLocator($this->locator, $reader),
             $reader,
-            Entities::TABLE_NAMING_NONE
+            Entities::TABLE_NAMING_NONE,
         ))->run($r);
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
@@ -305,13 +356,13 @@ abstract class TableTestCase extends BaseTestCase
     public function testForeignKeysAnnotationReader(
         ReaderInterface $reader,
         string $directory,
-        string $outerKey = 'outer_key'
+        string $outerKey = 'outer_key',
     ): void {
         $tokenizer = new Tokenizer(
             new TokenizerConfig([
                 'directories' => [dirname(__DIR__, 3) . $directory],
                 'exclude' => [],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();
@@ -337,56 +388,5 @@ abstract class TableTestCase extends BaseTestCase
         $this->assertSame('CASCADE', $expectedFk->getDeleteRule());
         $this->assertSame('CASCADE', $expectedFk->getUpdateRule());
         $this->assertTrue($expectedFk->hasIndex());
-    }
-
-    public static function foreignKeyDirectoriesDataProvider(): \Traversable
-    {
-        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
-        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
-        yield [new AttributeReader(), '/Fixtures/Fixtures24/Class/PropertyName'];
-
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/DatabaseField'];
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/PrimaryKey', 'id'];
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Class/PropertyName'];
-
-        yield [
-            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Class/DatabaseField',
-        ];
-        yield [
-            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Class/PrimaryKey',
-            'id',
-        ];
-        yield [
-            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Class/PropertyName',
-        ];
-
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/DatabaseField'];
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/PrimaryKey', 'id'];
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Entity/PropertyName'];
-
-        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/DatabaseField'];
-        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/PrimaryKey', 'id'];
-        yield [new AttributeReader(), '/Fixtures/Fixtures24/Property/PropertyName'];
-
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/DatabaseField'];
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/PrimaryKey', 'id'];
-        yield [new AnnotationReader(), '/Fixtures/Fixtures24/Property/PropertyName'];
-
-        yield [
-            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Property/DatabaseField',
-        ];
-        yield [
-            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Property/PrimaryKey',
-            'id',
-        ];
-        yield [
-            new SelectiveReader([new AnnotationReader(), new AttributeReader()]),
-            '/Fixtures/Fixtures24/Property/PropertyName',
-        ];
     }
 }

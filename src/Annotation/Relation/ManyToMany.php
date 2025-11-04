@@ -70,7 +70,7 @@ class ManyToMany extends Relation
         protected ?string $collection = null,
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
-        ?Inverse $inverse = null
+        ?Inverse $inverse = null,
     ) {
         $this->inverse = $inverse;
 

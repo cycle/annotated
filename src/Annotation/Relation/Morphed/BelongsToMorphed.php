@@ -45,7 +45,7 @@ class BelongsToMorphed extends Relation
         protected bool $indexCreate = true,
         #[ExpectedValues(values: ['lazy', 'eager'])]
         string $load = 'lazy',
-        ?Inverse $inverse = null
+        ?Inverse $inverse = null,
     ) {
         $this->inverse = $inverse;
 

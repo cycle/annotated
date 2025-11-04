@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Table\Index;
  */
 #[Embeddable(role: 'address', columnPrefix: 'address_')]
 #[Table(indexes: [
-    new Index(columns: ['zipcode'])
+    new Index(columns: ['zipcode']),
 ])]
 class Address
 {

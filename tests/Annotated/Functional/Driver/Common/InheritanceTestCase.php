@@ -42,7 +42,7 @@ abstract class InheritanceTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../Fixtures/Fixtures16'],
                 'exclude' => [__DIR__ . '/Fixtures16/CatWithoutParent.php'],
-            ])
+            ]),
         );
 
         $locator = $tokenizer->classLocator();

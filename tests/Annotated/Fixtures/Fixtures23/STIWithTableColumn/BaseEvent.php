@@ -20,7 +20,7 @@ use Cycle\Annotated\Annotation\Table;
 #[Entity]
 #[Table(columns: [
     new Column(type: 'primary', property: 'id'),
-    new Column(type: 'string', property: 'action')
+    new Column(type: 'string', property: 'action'),
 ])]
 #[DiscriminatorColumn('action')]
 abstract class BaseEvent

@@ -10,15 +10,12 @@ use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\Annotated\Annotation\Relation\ManyToMany;
 
 #[Entity(
-    table: 'FlightBooking'
+    table: 'FlightBooking',
 )]
 class Booking
 {
     #[Column(type: 'primary', name: 'id_booking')]
     protected ?int $bid = null;
-
-    #[Column(type: 'bigInteger', name: 'reserv_id_column')]
-    private int $reserv_id;
 
     // Without manual declaration
     #[HasOne(target: Reservation::class, fkCreate: false)]
@@ -59,4 +56,7 @@ class Booking
         fkCreate: false,
     )]
     protected array $reservations2;
+
+    #[Column(type: 'bigInteger', name: 'reserv_id_column')]
+    private int $reserv_id;
 }

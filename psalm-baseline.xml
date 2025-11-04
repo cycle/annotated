@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="src/Annotation/Column.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$attributes]]></code>
+    </MixedPropertyTypeCoercion>
+  </file>
+  <file src="src/Annotation/Embeddable.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Entity.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/ForeignKey.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/GeneratedValue.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Inheritance/DiscriminatorColumn.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Inheritance/JoinedTable.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Inheritance/SingleTable.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Relation/BelongsTo.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/Embedded.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/HasMany.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/HasOne.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/Inverse.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Relation/ManyToMany.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/Morphed/BelongsToMorphed.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/Morphed/MorphedHasMany.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/Morphed/MorphedHasOne.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/RefersTo.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
+  <file src="src/Annotation/Relation/Relation.php">
+    <MixedReturnStatement>
+      <code><![CDATA[static::TYPE]]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Annotation/Table.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Table/Index.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Annotation/Table/PrimaryKey.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$columns]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Configurator.php">
+    <MixedArgument>
+      <code><![CDATA[$this->resolveTypecast($column->getTypecast(), $class)]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$columnName]]></code>
+      <code><![CDATA[$propertyName]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$v]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($propertyName)]]></code>
+      <code><![CDATA[empty($resolvedTarget)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[Embeddable|null]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Entities.php">
+    <MixedArgument>
+      <code><![CDATA[$through]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[empty($foreignKey->getOuterColumns())
+                    ? $targetEntity->getPrimaryFields()->getColumnNames()
+                    : $this->getColumnNames($targetEntity, $foreignKey->getOuterColumns())]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$through]]></code>
+    </MixedAssignment>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($tableName)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Exception/AnnotationRequiredArgumentsException.php">
+    <UnsafeInstantiation>
+      <code><![CDATA[new static(
+            sprintf(
+                'Some of required arguments [`%s`] is missed on `%s.%s.`',
+                implode('`, `', $requiredArguments),
+                $property->getDeclaringClass()->getName(),
+                $property->getName(),
+            ),
+            (int) $e->getCode(),
+            $e,
+        )]]></code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Exception/AnnotationWrongTypeArgumentException.php">
+    <UnsafeInstantiation>
+      <code><![CDATA[new static(
+            sprintf(
+                'Some of arguments has a wrong type on `%s.%s.`. Error: `%s`',
+                $property->getDeclaringClass()->getName(),
+                $property->getName(),
+                $e->getMessage(),
+            ),
+            (int) $e->getCode(),
+            $e,
+        )]]></code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Locator/TokenizerEntityLocator.php">
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[$attribute !== null]]></code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/MergeColumns.php">
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[static fn(string $field): bool => !$e->getFields()->has($field)]]></code>
+    </MixedArgumentTypeCoercion>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($name)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[Table|null]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/MergeIndexes.php">
+    <MixedArgument>
+      <code><![CDATA[$column]]></code>
+      <code><![CDATA[$expression]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$expression]]></code>
+    </MixedAssignment>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[Table\PrimaryKey|null]]></code>
+      <code><![CDATA[Table|null]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/ReaderFactory.php">
+    <DeprecatedClass>
+      <code><![CDATA[new AnnotationReader($reader)]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/TableInheritance.php">
+    <MixedArgument>
+      <code><![CDATA[$column]]></code>
+      <code><![CDATA[$column]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$column]]></code>
+      <code><![CDATA[$column]]></code>
+    </MixedAssignment>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[$child->getRole() !== null && $entity !== null]]></code>
+      <code><![CDATA[$entity !== null]]></code>
+      <code><![CDATA[\assert($child->getRole() !== null && $entity !== null && isset($parent))]]></code>
+    </RedundantConditionGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$outerKey]]></code>
+      <code><![CDATA[empty($tableName)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+</files>

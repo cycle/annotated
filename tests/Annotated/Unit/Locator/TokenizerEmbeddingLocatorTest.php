@@ -15,6 +15,24 @@ use Spiral\Tokenizer\ClassesInterface;
 
 final class TokenizerEmbeddingLocatorTest extends TestCase
 {
+    public static function classesDataProvider(): \Traversable
+    {
+        yield [[], []];
+        yield [[], [Child::class => new \ReflectionClass(Child::class)]];
+        yield [
+            [
+                new Embedding(
+                    new Embeddable(role: 'address', columnPrefix: 'address_'),
+                    new \ReflectionClass(Address::class),
+                ),
+            ],
+            [
+                Address::class => new \ReflectionClass(Address::class),
+                Child::class => new \ReflectionClass(Child::class),
+            ],
+        ];
+    }
+
     #[DataProvider('classesDataProvider')]
     public function testGetEmbeddings(array $expected, array $classes): void
     {
@@ -24,23 +42,5 @@ final class TokenizerEmbeddingLocatorTest extends TestCase
         $locator = new TokenizerEmbeddingLocator($mock);
 
         $this->assertEquals($expected, $locator->getEmbeddings());
-    }
-
-    public static function classesDataProvider(): \Traversable
-    {
-        yield [[], []];
-        yield [[], [Child::class => new \ReflectionClass(Child::class)]];
-        yield [
-            [
-                new Embedding(
-                    new Embeddable(role: 'address', columnPrefix: 'address_'),
-                    new \ReflectionClass(Address::class)
-                ),
-            ],
-            [
-                Address::class => new \ReflectionClass(Address::class),
-                Child::class => new \ReflectionClass(Child::class),
-            ],
-        ];
     }
 }

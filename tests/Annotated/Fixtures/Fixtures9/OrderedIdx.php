@@ -25,11 +25,11 @@ use Cycle\Annotated\Annotation\Table\Index;
 #[Table(
     columns: [
         'name' => new Column(type: 'string'),
-        new Column(type: 'string', property: 'other_name')
+        new Column(type: 'string', property: 'other_name'),
     ],
     indexes: [
-        new Index(columns: ['name', 'id DESC'])
-    ]
+        new Index(columns: ['name', 'id DESC']),
+    ],
 )]
 class OrderedIdx
 {

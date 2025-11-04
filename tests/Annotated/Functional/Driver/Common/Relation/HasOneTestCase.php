@@ -56,7 +56,7 @@ abstract class HasOneTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures18'],
                 'exclude' => [],
-            ])
+            ]),
         );
         $reader = new AttributeReader();
 
@@ -91,19 +91,19 @@ abstract class HasOneTestCase extends BaseTestCase
 
             $this->assertSame(Relation::HAS_ONE, $relation[Relation::TYPE], "$name: relation type");
             $this->assertSame(
-                (array)$innerKey,
-                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
-                "$name: Inner Key"
+                (array) $innerKey,
+                (array) $relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key",
             );
             $this->assertSame(
-                (array)$outerKey,
-                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
-                "$name: Outer Key"
+                (array) $outerKey,
+                (array) $relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key",
             );
         }
         $this->assertArrayNotHasKey(
             'id_reservation',
-            $schema['booking'][SchemaInterface::COLUMNS]
+            $schema['booking'][SchemaInterface::COLUMNS],
         );
     }
 }

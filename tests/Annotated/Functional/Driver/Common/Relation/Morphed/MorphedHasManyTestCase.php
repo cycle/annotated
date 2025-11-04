@@ -45,14 +45,14 @@ abstract class MorphedHasManyTestCase extends BaseTestCase
         $this->assertArrayHasKey('labels', $schema['simple'][Schema::RELATIONS]);
         $this->assertSame(
             Relation::MORPHED_HAS_MANY,
-            $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE]
+            $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE],
         );
         $this->assertSame('label', $schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET]);
 
         $this->assertArrayHasKey('labels', $schema['withTable'][Schema::RELATIONS]);
         $this->assertSame(
             Relation::MORPHED_HAS_MANY,
-            $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TYPE]
+            $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TYPE],
         );
 
         $this->assertSame('label', $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TARGET]);
@@ -61,26 +61,26 @@ abstract class MorphedHasManyTestCase extends BaseTestCase
             $this->dbal->database('default')
                 ->getDriver()
                 ->getSchema('labels')
-                ->hasColumn('owner_id')
+                ->hasColumn('owner_id'),
         );
 
         $this->assertTrue(
             $this->dbal->database('default')
                 ->getDriver()
                 ->getSchema('labels')
-                ->hasColumn('owner_role')
+                ->hasColumn('owner_role'),
         );
 
         $this->assertFalse(
             $this->dbal->database('default')
                 ->getDriver()
                 ->getSchema('labels')
-                ->hasIndex(['owner_id', 'owner_role'])
+                ->hasIndex(['owner_id', 'owner_role']),
         );
 
         $this->assertSame(
             BaseCollection::class,
-            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE] // phpcs:ignore
+            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE], // phpcs:ignore
         );
     }
 }

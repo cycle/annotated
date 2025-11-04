@@ -20,11 +20,10 @@ use Spiral\Attributes\ReaderInterface;
 final class MergeColumns implements GeneratorInterface
 {
     private readonly ReaderInterface $reader;
-
     private readonly Configurator $generator;
     private readonly EntityUtils $utils;
 
-    public function __construct(DoctrineReader|ReaderInterface $reader = null, ?EntityUtils $utils = null)
+    public function __construct(DoctrineReader|ReaderInterface|null $reader = null, ?EntityUtils $utils = null)
     {
         $this->reader = ReaderFactory::create($reader);
         $this->generator = new Configurator($this->reader);
@@ -81,8 +80,8 @@ final class MergeColumns implements GeneratorInterface
 
         $columns = \array_filter(
             $columns,
-            static fn (string $field): bool => !$e->getFields()->has($field),
-            \ARRAY_FILTER_USE_KEY
+            static fn(string $field): bool => !$e->getFields()->has($field),
+            \ARRAY_FILTER_USE_KEY,
         );
 
         if ($columns === []) {

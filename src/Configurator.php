@@ -64,7 +64,7 @@ final class Configurator
         $typecast = $ann->getTypecast();
         if (\is_array($typecast)) {
             /** @var non-empty-string[] $typecast */
-            $typecast = \array_map(fn (string $value): string => $this->resolveName($value, $class), $typecast);
+            $typecast = \array_map(fn(string $value): string => $this->resolveName($value, $class), $typecast);
         } else {
             /** @var non-empty-string|null $typecast */
             $typecast = $this->resolveName($typecast, $class);
@@ -90,6 +90,18 @@ final class Configurator
 
         // representing classes
         $e->setMapper($this->resolveName($emb->getMapper(), $class));
+
+        $typecast = $emb->getTypecast();
+
+        if (\is_array($typecast)) {
+            /** @var non-empty-string[] $typecast */
+            $typecast = \array_map(fn(string $value): string => $this->resolveName($value, $class), $typecast);
+        } else {
+            /** @var non-empty-string|null $typecast */
+            $typecast = $this->resolveName($typecast, $class);
+        }
+
+        $e->setTypecast($typecast);
 
         return $e;
     }
@@ -134,7 +146,7 @@ final class Configurator
                 $target = $meta->getTarget();
                 if ($target === null) {
                     throw new AnnotationException(
-                        "Relation target definition is required on `{$entity->getClass()}`.`{$property->getName()}`"
+                        "Relation target definition is required on `{$entity->getClass()}`.`{$property->getName()}`",
                     );
                 }
 
@@ -148,13 +160,13 @@ final class Configurator
 
                 $inverse = $meta->getInverse() ?? $this->reader->firstPropertyMetadata(
                     $property,
-                    RelationAnnotation\Inverse::class
+                    RelationAnnotation\Inverse::class,
                 );
                 if ($inverse !== null) {
                     $relation->setInverse(
                         $inverse->getName(),
                         $inverse->getType(),
-                        $inverse->getLoadMethod()
+                        $inverse->getLoadMethod(),
                     );
                 }
 
@@ -172,7 +184,7 @@ final class Configurator
                     $value = match ($option) {
                         'collection' => $this->resolveName($value, $class),
                         'through' => $this->resolveName($value, $class),
-                        default => $value
+                        default => $value,
                     };
 
                     $relation->getOptions()->set($option, $value);
@@ -208,7 +220,7 @@ final class Configurator
             if (!$isNumericKey && $propertyName !== null && $key !== $propertyName) {
                 throw new AnnotationException(
                     "Can not use name \"{$key}\" for Column of the `{$entity->getRole()}` role, because the "
-                    . "\"property\" field of the metadata class has already been set to \"{$propertyName}\"."
+                    . "\"property\" field of the metadata class has already been set to \"{$propertyName}\".",
                 );
             }
 
@@ -219,7 +231,7 @@ final class Configurator
 
             if ($columnName === null) {
                 throw new AnnotationException(
-                    "Column name definition is required on `{$entity->getClass()}`"
+                    "Column name definition is required on `{$entity->getClass()}`",
                 );
             }
 
@@ -293,7 +305,7 @@ final class Configurator
         foreach ($foreignKeys as $foreignKey) {
             if ($foreignKey->innerKey === null) {
                 throw new AnnotationException(
-                    "Inner column definition for the foreign key is required on `{$entity->getClass()}`"
+                    "Inner column definition for the foreign key is required on `{$entity->getClass()}`",
                 );
             }
 
@@ -341,7 +353,7 @@ final class Configurator
         $resolved = \sprintf(
             '%s\\%s',
             $class->getNamespaceName(),
-            \ltrim(\str_replace('/', '\\', $name), '\\')
+            \ltrim(\str_replace('/', '\\', $name), '\\'),
         );
 
         if ($this->exists($resolved)) {
@@ -381,9 +393,9 @@ final class Configurator
      *
      * @param class-string<T> $name
      *
+     * @return iterable<T>
      * @throws AnnotationException
      *
-     * @return iterable<T>
      */
     private function getClassMetadata(\ReflectionClass $class, string $name): iterable
     {
@@ -399,9 +411,9 @@ final class Configurator
      *
      * @param class-string<T> $name
      *
+     * @return iterable<T>
      * @throws AnnotationException
      *
-     * @return iterable<T>
      */
     private function getPropertyMetadata(\ReflectionProperty $property, string $name): iterable
     {
@@ -416,7 +428,7 @@ final class Configurator
     {
         return match ($field->getType()) {
             'serial', 'bigserial', 'smallserial' => true,
-            default => $field->isPrimary()
+            default => $field->isPrimary(),
         };
     }
 

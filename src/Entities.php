@@ -32,7 +32,7 @@ final class Entities implements GeneratorInterface
 
     public function __construct(
         private readonly EntityLocatorInterface $locator,
-        DoctrineReader|ReaderInterface $reader = null,
+        DoctrineReader|ReaderInterface|null $reader = null,
         int $tableNamingStrategy = self::TABLE_NAMING_PLURAL,
     ) {
         $this->reader = ReaderFactory::create($reader);
@@ -118,19 +118,19 @@ final class Entities implements GeneratorInterface
                         if ($through !== null) {
                             $r->getOptions()->set(
                                 'through',
-                                $this->resolveTarget($registry, $through)
+                                $this->resolveTarget($registry, $through),
                             );
                         }
                     }
 
                     if ($r->getOptions()->has('throughInnerKey')) {
-                        if ($throughInnerKey = (array)$r->getOptions()->get('throughInnerKey')) {
+                        if ($throughInnerKey = (array) $r->getOptions()->get('throughInnerKey')) {
                             $r->getOptions()->set('throughInnerKey', $throughInnerKey);
                         }
                     }
 
                     if ($r->getOptions()->has('throughOuterKey')) {
-                        if ($throughOuterKey = (array)$r->getOptions()->get('throughOuterKey')) {
+                        if ($throughOuterKey = (array) $r->getOptions()->get('throughOuterKey')) {
                             $r->getOptions()->set('throughOuterKey', $throughOuterKey);
                         }
                     }
@@ -141,7 +141,7 @@ final class Entities implements GeneratorInterface
                     throw new RelationException(
                         \sprintf('Unable to resolve `%s`.`%s` relation target (not found or invalid)', $role, $name),
                         $ex->getCode(),
-                        $ex
+                        $ex,
                     );
                 }
             }
@@ -198,9 +198,9 @@ final class Entities implements GeneratorInterface
     /**
      * @param array<non-empty-string> $columns
      *
+     * @return array<non-empty-string>
      * @throws AnnotationException
      *
-     * @return array<non-empty-string>
      */
     private function getColumnNames(EntitySchema $entity, array $columns): array
     {

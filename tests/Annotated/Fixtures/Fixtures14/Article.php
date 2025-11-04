@@ -15,6 +15,10 @@ use Cycle\Annotated\Annotation\Relation\RefersTo;
 #[Entity]
 class Article extends Post
 {
+    /** @Column(type="string") */
+    #[Column(type: 'string')]
+    public $title;
+
     /** @Column(type="integer", nullable=true) */
     #[Column(type: 'integer', nullable: true)]
     protected int $field1;
@@ -22,10 +26,6 @@ class Article extends Post
     /** @Column(type="integer", nullable=true) */
     #[Column(type: 'integer', nullable: true)]
     protected int $field2;
-
-    /** @Column(type="string") */
-    #[Column(type: 'string')]
-    public $title;
 
     /** @BelongsTo(target="Some", innerKey={"id1", "id2"}, outerKey={"id1", "id2"}, fkAction="NO ACTION") */
     #[BelongsTo(target: Some::class, innerKey: ['id1', 'id2'], outerKey: ['id1', 'id2'], fkAction: 'NO ACTION')]

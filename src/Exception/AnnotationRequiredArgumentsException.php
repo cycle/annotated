@@ -25,10 +25,10 @@ class AnnotationRequiredArgumentsException extends AnnotationException
                 'Some of required arguments [`%s`] is missed on `%s.%s.`',
                 implode('`, `', $requiredArguments),
                 $property->getDeclaringClass()->getName(),
-                $property->getName()
+                $property->getName(),
             ),
             (int) $e->getCode(),
-            $e
+            $e,
         );
     }
 }

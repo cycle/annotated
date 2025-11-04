@@ -18,9 +18,8 @@ class DiscriminatorColumn
      * @param non-empty-string $name
      */
     public function __construct(
-        protected string $name
-    ) {
-    }
+        protected string $name,
+    ) {}
 
     /**
      * @return non-empty-string

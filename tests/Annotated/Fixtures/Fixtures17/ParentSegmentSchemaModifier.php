@@ -39,9 +39,7 @@ class ParentSegmentSchemaModifier implements SchemaModifierInterface
         $registry->getEntity($this->role)->setTypecast('test-typecast');
     }
 
-    public function render(Registry $registry): void
-    {
-    }
+    public function render(Registry $registry): void {}
 
     public function modifySchema(array &$schema): void
     {

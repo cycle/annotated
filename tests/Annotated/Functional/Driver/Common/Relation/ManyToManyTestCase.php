@@ -60,7 +60,7 @@ abstract class ManyToManyTestCase extends BaseTestCase
 
         $table = current(array_filter(
             $t->getReflector()->getTables(),
-            static fn (AbstractTable $t): bool => str_contains($t->getName(), 'context')
+            static fn(AbstractTable $t): bool => str_contains($t->getName(), 'context'),
         ));
         assert($table instanceof AbstractTable);
 
@@ -69,7 +69,7 @@ abstract class ManyToManyTestCase extends BaseTestCase
         $this->assertSame('tag', $schema['post'][Schema::RELATIONS]['tags'][Relation::TARGET]);
         $this->assertSame(
             'context',
-            $schema['post'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY]
+            $schema['post'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY],
         );
 
         // Check table
@@ -97,40 +97,40 @@ abstract class ManyToManyTestCase extends BaseTestCase
 
         $this->assertSame(
             Relation::MANY_TO_MANY,
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TYPE]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TYPE],
         );
 
         $this->assertSame(
             'tag',
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TARGET]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TARGET],
         );
 
         $this->assertSame(
             'tagContext',
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY],
         );
 
         $this->assertSame(
             ['withTable_id'],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
         );
 
         $this->assertSame(
             ['tag_id'],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
         );
 
         $this->assertSame(
             ['id' => ['>=' => '1']],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE],
         );
         $this->assertSame(
             ['id' => 'DESC'],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY],
         );
         $this->assertSame(
             BaseCollection::class,
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::COLLECTION_TYPE]
+            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::COLLECTION_TYPE],
         );
     }
 
@@ -140,7 +140,7 @@ abstract class ManyToManyTestCase extends BaseTestCase
             new TokenizerConfig([
                 'directories' => [__DIR__ . '/../../../../Fixtures/Fixtures18'],
                 'exclude' => [],
-            ])
+            ]),
         );
         $reader = new AttributeReader();
 
@@ -174,36 +174,36 @@ abstract class ManyToManyTestCase extends BaseTestCase
 
         foreach ($checks as [$name, $innerKey, $outerKey, $throughInnerKey, $throughOuterKey]) {
             $relation = $schema['booking'][SchemaInterface::RELATIONS][$name];
-            $innerKey = (array)$innerKey;
-            $outerKey = (array)$outerKey;
-            $throughInnerKey = (array)$throughInnerKey;
-            $throughOuterKey = (array)$throughOuterKey;
+            $innerKey = (array) $innerKey;
+            $outerKey = (array) $outerKey;
+            $throughInnerKey = (array) $throughInnerKey;
+            $throughOuterKey = (array) $throughOuterKey;
 
             $this->assertSame(Relation::MANY_TO_MANY, $relation[Relation::TYPE], "$name: relation type");
             $this->assertSame(
                 $innerKey,
-                (array)$relation[Relation::SCHEMA][Relation::INNER_KEY],
-                "$name: Inner Key"
+                (array) $relation[Relation::SCHEMA][Relation::INNER_KEY],
+                "$name: Inner Key",
             );
             $this->assertSame(
                 $outerKey,
-                (array)$relation[Relation::SCHEMA][Relation::OUTER_KEY],
-                "$name: Outer Key"
+                (array) $relation[Relation::SCHEMA][Relation::OUTER_KEY],
+                "$name: Outer Key",
             );
             $this->assertSame(
                 $throughInnerKey,
-                (array)$relation[Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
-                "$name: Through inner Key"
+                (array) $relation[Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
+                "$name: Through inner Key",
             );
             $this->assertSame(
                 $throughOuterKey,
-                (array)$relation[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
-                "$name: Through outer Key"
+                (array) $relation[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
+                "$name: Through outer Key",
             );
         }
         $this->assertArrayNotHasKey(
             'booking_id_column',
-            $schema['booking_reservation'][SchemaInterface::COLUMNS]
+            $schema['booking_reservation'][SchemaInterface::COLUMNS],
         );
     }
 }

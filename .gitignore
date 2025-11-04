@@ -1,9 +1,5 @@
-.idea/
-.env
+/.*/
+!/.github/
+/runtime/
+/vendor/
 composer.lock
-vendor/
-*.db
-clover.xml
-.php_cs.cache
-.phpunit.cache
-build

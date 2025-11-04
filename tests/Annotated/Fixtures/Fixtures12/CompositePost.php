@@ -28,6 +28,5 @@ class CompositePost
 {
     protected $id;
     protected $userId;
-
     protected $title;
 }

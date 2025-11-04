@@ -8,7 +8,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(
-    table: 'FlightSegment'
+    table: 'FlightSegment',
 )]
 class Segment
 {

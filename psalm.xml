@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-    findUnusedCode="false"
+    errorBaseline="psalm-baseline.xml"
+    errorLevel="1"
     findUnusedBaselineEntry="true"
 >
     <projectFiles>
@@ -14,6 +14,11 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <PossiblyUnusedMethod errorLevel="suppress"/>
+        <ClassMustBeFinal errorLevel="suppress"/>
+        <UnusedClass errorLevel="suppress"/>
+        <MissingOverrideAttribute errorLevel="suppress"/>
+        <MissingClassConstType errorLevel="suppress"/>
         <UndefinedAttributeClass>
             <errorLevel type="suppress">
                 <referencedClass name="JetBrains\PhpStorm\ExpectedValues" />

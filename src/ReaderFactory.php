@@ -11,7 +11,7 @@ use Spiral\Attributes\ReaderInterface;
 
 final class ReaderFactory
 {
-    public static function create(DoctrineReader|ReaderInterface $reader = null): ReaderInterface
+    public static function create(DoctrineReader|ReaderInterface|null $reader = null): ReaderInterface
     {
         return match (true) {
             $reader instanceof ReaderInterface => $reader,

@@ -6,6 +6,4 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures1\Repository;
 
 use Cycle\ORM\Select\Repository;
 
-class CompleteRepository extends Repository
-{
-}
+class CompleteRepository extends Repository {}

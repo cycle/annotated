@@ -10,7 +10,6 @@ final class Embedding
 {
     public function __construct(
         public readonly Embeddable $attribute,
-        public readonly \ReflectionClass $class
-    ) {
-    }
+        public readonly \ReflectionClass $class,
+    ) {}
 }

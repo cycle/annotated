@@ -16,8 +16,7 @@ abstract class Relation implements RelationInterface
     public function __construct(
         protected ?string $target,
         protected string $load = 'lazy',
-    ) {
-    }
+    ) {}
 
     /**
      * @return non-empty-string

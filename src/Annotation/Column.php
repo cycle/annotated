@@ -19,6 +19,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
 class Column
 {
     protected bool $hasDefault = false;
+
     /**
      * @var array<non-empty-string, mixed> Other database specific attributes.
      */
@@ -50,7 +51,7 @@ class Column
         #[ExpectedValues(values: ['primary', 'bigPrimary', 'enum', 'boolean',
             'integer', 'tinyInteger', 'smallInteger', 'bigInteger', 'string', 'text', 'tinyText', 'longText', 'double',
             'float', 'decimal', 'datetime', 'date', 'time', 'timestamp', 'binary', 'tinyBinary', 'longBinary', 'json',
-            'uuid', 'bit',
+            'snowflake', 'ulid', 'uuid', 'bit',
             // PostgreSQL
             'smallPrimary', 'timetz', 'timestamptz', 'interval', 'bitVarying', 'int4range', 'int8range', 'numrange',
             'tsrange', 'tstzrange', 'daterange', 'jsonb', 'point', 'line', 'lseg', 'box', 'path', 'polygon', 'circle',
@@ -72,7 +73,7 @@ class Column
         if ($default !== null) {
             $this->hasDefault = true;
         }
-        $this->attributes = $attributes;
+        $this->setAttributes($attributes);
     }
 
     /**
@@ -140,5 +141,34 @@ class Column
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    protected function setAttributes(array $attributes): void
+    {
+        if ($this->type === 'enum' && isset($attributes['values'])) {
+            /** @var mixed $values */
+            $values = $attributes['values'];
+            /** @var list<mixed> $array */
+            $array = [];
+
+            if (is_string($values) && enum_exists($values) && method_exists($values, 'cases')) {
+                /** @var class-string<\BackedEnum> $values */
+                $array = array_column($values::cases(), 'value');
+            } elseif ($values instanceof \BackedEnum) {
+                $array = array_column($values::cases(), 'value');
+            } elseif (is_array($values)) {
+                $array = array_map(function ($value) {
+                    return $value instanceof \BackedEnum ? $value->value : $value;
+                }, $values);
+            }
+
+            $this->type = 'enum(' . implode(',', array_map(function ($item) {
+                return is_scalar($item) ? strval($item) : '';
+            }, $array)) . ')';
+
+            unset($attributes['values']);
+        }
+
+        $this->attributes = $attributes;
     }
 }

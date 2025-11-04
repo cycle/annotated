@@ -19,7 +19,7 @@ final class EntityUtils
     private readonly Inflector $inflector;
 
     public function __construct(
-        private readonly ReaderInterface $reader
+        private readonly ReaderInterface $reader,
     ) {
         $this->inflector = (new InflectorFactory())->build();
     }

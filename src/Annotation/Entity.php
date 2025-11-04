@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Annotation;
 
+use Cycle\ORM\MapperInterface as Mapper;
+use Cycle\ORM\RepositoryInterface as Repository;
+use Cycle\ORM\Select\ScopeInterface as Scope;
+use Cycle\ORM\Select\SourceInterface as Source;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Spiral\Attributes\NamedArgumentConstructor;
 
@@ -17,15 +21,16 @@ class Entity
 {
     /**
      * @param non-empty-string|null $role Entity role. Defaults to the lowercase class name without a namespace.
-     * @param class-string|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}
-     * @param class-string|null $repository Repository class to represent read operations for an entity.
+     * @param class-string<Mapper>|null $mapper Mapper class name. Defaults to {@see \Cycle\ORM\Mapper\Mapper}
+     * @param class-string<Repository>|null $repository Repository class to represent read operations for an entity.
      *        Defaults to {@see \Cycle\ORM\Select\Repository}
      * @param non-empty-string|null $table Entity source table. Defaults to plural form of entity role.
      * @param bool $readonlySchema Set to true to disable schema synchronization for the assigned table.
      * @param non-empty-string|null $database Database name. Defaults to null (default database).
-     * @param class-string|null $source Entity source class (internal). Defaults to {@see \Cycle\ORM\Select\Source}
-     * @param non-empty-string|non-empty-string[]|null $typecast
-     * @param class-string|null $scope Class name of constraint to be applied to every entity query.
+     * @param class-string<Source>|null $source Entity source class (internal).
+     *        Defaults to {@see \Cycle\ORM\Select\Source}
+     * @param non-empty-string|non-empty-string[]|null $typecast Typecast handlers for entity columns.
+     * @param class-string<Scope>|null $scope Class name of constraint to be applied to every entity query.
      * @param Column[] $columns Entity columns.
      * @param ForeignKey[] $foreignKeys Entity foreign keys.
      */
@@ -41,8 +46,7 @@ class Entity
         protected ?string $scope = null,
         protected array $columns = [],
         protected array $foreignKeys = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @return non-empty-string|null

@@ -51,7 +51,7 @@ abstract class RefersToTestCase extends BaseTestCase
                 ->getDriver()
                 ->getSchema('simples')
                 ->foreignKey(['parent_id'])
-                ->getDeleteRule()
+                ->getDeleteRule(),
         );
     }
 }

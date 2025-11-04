@@ -10,7 +10,7 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 
 #[Entity(
     role: 'booking_reservation',
-    table: 'FlightReservation'
+    table: 'FlightReservation',
 )]
 class Reservation
 {

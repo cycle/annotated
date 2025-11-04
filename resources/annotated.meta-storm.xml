@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta-storm xmlns="meta-storm">
+    <definitions>
+        <!-- Embeddable Entity -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Embeddable" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+
+        <!-- Foreign Key -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="0">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\ForeignKey" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+    </definitions>
+</meta-storm>
