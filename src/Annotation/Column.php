@@ -73,7 +73,7 @@ class Column
         if ($default !== null) {
             $this->hasDefault = true;
         }
-        $this->attributes = $attributes;
+        $this->setAttributes($attributes);
     }
 
     /**
@@ -141,5 +141,43 @@ class Column
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @param array<non-empty-string, mixed> $attributes
+     */
+    protected function setAttributes(array $attributes): void
+    {
+        if ($this->type === 'enum' && isset($attributes['values'])) {
+            /** @var mixed $values */
+            $values = $attributes['values'];
+            /** @var list<mixed> $array */
+            $array = [];
+
+            if (is_string($values) && enum_exists($values) && method_exists($values, 'cases')) {
+                /** @var class-string<\BackedEnum> $values */
+                $array = array_column($values::cases(), 'value');
+            } elseif ($values instanceof \BackedEnum) {
+                $array = array_column($values::cases(), 'value');
+            } elseif (is_array($values)) {
+                $array = array_map(function ($value) {
+                    if ($value instanceof \BackedEnum) {
+                        return $value->value;
+                    }
+                    if (is_object($value) && property_exists($value, 'value')) {
+                        return $value->value;
+                    }
+                    return $value;
+                }, $values);
+            }
+
+            $this->type = 'enum(' . implode(',', array_map(function ($item) {
+                return is_scalar($item) ? strval($item) : '';
+            }, $array)) . ')';
+
+            unset($attributes['values']);
+        }
+
+        $this->attributes = $attributes;
     }
 }
