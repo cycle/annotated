@@ -158,13 +158,7 @@ class Column
                 $array = array_column($values::cases(), 'value');
             } elseif (is_array($values)) {
                 $array = array_map(function ($value) {
-                    if ($value instanceof \BackedEnum) {
-                        return $value->value;
-                    }
-                    if (is_object($value) && property_exists($value, 'value')) {
-                        return $value->value;
-                    }
-                    return $value;
+                    return $value instanceof \BackedEnum ? $value->value : $value;
                 }, $values);
             }
 
