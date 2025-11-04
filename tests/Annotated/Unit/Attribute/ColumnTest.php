@@ -46,9 +46,16 @@ class ColumnTest extends TestCase
     #[Column(
         type: 'enum',
         default: 'a',
-        values: [StringEnum::A, StringEnum::B],
+        values: StringEnum::A,
     )]
     private string $column8 = 'a';
+
+    #[Column(
+        type: 'enum',
+        default: 'a',
+        values: [StringEnum::A, StringEnum::B],
+    )]
+    private string $column9 = 'a';
 
     public function testOneAttribute(): void
     {
@@ -101,7 +108,7 @@ class ColumnTest extends TestCase
         $this->assertArrayNotHasKey('values', $column->getAttributes());
     }
 
-    public function testEnumTypeBackedEnum(): void
+    public function testEnumTypeStringClass(): void
     {
         $column = $this->getColumn('column7');
 
@@ -110,9 +117,18 @@ class ColumnTest extends TestCase
         $this->assertArrayNotHasKey('values', $column->getAttributes());
     }
 
-    public function testEnumTypeArrayBackedEnum(): void
+    public function testEnumTypeBackedEnum(): void
     {
         $column = $this->getColumn('column8');
+
+        $this->assertSame('enum(a,b)', $column->getType());
+        $this->assertSame('a', $column->getDefault());
+        $this->assertArrayNotHasKey('values', $column->getAttributes());
+    }
+
+    public function testEnumTypeArrayBackedEnum(): void
+    {
+        $column = $this->getColumn('column9');
 
         $this->assertSame('enum(a,b)', $column->getType());
         $this->assertSame('a', $column->getDefault());
