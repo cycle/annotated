@@ -46,11 +46,12 @@
         "doctrine/inflector": "^2.0"
     },
     "require-dev": {
+        "buggregator/trap": "^1.15",
         "doctrine/annotations": "^1.14.3 || ^2.0.1",
         "phpunit/phpunit": "^10.1",
-        "vimeo/psalm": "^5.26 || ^6.0",
         "spiral/code-style": "^2.2",
-        "spiral/dumper": "^3.3"
+        "spiral/dumper": "^3.3",
+        "vimeo/psalm": "^5.26 || ^6.0"
     },
     "autoload": {
         "psr-4": {
