@@ -7,7 +7,9 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures16;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-/** @Entity */
+/**
+ * @Entity
+ */
 #[Entity]
 class Beaver extends Person
 {

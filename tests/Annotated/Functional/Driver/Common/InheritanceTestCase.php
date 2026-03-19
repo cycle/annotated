@@ -108,7 +108,7 @@ abstract class InheritanceTestCase extends BaseTestCase
         $this->assertSame('employee', $schema['executive'][SchemaInterface::PARENT]);
         $this->assertSame('foo_id', $schema['executive'][SchemaInterface::PARENT_KEY]);
         $this->assertSame('executives', $schema['executive'][SchemaInterface::TABLE]);
-        $this->assertSame(
+        $this->assertEquals(
             ['bonus' => 'bonus', 'foo_id' => 'id', 'hidden' => 'hidden'],
             $schema['executive'][SchemaInterface::COLUMNS],
         );

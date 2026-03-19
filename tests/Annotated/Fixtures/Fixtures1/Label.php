@@ -36,4 +36,7 @@ class Label
 
     #[Column(type: 'tinyInteger')]
     private int $simple = 1;
+
+    #[Column(type: 'string', charset: 'ascii', collation: 'ascii_bin')]
+    private string $charsetColumn = '';
 }
