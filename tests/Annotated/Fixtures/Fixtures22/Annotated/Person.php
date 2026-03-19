@@ -6,5 +6,7 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures22\Annotated;
 
 use Cycle\Annotated\Annotation\Entity;
 
-/** @Entity */
+/**
+ * @Entity
+ */
 class Person {}

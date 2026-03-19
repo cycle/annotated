@@ -24,29 +24,23 @@ class WithGeneratedFields
      * @Column(type="datetime", name="created_at")
      * @GeneratedValue(beforeInsert=true)
      */
-    #[
-        Column(type: 'datetime', name: 'created_at'),
-        GeneratedValue(beforeInsert: true)
-    ]
+    #[Column(type: 'datetime', name: 'created_at'),
+        GeneratedValue(beforeInsert: true)]
     public \DateTimeImmutable $createdAt;
 
     /**
      * @Column(type="datetime", name="created_at_generated_by_database")
      * @GeneratedValue(onInsert=true)
      */
-    #[
-        Column(type: 'datetime', name: 'created_at_generated_by_database'),
-        GeneratedValue(onInsert: true)
-    ]
+    #[Column(type: 'datetime', name: 'created_at_generated_by_database'),
+        GeneratedValue(onInsert: true)]
     public \DateTimeImmutable $createdAtGeneratedByDatabase;
 
     /**
      * @Column(type="datetime", name="created_at")
      * @GeneratedValue(beforeInsert=true, beforeUpdate=true)
      */
-    #[
-        Column(type: 'datetime', name: 'updated_at'),
-        GeneratedValue(beforeInsert: true, beforeUpdate: true)
-    ]
+    #[Column(type: 'datetime', name: 'updated_at'),
+        GeneratedValue(beforeInsert: true, beforeUpdate: true)]
     public \DateTimeImmutable $updatedAt;
 }

@@ -50,6 +50,9 @@ class ColumnTest extends TestCase
     )]
     private string $column8 = 'a';
 
+    #[Column(type: 'string', length: 255, charset: 'ascii', collation: 'ascii_bin')]
+    private string $column9;
+
     public function testOneAttribute(): void
     {
         $column = $this->getColumn('column1');
@@ -117,6 +120,18 @@ class ColumnTest extends TestCase
         $this->assertSame('enum(a,b)', $column->getType());
         $this->assertSame('a', $column->getDefault());
         $this->assertArrayNotHasKey('values', $column->getAttributes());
+    }
+
+    public function testCharsetAndCollationAttributes(): void
+    {
+        $column = $this->getColumn('column9');
+
+        $this->assertSame('string', $column->getType());
+        $this->assertSame([
+            'length' => 255,
+            'charset' => 'ascii',
+            'collation' => 'ascii_bin',
+        ], $column->getAttributes());
     }
 
     private function getColumn(string $field): Column
