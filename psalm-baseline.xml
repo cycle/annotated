@@ -254,11 +254,6 @@
       <code><![CDATA[$column]]></code>
       <code><![CDATA[$column]]></code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$child->getRole() !== null && $entity !== null]]></code>
-      <code><![CDATA[$entity !== null]]></code>
-      <code><![CDATA[\assert($child->getRole() !== null && $entity !== null && isset($parent))]]></code>
-    </RedundantConditionGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$outerKey]]></code>
       <code><![CDATA[empty($tableName)]]></code>

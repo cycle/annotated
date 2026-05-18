@@ -69,7 +69,7 @@ class TableInheritance implements GeneratorInterface
                 // todo should $parent be not null?
                 // \assert(isset($parent));
 
-                \assert($child->getRole() !== null && $entity !== null);
+                \assert($child->getRole() !== null);
 
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
