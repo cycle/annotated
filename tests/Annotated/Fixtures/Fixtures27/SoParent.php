@@ -22,6 +22,6 @@ class SoParent
     #[Column(type: 'int', nullable: true)]
     public ?int $target_id = null;
 
-    #[HasOne(target: SoTarget::class, innerKey: 'target_id', outerKey: 'id', nullable: true)]
+    #[HasOne(target: SoTarget::class, innerKey: 'target_id', outerKey: 'id', nullable: true, fkCreate: false)]
     public ?SoTarget $target = null;
 }

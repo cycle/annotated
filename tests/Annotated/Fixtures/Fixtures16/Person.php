@@ -29,8 +29,8 @@ class Person
     #[Column(type: 'int', nullable: true, typecast: 'int')]
     public ?int $tool_id;
 
-    /** @HasOne(target=Tool::class, innerKey="id", outerKey="tool_id", nullable=true) */
-    #[HasOne(target: Tool::class, innerKey: 'id', outerKey: 'tool_id', nullable: true)]
+    /** @HasOne(target=Tool::class, innerKey="id", outerKey="tool_id", nullable=true, fkCreate=false) */
+    #[HasOne(target: Tool::class, innerKey: 'id', outerKey: 'tool_id', nullable: true, fkCreate: false)]
     public Tool $tool;
 
     /** @Column(type="primary", name="id") */

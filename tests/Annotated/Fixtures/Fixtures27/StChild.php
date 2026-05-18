@@ -16,6 +16,6 @@ class StChild extends StParent
     #[Column(type: 'int', nullable: true)]
     public ?int $target_id = null;
 
-    #[HasOne(target: StTarget::class, innerKey: 'target_id', outerKey: 'id', nullable: true)]
+    #[HasOne(target: StTarget::class, innerKey: 'target_id', outerKey: 'id', nullable: true, fkCreate: false)]
     public ?StTarget $target = null;
 }

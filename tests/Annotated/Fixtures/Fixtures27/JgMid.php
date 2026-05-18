@@ -16,6 +16,6 @@ class JgMid extends JgParent
     #[Column(type: 'int', nullable: true)]
     public ?int $target_id = null;
 
-    #[HasOne(target: JgTarget::class, innerKey: 'target_id', outerKey: 'id', nullable: true)]
+    #[HasOne(target: JgTarget::class, innerKey: 'target_id', outerKey: 'id', nullable: true, fkCreate: false)]
     public ?JgTarget $target = null;
 }

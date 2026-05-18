@@ -27,7 +27,7 @@ class Executive extends ExecutiveProxy
     #[Column(type: 'int', nullable: true, typecast: 'int')]
     public ?int $added_tool_id;
 
-    /** @HasOne(target=Tool::class, innerKey="added_tool_id", outerKey="added_tool_id", nullable=true) */
-    #[HasOne(target: Tool::class, innerKey: 'added_tool_id', outerKey: 'added_tool_id', nullable: true)]
+    /** @HasOne(target=Tool::class, innerKey="added_tool_id", outerKey="added_tool_id", nullable=true, fkCreate=false) */
+    #[HasOne(target: Tool::class, innerKey: 'added_tool_id', outerKey: 'added_tool_id', nullable: true, fkCreate: false)]
     public Tool $addedTool;
 }
