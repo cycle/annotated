@@ -63,7 +63,7 @@ abstract class JoinedTableTestCase extends BaseTestCase
         $this->assertSame('secret', $loadedExecutive->hidden);
         $this->assertSame(15000, $loadedExecutive->bonus);
         $this->assertSame('executive', $loadedExecutive->getType());
-        $this->assertNull($loadedExecutive->proxyFieldWithAnnotation);
+        $this->assertSame('value', $loadedExecutive->proxyFieldWithAnnotation);
     }
 
     #[DataProvider('allReadersProvider')]

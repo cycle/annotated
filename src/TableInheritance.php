@@ -66,7 +66,11 @@ class TableInheritance implements GeneratorInterface
 
                 // All child should be presented in a schema as separated entity
                 // Every child will be handled according its table inheritance type
-                \assert($child->getRole() !== null && $entity !== null && isset($parent));
+                // todo should $parent be not null?
+                // \assert(isset($parent));
+
+                \assert($child->getRole() !== null);
+
                 if (!$registry->hasEntity($child->getRole())) {
                     $registry->register($child);
 

@@ -9,6 +9,7 @@ use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Annotation\GeneratedValue;
+use Cycle\Annotated\Annotation\Inheritance;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
@@ -124,14 +125,26 @@ final class Configurator
             }
 
             $field = $this->initField($property->getName(), $column, $class, $columnPrefix);
-            $field->setEntityClass($property->getDeclaringClass()->getName());
+            $field->setEntityClass($this->findOwningEntity($class, $property->getDeclaringClass())->getName());
             $entity->getFields()->set($property->getName(), $field);
         }
     }
 
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
+        // Only STI/JTI children must skip relations declared by parent entities — for them, the parent table already
+        // owns those relations. Entities that merely extend another entity physically (separate table) must keep them.
+        $isInheritanceChild = $this->reader->firstClassMetadata($class, Inheritance::class) !== null;
+
         foreach ($class->getProperties() as $property) {
+            // ignore properties declared by parent entities
+            // otherwise all the relation columns declared in parent would be duplicated across all child tables in JTI
+            if ($isInheritanceChild
+                && $this->findOwningEntity($class, $property->getDeclaringClass())->getName() !== $class->getName()
+            ) {
+                continue;
+            }
+
             $metadata = $this->getPropertyMetadata($property, RelationAnnotation\RelationInterface::class);
 
             foreach ($metadata as $meta) {
@@ -424,5 +437,38 @@ final class Configurator
             'serial', 'bigserial', 'smallserial' => true,
             default => $field->isPrimary(),
         };
+    }
+
+    /**
+     * Function to find an owning entity class in the inheritance hierarchy.
+     *
+     * Entity classes may extend a base class and this function is needed route the properties from declaring class to the entity class.
+     * The function stops only when the declaring class is truly found, it does not naively stop on first entity.
+     * This behaviour makes it also functional in cases of Joined Table Inheritance on theoretically any number of nesting levels.
+     */
+    private function findOwningEntity(\ReflectionClass $currentClass, \ReflectionClass $declaringClass): \ReflectionClass
+    {
+        // latest found entityClass before declaringClass
+        $latestEntityClass = $currentClass;
+
+        do {
+            // we found declaringClass in the hierarchy
+            // in most cases the execution will stop here in first loop
+            if ($currentClass->getName() === $declaringClass->getName()) {
+                return $latestEntityClass;
+            }
+
+            $currentClass = $currentClass->getParentClass();
+
+            // not possible to happen for logical reasons, but defensively check anyway
+            if (!$currentClass instanceof \ReflectionClass) {
+                return $latestEntityClass;
+            }
+
+            // if a currentClass in hierarchy is an entity on its own, the property belongs to that entity
+            if (\count($currentClass->getAttributes(Entity::class)) > 0) {
+                $latestEntityClass = $currentClass;
+            }
+        } while (true); // the inheritance hierarchy cannot be infinite
     }
 }

@@ -7,6 +7,7 @@ namespace Cycle\Annotated\Tests\Fixtures\Fixtures16;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Inheritance\JoinedTable as InheritanceJoinedTable;
+use Cycle\Annotated\Annotation\Relation\HasOne;
 
 /**
  * @Entity
@@ -21,4 +22,12 @@ class Executive extends ExecutiveProxy
     /** @Column(type="int") */
     #[Column(type: 'int')]
     public int $bonus;
+
+    /** @Column(type="int", nullable=true, typecast="int") */
+    #[Column(type: 'int', nullable: true, typecast: 'int')]
+    public ?int $added_tool_id;
+
+    /** @HasOne(target=Tool::class, innerKey="added_tool_id", outerKey="added_tool_id", nullable=true, fkCreate=false) */
+    #[HasOne(target: Tool::class, innerKey: 'added_tool_id', outerKey: 'added_tool_id', nullable: true, fkCreate: false)]
+    public Tool $addedTool;
 }
