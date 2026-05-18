@@ -9,6 +9,7 @@ use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Annotation\GeneratedValue;
+use Cycle\Annotated\Annotation\Inheritance;
 use Cycle\Annotated\Annotation\Relation as RelationAnnotation;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationRequiredArgumentsException;
@@ -131,10 +132,16 @@ final class Configurator
 
     public function initRelations(EntitySchema $entity, \ReflectionClass $class): void
     {
+        // Only STI/JTI children must skip relations declared by parent entities — for them, the parent table already
+        // owns those relations. Entities that merely extend another entity physically (separate table) must keep them.
+        $isInheritanceChild = $this->reader->firstClassMetadata($class, Inheritance::class) !== null;
+
         foreach ($class->getProperties() as $property) {
             // ignore properties declared by parent entities
             // otherwise all the relation columns declared in parent would be duplicated across all child tables in JTI
-            if ($this->findOwningEntity($class, $property->getDeclaringClass())->getName() !== $class->getName()) {
+            if ($isInheritanceChild
+                && $this->findOwningEntity($class, $property->getDeclaringClass())->getName() !== $class->getName()
+            ) {
                 continue;
             }
 
