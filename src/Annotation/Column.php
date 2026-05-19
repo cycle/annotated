@@ -72,6 +72,7 @@ class Column
     ) {
         if ($default !== null) {
             $this->hasDefault = true;
+            $default instanceof \BackedEnum and $this->default = $default->value;
         }
         $this->setAttributes($attributes);
     }
