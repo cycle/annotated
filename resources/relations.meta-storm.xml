@@ -159,6 +159,29 @@
             </properties>
         </classConstructor>
 
+        <!-- Refers To Morphed -->
+        <!-- target: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\RefersToMorphed" argument="1">
+            <collection name="cycle/orm:entity-class" argument="0" />
+            <collection name="cycle/orm:entity-role" argument="0" />
+        </classConstructor>
+        <!-- innerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\RefersToMorphed" argument="1" targetInArray="value">
+            <properties xpath="$containingClass">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+        <!-- outerKey: -->
+        <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\RefersToMorphed" argument="2" targetInArray="value">
+            <properties xpath="$argument[0]">
+                <filters>
+                    <hasAttribute class="\Cycle\Annotated\Annotation\Column"/>
+                </filters>
+            </properties>
+        </classConstructor>
+
         <!-- Morphed Has Many -->
         <!-- target: -->
         <classConstructor class="\Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany" argument="1">

@@ -18,12 +18,12 @@
             "email": "wolfy-j@spiralscout.com"
         },
         {
-            "name": "Aleksei Gagarin (roxblnfk)",
-            "email": "alexey.gagarin@spiralscout.com"
+            "name": "Aleksei Gagarin",
+            "homepage": "https://github.com/roxblnfk"
         },
         {
-            "name": "Pavel Butchnev (butschster)",
-            "email": "pavel.buchnev@spiralscout.com"
+            "name": "Pavel Butchnev",
+            "homepage": "https://github.com/butschster"
         },
         {
             "name": "Maksim Smakouz (msmakouz)",
@@ -38,20 +38,20 @@
     ],
     "require": {
         "php": ">=8.1",
-        "cycle/database": "^2.16",
-        "cycle/orm": "^2.15",
-        "cycle/schema-builder": "^2.11.1",
-        "spiral/attributes": "^2.8|^3.0",
-        "spiral/tokenizer": "^2.8|^3.0",
-        "doctrine/inflector": "^2.0"
+        "cycle/database": "^2.20",
+        "cycle/orm": "^2.18",
+        "cycle/schema-builder": "^2.12",
+        "spiral/attributes": "^2.8 || ^3.1",
+        "spiral/tokenizer": "^2.8 || ^3.17",
+        "doctrine/inflector": "^2.1"
     },
     "require-dev": {
         "buggregator/trap": "^1.15",
-        "doctrine/annotations": "^1.14.3 || ^2.0.1",
-        "phpunit/phpunit": "^10.1",
-        "spiral/code-style": "^2.2",
+        "doctrine/annotations": "^1.14 || ^2.0",
+        "phpunit/phpunit": "^10.5",
+        "spiral/code-style": "^2.3",
         "spiral/dumper": "^3.3",
-        "vimeo/psalm": "^5.26 || ^6.0"
+        "vimeo/psalm": "^5.26 || ^6.16"
     },
     "autoload": {
         "psr-4": {
