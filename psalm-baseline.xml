@@ -112,6 +112,14 @@
       <code><![CDATA[TYPE]]></code>
     </InvalidClassConstantType>
   </file>
+  <file src="src/Annotation/Relation/Morphed/RefersToMorphed.php">
+    <DeprecatedClass>
+      <code><![CDATA[NamedArgumentConstructor]]></code>
+    </DeprecatedClass>
+    <InvalidClassConstantType>
+      <code><![CDATA[TYPE]]></code>
+    </InvalidClassConstantType>
+  </file>
   <file src="src/Annotation/Relation/RefersTo.php">
     <DeprecatedClass>
       <code><![CDATA[NamedArgumentConstructor]]></code>
