@@ -53,6 +53,9 @@
         "spiral/dumper": "^3.3",
         "vimeo/psalm": "^5.26 || ^6.16"
     },
+    "suggest": {
+        "llm/skills": "To sync the cycle-orm-attributes AI skill into your project"
+    },
     "autoload": {
         "psr-4": {
             "Cycle\\Annotated\\": "src/"
