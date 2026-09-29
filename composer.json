@@ -79,7 +79,9 @@
                 {
                     "from": "github",
                     "package": "cycle/skills",
-                    "skills": ["cycle-orm-attributes"]
+                    "skills": [
+                        "cycle-orm-attributes"
+                    ]
                 }
             ]
         }
