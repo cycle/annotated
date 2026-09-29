@@ -4,3 +4,4 @@
 /*.yml   export-ignore
 /*.lock  export-ignore
 /*.dist  export-ignore
+/resources/version.json export-ignore
