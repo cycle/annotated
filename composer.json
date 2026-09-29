@@ -69,5 +69,16 @@
         "psalm": "psalm",
         "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
         "test": "phpunit --color=always"
+    },
+    "extra": {
+        "skills": {
+            "sources": [
+                {
+                    "from": "github",
+                    "package": "cycle/skills",
+                    "skills": ["cycle-orm-attributes"]
+                }
+            ]
+        }
     }
 }
