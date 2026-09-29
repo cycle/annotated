@@ -15,7 +15,7 @@ jobs:
           sudo curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Setup DB services
         run: |
           cd tests
@@ -33,7 +33,7 @@ jobs:
         run: composer validate --ansi --strict
 
       - name: Install dependencies with composer
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Execute Tests
         run: |
@@ -41,10 +41,10 @@ jobs:
 
       - name: Upload coverage to Codecov
         continue-on-error: true # if is fork
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.clover
+          files: ./coverage.clover
 
       - name: Upload coverage to Scrutinizer
         continue-on-error: true # if is fork
