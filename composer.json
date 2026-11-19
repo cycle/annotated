@@ -37,20 +37,19 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
-        "cycle/database": "^2.20",
+        "php": ">=8.2",
+        "cycle/database": "^2.23",
         "cycle/orm": "^2.18",
         "cycle/schema-builder": "^2.12",
-        "spiral/attributes": "^2.8 || ^3.1",
-        "spiral/tokenizer": "^2.8 || ^3.17",
+        "spiral/attributes": "^3.1",
+        "spiral/tokenizer": "^3.17",
         "doctrine/inflector": "^2.1"
     },
     "require-dev": {
-        "buggregator/trap": "^1.15",
-        "doctrine/annotations": "^1.14 || ^2.0",
-        "phpunit/phpunit": "^10.5",
+        "buggregator/trap": "^1.20",
+        "doctrine/annotations": "^2.0.2",
+        "phpunit/phpunit": "^11.5",
         "spiral/code-style": "^2.3",
-        "spiral/dumper": "^3.3",
         "vimeo/psalm": "^5.26 || ^6.16"
     },
     "suggest": {

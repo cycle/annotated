@@ -40,14 +40,14 @@ abstract class BaseTestCase extends TestCase
 
     public static function singularReadersProvider(): \Traversable
     {
-        yield ['Annotation reader' => new AnnotationReader()];
-        yield ['Attribute reader' => new AttributeReader()];
+        yield 'Annotation reader' => [new AnnotationReader()];
+        yield 'Attribute reader' => [new AttributeReader()];
     }
 
     public static function allReadersProvider(): \Traversable
     {
         yield from static::singularReadersProvider();
-        yield ['Selective reader' => new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
+        yield 'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
     }
 
     public function getDriver(): Driver
