@@ -1,26 +1,43 @@
 name: build
 
-on: [push, pull_request]
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+  push:
+    branches: [4.x]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
-    name: Test PHP ${{ matrix.php-version }} with Code Coverage
+    name: Test PHP ${{ matrix.php-version }} (${{ matrix.dependencies }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php-version: ['8.2', '8.3', '8.4', '8.5']
+        dependencies: [lowest, highest]
     steps:
       - name: Install ODBC driver.
         run: |
           sudo curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
       - name: Setup DB services
         run: |
           cd tests
           docker compose up -d
           cd ..
+
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
@@ -29,15 +46,16 @@ jobs:
           tools: pecl
           extensions: mbstring, pdo, pdo_sqlite, pdo_pgsql, pdo_sqlsrv, pdo_mysql
 
-      - name: Validate composer.json and composer.lock
+      - name: Validate composer.json
         run: composer validate --ansi --strict
 
       - name: Install dependencies with composer
         uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
       - name: Execute Tests
-        run: |
-          vendor/bin/phpunit --coverage-clover=coverage.clover
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover
 
       - name: Upload coverage to Codecov
         continue-on-error: true # if is fork
@@ -45,9 +63,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.clover
-
-      - name: Upload coverage to Scrutinizer
-        continue-on-error: true # if is fork
-        uses: sudo-bot/action-scrutinizer@latest
-        with:
-          cli-args: "--format=php-clover coverage.clover"
