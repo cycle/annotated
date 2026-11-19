@@ -361,3 +361,13 @@ class Customer extends Person
 
 > **Note**
 > Read more about [Joined Table Inheritance](https://cycle-orm.dev/docs/advanced-joined-table-inheritance).
+
+## Agent skills
+
+Cycle Annotated comes with the `cycle-orm-attributes` [Agent Skill](https://agentskills.io) from [cycle/skills](https://github.com/cycle/skills): it teaches coding agents such as Claude Code and Codex to map PHP classes to tables with attributes — entities, columns and typecasts, relations including polymorphic ones, STI/JTI inheritance, embeddables, indexes and foreign keys, and entity behaviors such as timestamps, soft delete, optimistic lock, hooks and UUIDs. Install the [llm/skills](https://github.com/roxblnfk/skills) Composer plugin, and it copies the skill into `.agents/skills/` on every `composer install` and `update`:
+
+```bash
+composer require --dev llm/skills
+```
+
+Querying and persisting the mapped entities is covered by the `cycle-orm` skill that comes with [cycle/orm](https://github.com/cycle/orm).
