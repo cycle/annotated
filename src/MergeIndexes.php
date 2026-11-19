@@ -6,13 +6,13 @@ namespace Cycle\Annotated;
 
 use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Exception\AnnotationException;
+use Cycle\Database\Schema\AbstractIndex;
+use Cycle\Database\Schema\AbstractTable;
 use Cycle\Schema\Definition\Entity;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Doctrine\Common\Annotations\Reader as DoctrineReader;
 use Spiral\Attributes\ReaderInterface;
-use Cycle\Database\Schema\AbstractIndex;
-use Cycle\Database\Schema\AbstractTable;
 
 /**
  * Copy index definitions from Mapper/Repository to Entity.
