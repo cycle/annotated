@@ -1,19 +1,46 @@
-# Cycle ORM - Annotated Entities
+<div align="center">
+    <a href="https://cycle-orm.dev" target="_blank">
+        <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="https://github.com/cycle/.github/blob/main/logo/words-vector-dark.svg?raw=true">
+            <img width="50%" align="center" src="https://github.com/cycle/.github/blob/main/logo/words-vector-light.svg?raw=true" alt="CycleORM Logo">
+        </picture>
+    </a>
+</div>
 
-[![PHP Version Require](https://poser.pugx.org/cycle/annotated/require/php)](https://packagist.org/packages/cycle/annotated)
-[![Latest Stable Version](https://poser.pugx.org/cycle/annotated/v/stable)](https://packagist.org/packages/cycle/annotated)
-[![phpunit](https://github.com/cycle/annotated/actions/workflows/main.yml/badge.svg)](https://github.com/cycle/annotated/actions)
-[![psalm](https://github.com/cycle/annotated/actions/workflows/psalm.yml/badge.svg)](https://github.com/cycle/annotated/actions)
-[![psalm-level](https://shepherd.dev/github/cycle/annotated/level.svg)](https://shepherd.dev/github/cycle/annotated)
-[![Codecov](https://codecov.io/gh/cycle/annotated/branch/4.x/graph/badge.svg)](https://codecov.io/gh/cycle/annotated/)
-[![Total Downloads](https://poser.pugx.org/cycle/annotated/downloads)](https://packagist.org/packages/cycle/annotated)
-<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
+<p align="center">Cycle ORM schema from PHP attributes</p>
 
-<b>[Documentation](https://cycle-orm.dev/docs/annotated-prerequisites)</b> | [Cycle ORM](https://github.com/cycle/orm)
+<div align="center">
 
-The package provides the ability to define Cycle ORM schema using PHP attributes.
+[![Documentation](https://img.shields.io/badge/Documentation-blue?style=for-the-badge&logo=gitbook&logoColor=white)](https://cycle-orm.dev/docs/annotated-prerequisites)
+[![Sponsor](https://img.shields.io/static/v1?style=for-the-badge&label=&message=Sponsor&logo=githubsponsors&logoColor=white&color=%23EA4AAA)](https://github.com/sponsors/cycle)
 
-## Usage
+[![Psalm Level](https://shepherd.dev/github/cycle/annotated/level.svg)](https://shepherd.dev/github/cycle/annotated)
+[![Type Coverage](https://shepherd.dev/github/cycle/annotated/coverage.svg)](https://shepherd.dev/github/cycle/annotated)
+[![Codecov](https://codecov.io/gh/cycle/annotated/branch/4.x/graph/badge.svg)](https://codecov.io/gh/cycle/annotated)
+[![Discord](https://img.shields.io/discord/538114875570913290?style=flat-square&logo=discord&labelColor=7289d9&logoColor=white&color=39456d)](https://discord.gg/spiralphp)
+
+</div>
+
+<br />
+
+The package lets you define the [Cycle ORM](https://github.com/cycle/orm) schema with PHP attributes: entities, columns, indexes, relations, embeddings and table inheritance are declared on the classes themselves, and the package compiles them into the ORM schema.
+
+## Get Started
+
+### Installation
+
+```bash
+composer require cycle/annotated
+```
+
+[![PHP](https://img.shields.io/packagist/php-v/cycle/annotated.svg?style=flat-square&logo=php)](https://packagist.org/packages/cycle/annotated)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/cycle/annotated.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/cycle/annotated)
+[![License](https://img.shields.io/packagist/l/cycle/annotated.svg?style=flat-square)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/cycle/annotated.svg?style=flat-square)](https://packagist.org/packages/cycle/annotated/stats)
+
+The package requires PHP 8.2+.
+
+### Usage
 
 ```php
 use Cycle\Annotated\Annotation\Entity;
@@ -219,7 +246,7 @@ class Image
 {
     // ...
 
-    #[BelongsToMorphed(taget: ImageHolderInterface::class)]
+    #[BelongsToMorphed(target: ImageHolderInterface::class)]
     public ImageHolderInterface $imageHolder;
 }
 ```
@@ -334,8 +361,3 @@ class Customer extends Person
 
 > **Note**
 > Read more about [Joined Table Inheritance](https://cycle-orm.dev/docs/advanced-joined-table-inheritance).
-
-## License
-
-The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained
-by [Spiral Scout](https://spiralscout.com).
