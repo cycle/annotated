@@ -3,3 +3,5 @@
 /runtime/
 /vendor/
 composer.lock
+/vendor-bin/*/vendor/
+/vendor-bin/*/composer.lock
