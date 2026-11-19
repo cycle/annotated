@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+<files psalm-version="7.11.0@9e0d0f88bc0a4233357a9aeb4b32da060644e196">
   <file src="src/Annotation/Column.php">
     <DeprecatedClass>
       <code><![CDATA[NamedArgumentConstructor]]></code>
@@ -152,6 +152,13 @@
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Configurator.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->resolveName($ann->getMapper(), $class)]]></code>
+      <code><![CDATA[$this->resolveName($ann->getRepository(), $class)]]></code>
+      <code><![CDATA[$this->resolveName($ann->getScope(), $class)]]></code>
+      <code><![CDATA[$this->resolveName($ann->getSource(), $class)]]></code>
+      <code><![CDATA[$this->resolveName($emb->getMapper(), $class)]]></code>
+    </ArgumentTypeCoercion>
     <MixedArgument>
       <code><![CDATA[$this->resolveTypecast($column->getTypecast(), $class)]]></code>
       <code><![CDATA[$value]]></code>
@@ -166,13 +173,14 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[\assert($meta instanceof RelationAnnotation\RelationInterface)]]></code>
+      <code><![CDATA[\assert($meta instanceof SchemaModifierInterface)]]></code>
+    </RedundantConditionGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($propertyName)]]></code>
       <code><![CDATA[empty($resolvedTarget)]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[Embeddable|null]]></code>
-    </UnnecessaryVarAnnotation>
   </file>
   <file src="src/Entities.php">
     <MixedArgument>
@@ -231,9 +239,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($name)]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[Table|null]]></code>
-    </UnnecessaryVarAnnotation>
   </file>
   <file src="src/MergeIndexes.php">
     <MixedArgument>
@@ -241,12 +246,13 @@
       <code><![CDATA[$expression]]></code>
     </MixedArgument>
     <MixedAssignment>
+      <code><![CDATA[$column]]></code>
       <code><![CDATA[$expression]]></code>
+      <code><![CDATA[$order]]></code>
     </MixedAssignment>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[Table\PrimaryKey|null]]></code>
-      <code><![CDATA[Table|null]]></code>
-    </UnnecessaryVarAnnotation>
+    <PossiblyNullArgument>
+      <code><![CDATA[$child->getRole()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="src/ReaderFactory.php">
     <DeprecatedClass>

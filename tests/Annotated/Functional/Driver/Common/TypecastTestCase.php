@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Embeddings;
+use Cycle\Annotated\Entities;
 use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Locator\TokenizerEntityLocator;
+use Cycle\Annotated\MergeColumns;
 use Cycle\Annotated\MergeIndexes;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\Typecaster;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\UuidTypecaster;
+use Cycle\Annotated\Tests\Fixtures\Fixtures19\BackedEnum;
 use Cycle\Annotated\Tests\Fixtures\Fixtures19\BackedEnumWrapper;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
@@ -21,13 +24,10 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
-use Cycle\Annotated\Entities;
-use Cycle\Annotated\MergeColumns;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
-use Cycle\Annotated\Tests\Fixtures\Fixtures19\BackedEnum;
 
 abstract class TypecastTestCase extends BaseTestCase
 {

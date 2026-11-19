@@ -37,21 +37,21 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
-        "cycle/database": "^2.20",
+        "php": ">=8.2",
+        "cycle/database": "^2.23",
         "cycle/orm": "^2.18",
         "cycle/schema-builder": "^2.12",
-        "spiral/attributes": "^2.8 || ^3.1",
-        "spiral/tokenizer": "^2.8 || ^3.17",
+        "spiral/attributes": "^3.1",
+        "spiral/tokenizer": "^3.17",
         "doctrine/inflector": "^2.1"
     },
     "require-dev": {
-        "buggregator/trap": "^1.15",
-        "doctrine/annotations": "^1.14 || ^2.0",
-        "phpunit/phpunit": "^10.5",
-        "spiral/code-style": "^2.3",
-        "spiral/dumper": "^3.3",
-        "vimeo/psalm": "^5.26 || ^6.16"
+        "bamarni/composer-bin-plugin": "^1.8",
+        "buggregator/trap": "^1.20",
+        "doctrine/annotations": "^2.0.2",
+        "llm/skills": "^1.20",
+        "phpunit/phpunit": "^11.5",
+        "roxblnfk/unpoly": "^1.8"
     },
     "suggest": {
         "llm/skills": "To sync the cycle-orm-attributes AI skill into your project"
@@ -67,13 +67,19 @@
         }
     },
     "scripts": {
-        "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
-        "cs:fix": "php-cs-fixer fix -v",
-        "psalm": "psalm",
-        "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
+        "cs:diff": "php-cs-fixer fix --dry-run -v --diff --config=vendor-bin/code-style/.php-cs-fixer.dist.php",
+        "cs:fix": "php-cs-fixer fix -v --config=vendor-bin/code-style/.php-cs-fixer.dist.php",
+        "psalm": "psalm -c vendor-bin/psalm/psalm.xml",
+        "psalm:baseline": "psalm -c vendor-bin/psalm/psalm.xml --set-baseline=vendor-bin/psalm/psalm-baseline.xml",
+        "psalm:ci": "psalm -c vendor-bin/psalm/psalm.xml --output-format=github --shepherd --show-info=false --stats --threads=4",
         "test": "phpunit --color=always"
     },
     "extra": {
+        "bamarni-bin": {
+            "bin-links": true,
+            "forward-command": false,
+            "target-directory": "vendor-bin"
+        },
         "skills": {
             "sources": [
                 {
@@ -84,6 +90,15 @@
                     ]
                 }
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
+            "llm/skills": true
+        },
+        "audit": {
+            "abandoned": "report"
         }
     }
 }

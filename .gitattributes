@@ -4,3 +4,4 @@
 /*.yml   export-ignore
 /*.lock  export-ignore
 /*.dist  export-ignore
+/vendor-bin export-ignore

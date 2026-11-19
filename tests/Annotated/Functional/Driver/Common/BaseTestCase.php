@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Functional\Driver\Common;
 
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\TestLogger;
+use Cycle\Database\Config\DatabaseConfig;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseManager;
+use Cycle\Database\Driver\Driver;
+use Cycle\Database\Driver\Handler;
 use Cycle\ORM\Config\RelationConfig;
 use Cycle\ORM\Factory;
 use Cycle\ORM\ORM;
@@ -13,11 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\SelectiveReader;
-use Cycle\Database\Config\DatabaseConfig;
-use Cycle\Database\Database;
-use Cycle\Database\DatabaseManager;
-use Cycle\Database\Driver\Driver;
-use Cycle\Database\Driver\Handler;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
@@ -40,14 +40,14 @@ abstract class BaseTestCase extends TestCase
 
     public static function singularReadersProvider(): \Traversable
     {
-        yield ['Annotation reader' => new AnnotationReader()];
-        yield ['Attribute reader' => new AttributeReader()];
+        yield 'Annotation reader' => [new AnnotationReader()];
+        yield 'Attribute reader' => [new AttributeReader()];
     }
 
     public static function allReadersProvider(): \Traversable
     {
         yield from static::singularReadersProvider();
-        yield ['Selective reader' => new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
+        yield 'Selective reader' => [new SelectiveReader([new AttributeReader(), new AnnotationReader()])];
     }
 
     public function getDriver(): Driver
