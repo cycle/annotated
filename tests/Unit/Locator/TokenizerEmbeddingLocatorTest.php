@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Unit\Locator;
 
 use Cycle\Annotated\Annotation\Embeddable;
+use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Locator\Embedding;
 use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Address as PostalAddress;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Child;
 use Cycle\Annotated\Tests\Fixtures\Fixtures7\Address;
+use Cycle\Annotated\Tests\Fixtures\Locator\FailingClassReader;
 use Cycle\Testing\ORM\Schema\ClassList;
 use Testo\Assert;
 use Testo\Data\DataProvider;
+use Testo\Expect;
 use Testo\Test;
 
 #[Test]
@@ -60,5 +63,18 @@ final class TokenizerEmbeddingLocatorTest
         $locator = new TokenizerEmbeddingLocator($source);
 
         Assert::equals($locator->getEmbeddings(), $expected);
+    }
+
+    public function wrapsAnExceptionOfTheReader(): never
+    {
+        $previous = new \RuntimeException('broken', 42);
+        $locator = new TokenizerEmbeddingLocator(new ClassList(Address::class), new FailingClassReader($previous));
+
+        Expect::exception(AnnotationException::class)
+            ->withMessage('broken')
+            ->withCode(42)
+            ->withPrevious($previous);
+
+        $locator->getEmbeddings();
     }
 }
