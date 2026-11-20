@@ -7,6 +7,7 @@ namespace Cycle\Annotated\Tests\Unit\Locator;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Locator\Embedding;
 use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
+use Cycle\Annotated\Tests\Fixtures\Configurator\Address as PostalAddress;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Child;
 use Cycle\Annotated\Tests\Fixtures\Fixtures7\Address;
 use Cycle\Testing\ORM\Schema\ClassList;
@@ -31,6 +32,22 @@ final class TokenizerEmbeddingLocatorTest
             [
                 Address::class => new \ReflectionClass(Address::class),
                 Child::class => new \ReflectionClass(Child::class),
+            ],
+        ];
+        yield [
+            [
+                new Embedding(
+                    new Embeddable(role: 'address', columnPrefix: 'address_'),
+                    new \ReflectionClass(Address::class),
+                ),
+                new Embedding(
+                    new Embeddable(role: 'postal', mapper: 'AddressMapper', typecast: ['Typecaster', 'Sub/Typecaster']),
+                    new \ReflectionClass(PostalAddress::class),
+                ),
+            ],
+            [
+                Address::class => new \ReflectionClass(Address::class),
+                PostalAddress::class => new \ReflectionClass(PostalAddress::class),
             ],
         ];
     }
