@@ -7,13 +7,16 @@ namespace Cycle\Annotated\Tests\Unit\Utils;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Tests\Fixtures\Fixtures22\Attributed\Person;
 use Cycle\Annotated\Utils\EntityUtils;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Expect;
+use Testo\Test;
 
-class EntityUtilsTest
+#[Test]
+final class EntityUtilsTest
 {
     public static function findParentDataProvider(): iterable
     {
@@ -46,8 +49,7 @@ class EntityUtilsTest
         }
     }
 
-    #[\Testo\Data\DataProvider('findParentDataProvider')]
-    #[\Testo\Test]
+    #[DataProvider('findParentDataProvider')]
     public function testFindParent(
         ReaderInterface $reader,
         string $child,
@@ -58,15 +60,14 @@ class EntityUtilsTest
 
         $actualParent = $entityUtils->findParent($child, $root);
 
-        \Testo\Assert::equals($actualParent, $expectedParent);
+        Assert::equals($actualParent, $expectedParent);
     }
 
-    #[\Testo\Test]
     public function testGetParentException(): void
     {
         $entityUtils = new EntityUtils(new AttributeReader());
 
-        \Testo\Expect::exception(AnnotationException::class)->withMessageContaining(\sprintf('The parent class could not be found for the class `%s`.', Person::class));
+        Expect::exception(AnnotationException::class)->withMessageContaining(\sprintf('The parent class could not be found for the class `%s`.', Person::class));
         $entityUtils->getParent(Person::class);
     }
 }

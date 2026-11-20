@@ -9,10 +9,12 @@ use Cycle\Annotated\Locator\Embedding;
 use Cycle\Annotated\Locator\TokenizerEmbeddingLocator;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Child;
 use Cycle\Annotated\Tests\Fixtures\Fixtures7\Address;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use Spiral\Tokenizer\ClassesInterface;
+use Cycle\Testing\ORM\Schema\ClassList;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Test;
 
+#[Test]
 final class TokenizerEmbeddingLocatorTest
 {
     public static function classesDataProvider(): \Traversable
@@ -33,15 +35,13 @@ final class TokenizerEmbeddingLocatorTest
         ];
     }
 
-    #[\Testo\Data\DataProvider('classesDataProvider')]
-    #[\Testo\Test]
+    #[DataProvider('classesDataProvider')]
     public function testGetEmbeddings(array $expected, array $classes): void
     {
-        $mock = $this->createMock(ClassesInterface::class);
-        $mock->method('getClasses')->willReturn($classes);
+        $source = new ClassList(...\array_keys($classes));
 
-        $locator = new TokenizerEmbeddingLocator($mock);
+        $locator = new TokenizerEmbeddingLocator($source);
 
-        \Testo\Assert::equals($locator->getEmbeddings(), $expected);
+        Assert::equals($locator->getEmbeddings(), $expected);
     }
 }

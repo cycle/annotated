@@ -12,10 +12,12 @@ use Cycle\Annotated\Tests\Fixtures\Fixtures1\Tag;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\Typecaster;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\Typecast\UuidTypecaster;
 use Cycle\Annotated\Tests\Fixtures\Fixtures1\WithTable;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use Spiral\Tokenizer\ClassesInterface;
+use Cycle\Testing\ORM\Schema\ClassList;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Test;
 
+#[Test]
 final class TokenizerEntityLocatorTest
 {
     public static function classesDataProvider(): \Traversable
@@ -40,15 +42,13 @@ final class TokenizerEntityLocatorTest
         ];
     }
 
-    #[\Testo\Data\DataProvider('classesDataProvider')]
-    #[\Testo\Test]
+    #[DataProvider('classesDataProvider')]
     public function testGetEntities(array $expected, array $classes): void
     {
-        $mock = $this->createMock(ClassesInterface::class);
-        $mock->method('getClasses')->willReturn($classes);
+        $source = new ClassList(...\array_keys($classes));
 
-        $locator = new TokenizerEntityLocator($mock);
+        $locator = new TokenizerEntityLocator($source);
 
-        \Testo\Assert::equals($locator->getEntities(), $expected);
+        Assert::equals($locator->getEntities(), $expected);
     }
 }

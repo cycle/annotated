@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Unit\Attribute\SingleTable;
 
 use Cycle\Annotated\Annotation\Inheritance\SingleTable;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Test;
 
+#[Test]
 final class SingleTableTest
 {
     public static function dataBase(): iterable
@@ -21,12 +23,11 @@ final class SingleTableTest
         yield ['a', StringEnum::A];
     }
 
-    #[\Testo\Data\DataProvider('dataBase')]
-    #[\Testo\Test]
+    #[DataProvider('dataBase')]
     public function testBase1(?string $expected, mixed $value): void
     {
         $attribute = new SingleTable($value);
 
-        \Testo\Assert::same($attribute->getValue(), $expected);
+        Assert::same($attribute->getValue(), $expected);
     }
 }

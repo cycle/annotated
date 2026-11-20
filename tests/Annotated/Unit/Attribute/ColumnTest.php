@@ -6,9 +6,11 @@ namespace Cycle\Annotated\Tests\Unit\Attribute;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Tests\Unit\Attribute\SingleTable\StringEnum;
-use PHPUnit\Framework\TestCase;
+use Testo\Assert;
+use Testo\Test;
 
-class ColumnTest
+#[Test]
+final class ColumnTest
 {
     public const ENUM_VALUE_A = 'a';
     public const ENUM_VALUE_B = 'b';
@@ -60,101 +62,90 @@ class ColumnTest
     )]
     private StringEnum $column10 = StringEnum::A;
 
-    #[\Testo\Test]
     public function testOneAttribute(): void
     {
         $column = $this->getColumn('column1');
 
-        \Testo\Assert::same($column->getAttributes(), ['unsigned' => true]);
+        Assert::same($column->getAttributes(), ['unsigned' => true]);
     }
 
-    #[\Testo\Test]
     public function testTwoAttributes(): void
     {
         $column = $this->getColumn('column2');
 
-        \Testo\Assert::same($column->getAttributes(), ['unsigned' => true, 'zerofill' => true]);
+        Assert::same($column->getAttributes(), ['unsigned' => true, 'zerofill' => true]);
     }
 
-    #[\Testo\Test]
     public function testCustomSizeAttribute(): void
     {
         $column = $this->getColumn('column3');
 
-        \Testo\Assert::same($column->getAttributes(), ['size' => 128]);
+        Assert::same($column->getAttributes(), ['size' => 128]);
     }
 
-    #[\Testo\Test]
     public function testDefaultReadonlySchema(): void
     {
         $column = $this->getColumn('column1');
 
-        \Testo\Assert::false($column->isReadonlySchema());
+        Assert::false($column->isReadonlySchema());
     }
 
-    #[\Testo\Test]
     public function testReadonlySchema(): void
     {
         $column = $this->getColumn('column4');
 
-        \Testo\Assert::true($column->isReadonlySchema());
+        Assert::true($column->isReadonlySchema());
     }
 
-    #[\Testo\Test]
     public function testEnumTypeString(): void
     {
         $column = $this->getColumn('column5');
 
-        \Testo\Assert::same($column->getType(), 'enum(a,b)');
+        Assert::same($column->getType(), 'enum(a,b)');
     }
 
-    #[\Testo\Test]
     public function testEnumTypeArray(): void
     {
         $column = $this->getColumn('column6');
 
-        \Testo\Assert::same($column->getType(), 'enum(a,b)');
-        \Testo\Assert::same($column->getDefault(), 'a');
-        \Testo\Assert::array($column->getAttributes())->doesNotHaveKeys('values');
+        Assert::same($column->getType(), 'enum(a,b)');
+        Assert::same($column->getDefault(), 'a');
+        Assert::array($column->getAttributes())->doesNotHaveKeys('values');
     }
 
-    #[\Testo\Test]
     public function testEnumTypeBackedEnum(): void
     {
         $column = $this->getColumn('column7');
 
-        \Testo\Assert::same($column->getType(), 'enum(a,b)');
-        \Testo\Assert::same($column->getDefault(), 'a');
-        \Testo\Assert::array($column->getAttributes())->doesNotHaveKeys('values');
+        Assert::same($column->getType(), 'enum(a,b)');
+        Assert::same($column->getDefault(), 'a');
+        Assert::array($column->getAttributes())->doesNotHaveKeys('values');
     }
 
-    #[\Testo\Test]
     public function testEnumTypeArrayBackedEnum(): void
     {
         $column = $this->getColumn('column8');
 
-        \Testo\Assert::same($column->getType(), 'enum(a,b)');
-        \Testo\Assert::same($column->getDefault(), 'a');
-        \Testo\Assert::array($column->getAttributes())->doesNotHaveKeys('values');
+        Assert::same($column->getType(), 'enum(a,b)');
+        Assert::same($column->getDefault(), 'a');
+        Assert::array($column->getAttributes())->doesNotHaveKeys('values');
     }
 
-    #[\Testo\Test]
     public function testEnumTypeBackedEnumAsDefault(): void
     {
         $column = $this->getColumn('column10');
 
-        \Testo\Assert::same($column->getType(), 'enum(a,b)');
-        \Testo\Assert::same($column->getDefault(), 'a');
-        \Testo\Assert::array($column->getAttributes())->doesNotHaveKeys('values');
+        Assert::same($column->getType(), 'enum(a,b)');
+        Assert::same($column->getDefault(), 'a');
+        Assert::array($column->getAttributes())->doesNotHaveKeys('values');
     }
 
-    #[\Testo\Test]
     public function testCharsetAndCollationAttributes(): void
     {
         $column = $this->getColumn('column9');
 
-        \Testo\Assert::same($column->getType(), 'string');
-        \Testo\Assert::same($column->getAttributes(), [
+        Assert::same($column->getType(), 'string');
+        Assert::same($column->getAttributes(), [
             'length' => 255,
             'charset' => 'ascii',
             'collation' => 'ascii_bin',
@@ -163,7 +154,7 @@ class ColumnTest
 
     private function getColumn(string $field): Column
     {
-        $ref = new \ReflectionClass(static::class);
+        $ref = new \ReflectionClass(self::class);
         return $ref->getProperty($field)->getAttributes(Column::class)[0]->newInstance();
     }
 }
