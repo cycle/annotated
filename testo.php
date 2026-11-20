@@ -13,4 +13,5 @@ return Config::forPackage('cycle/annotated', root: __DIR__)
         layout: Layout::prefixed(['secondary' => 'secondary_']),
         plugins: [new OrmPlugin()],
     )
+    ->regression('tests/Regression', plugins: [new OrmPlugin()])
     ->build();

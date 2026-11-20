@@ -384,4 +384,5 @@ composer test              # every suite; a driver whose server is down is skipp
 composer db:down
 ```
 
-`composer test:mysql`, `test:postgres` and `test:sqlserver` run one driver.
+`composer test:mysql`, `test:postgres` and `test:sqlserver` run one driver. To reproduce a new issue, generate a case:
+`composer test:new-case -- 123` writes `tests/Regression/Issue123`.
