@@ -371,3 +371,18 @@ composer require --dev llm/skills
 ```
 
 Querying and persisting the mapped entities is covered by the `cycle-orm` skill that comes with [cycle/orm](https://github.com/cycle/orm).
+
+## Testing
+
+The tests run on [Testo](https://github.com/php-testo/testo) through the shared [cycle/testing](https://github.com/cycle/testing) harness: `tests/Unit` needs no database, and `tests/Feature` runs once per database driver.
+
+```bash
+composer test:unit         # no database
+composer test:sqlite       # in-memory SQLite, no docker
+composer db:up             # MySQL, Postgres and SQL Server in docker
+composer test              # every suite; a driver whose server is down is skipped
+composer db:down
+```
+
+`composer test:mysql`, `test:postgres` and `test:sqlserver` run one driver. To reproduce a new issue, generate a case:
+`composer test:new-case -- 123` writes `tests/Regression/Issue123`.

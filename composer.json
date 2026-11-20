@@ -36,6 +36,12 @@
             "url": "https://github.com/sponsors/cycle"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cycle/testing"
+        }
+    ],
     "require": {
         "php": ">=8.2",
         "cycle/database": "^2.23",
@@ -48,10 +54,11 @@
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8",
         "buggregator/trap": "^1.20",
+        "cycle/testing": "^0.1.1",
         "doctrine/annotations": "^2.0.2",
         "llm/skills": "^1.20",
-        "phpunit/phpunit": "^11.5",
-        "roxblnfk/unpoly": "^1.8"
+        "roxblnfk/unpoly": "^1.8",
+        "testo/testo": "^0.10.60"
     },
     "suggest": {
         "llm/skills": "To sync the cycle-orm-attributes AI skill into your project"
@@ -63,7 +70,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Cycle\\Annotated\\Tests\\": "tests/Annotated/"
+            "Cycle\\Annotated\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -72,7 +79,18 @@
         "psalm": "psalm -c vendor-bin/psalm/psalm.xml",
         "psalm:baseline": "psalm -c vendor-bin/psalm/psalm.xml --set-baseline=vendor-bin/psalm/psalm-baseline.xml",
         "psalm:ci": "psalm -c vendor-bin/psalm/psalm.xml --output-format=github --shepherd --show-info=false --stats --threads=4",
-        "test": "phpunit --color=always"
+        "db:down": "docker compose -f vendor/cycle/testing/resources/docker/compose.yaml down -v",
+        "db:up": "docker compose -f vendor/cycle/testing/resources/docker/compose.yaml up -d --wait",
+        "test": "testo",
+        "test:mysql": "testo --suite=Feature/MySQL --suite=Acceptance/MySQL --suite=Regression/MySQL",
+        "test:new-case": "cycle-testing new-case --template=orm-attributes",
+        "test:postgres": "testo --suite=Feature/Postgres --suite=Acceptance/Postgres --suite=Regression/Postgres",
+        "test:sqlite": "testo --suite=Feature/SQLite --suite=Acceptance/SQLite --suite=Regression/SQLite",
+        "test:sqlserver": "testo --suite=Feature/SQLServer --suite=Acceptance/SQLServer --suite=Regression/SQLServer",
+        "test:unit": "testo --suite=Unit"
+    },
+    "scripts-descriptions": {
+        "test:new-case": "Create a regression case for an issue: composer test:new-case -- <issue>"
     },
     "extra": {
         "bamarni-bin": {
