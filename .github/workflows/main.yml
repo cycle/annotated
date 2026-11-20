@@ -37,7 +37,6 @@ jobs:
       - name: Validate composer.json
         run: composer validate --ansi --strict
 
-      # TODO(cycle/testing): switch to the released package
       - name: Install dependencies with composer
         uses: ramsey/composer-install@v4
         with:
@@ -91,7 +90,6 @@ jobs:
           tools: pecl
           extensions: mbstring, pdo, ${{ matrix.extensions }}
 
-      # TODO(cycle/testing): switch to the released package
       - name: Install dependencies with composer
         uses: ramsey/composer-install@v4
 
