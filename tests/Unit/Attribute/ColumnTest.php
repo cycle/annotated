@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Annotated\Tests\Unit\Attribute;
 
 use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Tests\Unit\Attribute\SingleTable\StringableObject;
 use Cycle\Annotated\Tests\Unit\Attribute\SingleTable\StringEnum;
 use Testo\Assert;
 use Testo\Test;
@@ -150,6 +151,21 @@ final class ColumnTest
             'charset' => 'ascii',
             'collation' => 'ascii_bin',
         ]);
+    }
+
+    public function testValuesOfANonEnumColumnStayAnAttribute(): void
+    {
+        $column = new Column(type: 'string', values: ['a', 'b']);
+
+        Assert::same($column->getType(), 'string');
+        Assert::same($column->getAttributes(), ['values' => ['a', 'b']]);
+    }
+
+    public function testEnumValuesThatAreNotScalarAreLeftEmpty(): void
+    {
+        $column = new Column(type: 'enum', values: ['a', new StringableObject('b'), 1]);
+
+        Assert::same($column->getType(), 'enum(a,,1)');
     }
 
     private function getColumn(string $field): Column

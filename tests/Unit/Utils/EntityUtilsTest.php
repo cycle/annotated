@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Unit\Utils;
 
+use Cycle\Annotated\Entities;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Tests\Fixtures\Fixtures22\Attributed\Person;
 use Cycle\Annotated\Utils\EntityUtils;
@@ -12,6 +13,7 @@ use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Testo\Assert;
 use Testo\Data\DataProvider;
+use Testo\Data\DataSet;
 use Testo\Expect;
 use Testo\Test;
 
@@ -61,6 +63,16 @@ final class EntityUtilsTest
         $actualParent = $entityUtils->findParent($child, $root);
 
         Assert::equals($actualParent, $expectedParent);
+    }
+
+    #[DataSet([Entities::TABLE_NAMING_PLURAL, 'blog_posts'])]
+    #[DataSet([Entities::TABLE_NAMING_SINGULAR, 'blog_post'])]
+    #[DataSet([Entities::TABLE_NAMING_NONE, 'blog_posts'])]
+    public function testTableName(int $strategy, string $table): void
+    {
+        $entityUtils = new EntityUtils(new AttributeReader());
+
+        Assert::same($entityUtils->tableName('blogPosts', $strategy), $table);
     }
 
     public function testGetParentException(): void
