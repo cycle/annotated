@@ -36,6 +36,15 @@
             "url": "https://github.com/sponsors/cycle"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../testing",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "require": {
         "php": ">=8.2",
         "cycle/database": "^2.23",
@@ -48,10 +57,12 @@
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8",
         "buggregator/trap": "^1.20",
+        "cycle/testing": "1.x-dev",
         "doctrine/annotations": "^2.0.2",
         "llm/skills": "^1.20",
         "phpunit/phpunit": "^11.5",
-        "roxblnfk/unpoly": "^1.8"
+        "roxblnfk/unpoly": "^1.8",
+        "testo/testo": "^0.10.60"
     },
     "suggest": {
         "llm/skills": "To sync the cycle-orm-attributes AI skill into your project"
