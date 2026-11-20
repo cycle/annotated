@@ -161,6 +161,14 @@ final class ColumnTest
         Assert::same($column->getAttributes(), ['values' => ['a', 'b']]);
     }
 
+    public function testEnumValuesTakenFromTheCasesOfAnEnumInstance(): void
+    {
+        $column = new Column(type: 'enum', values: StringEnum::B);
+
+        Assert::same($column->getType(), 'enum(a,b)');
+        Assert::array($column->getAttributes())->doesNotHaveKeys('values');
+    }
+
     public function testEnumValuesThatAreNotScalarAreLeftEmpty(): void
     {
         $column = new Column(type: 'enum', values: ['a', new StringableObject('b'), 1]);
