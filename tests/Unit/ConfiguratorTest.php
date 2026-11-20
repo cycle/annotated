@@ -7,19 +7,23 @@ namespace Cycle\Annotated\Tests\Unit;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\ForeignKey;
 use Cycle\Annotated\Configurator;
 use Cycle\Annotated\Exception\AnnotationException;
 use Cycle\Annotated\Exception\AnnotationWrongTypeArgumentException;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Address;
 use Cycle\Annotated\Tests\Fixtures\Configurator\AddressMapper;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Author;
+use Cycle\Annotated\Tests\Fixtures\Configurator\Draft;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Post;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Sub\Comments;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Sub\Typecaster as SubTypecaster;
 use Cycle\Annotated\Tests\Fixtures\Configurator\Typecaster;
+use Cycle\Annotated\Tests\Fixtures\Locator\FailingClassReader;
 use Cycle\ORM\Schema\GeneratedField;
 use Cycle\Schema\Definition\Entity as EntitySchema;
 use Cycle\Schema\Definition\Field;
+use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Table\Column as ColumnOption;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Reader;
@@ -112,6 +116,88 @@ final class ConfiguratorTest
         Assert::count($keys, 1);
         Assert::same($keys[0]->getTarget(), Author::class);
         Assert::same($keys[0]->getInnerColumns(), ['author_ref']);
+    }
+
+    public function marksTheSchemaOfAReadonlyEntity(): void
+    {
+        $entity = $this->configurator()->initEntity(new Entity(readonlySchema: true), new \ReflectionClass(Post::class));
+
+        Assert::true($entity->getOptions()->get(SyncTables::READONLY_SCHEMA));
+    }
+
+    public function requiresTheTargetOfARelation(): never
+    {
+        $entity = new EntitySchema();
+        $entity->setClass(Draft::class);
+
+        Expect::exception(AnnotationException::class)
+            ->withMessage(\sprintf('Relation target definition is required on `%s`.`reviewer`', Draft::class));
+
+        $this->configurator()->initRelations($entity, new \ReflectionClass(Draft::class));
+    }
+
+    public function wrapsAnExceptionOfTheReaderWhileReadingRelations(): never
+    {
+        $entity = new EntitySchema();
+        $entity->setClass(Post::class);
+
+        Expect::exception(AnnotationException::class)->withMessage('broken')->withCode(7);
+
+        (new Configurator($this->throwingReader(new \RuntimeException('broken', 7))))
+            ->initRelations($entity, new \ReflectionClass(Post::class));
+    }
+
+    public function takesTheInnerKeyOfAPropertyForeignKeyFromTheProperty(): void
+    {
+        $entity = new EntitySchema();
+        $entity->setClass(Draft::class);
+
+        $this->configurator()->initForeignKeys(new Entity(), $entity, new \ReflectionClass(Draft::class));
+
+        $keys = \iterator_to_array($entity->getForeignKeys(), false);
+        Assert::count($keys, 1);
+        Assert::same($keys[0]->getInnerColumns(), ['editorId']);
+    }
+
+    public function requiresTheInnerKeyOfAnEntityForeignKey(): never
+    {
+        $entity = new EntitySchema();
+        $entity->setClass(Post::class);
+
+        Expect::exception(AnnotationException::class)
+            ->withMessage(\sprintf('Inner column definition for the foreign key is required on `%s`', Post::class));
+
+        $this->configurator()->initForeignKeys(
+            new Entity(foreignKeys: [new ForeignKey(target: Author::class)]),
+            $entity,
+            new \ReflectionClass(\stdClass::class),
+        );
+    }
+
+    public function wrapsAnExceptionOfTheReaderWhileReadingClassForeignKeys(): never
+    {
+        $entity = new EntitySchema();
+        $entity->setClass(Post::class);
+
+        Expect::exception(AnnotationException::class)->withMessage('broken')->withCode(5);
+
+        (new Configurator(new FailingClassReader(new \RuntimeException('broken', 5))))
+            ->initForeignKeys(new Entity(), $entity, new \ReflectionClass(Post::class));
+    }
+
+    public function wrapsAnExceptionOfTheReaderWhileReadingGeneratedFields(): never
+    {
+        Expect::exception(AnnotationException::class)->withMessage('broken')->withCode(3);
+
+        (new Configurator($this->throwingReader(new \RuntimeException('broken', 3))))
+            ->initGeneratedFields(new EntitySchema(), new \ReflectionClass(Post::class));
+    }
+
+    public function resolvesATypecastWrittenAsClassAndMethod(): void
+    {
+        $field = $this->field(new Column(type: 'string', typecast: 'Sub/Typecaster::cast'));
+
+        Assert::same($field->getTypecast(), [SubTypecaster::class, 'cast']);
     }
 
     public function makesANullableColumnDefaultToNull(): void

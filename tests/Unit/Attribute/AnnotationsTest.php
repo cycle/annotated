@@ -8,20 +8,39 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\GeneratedValue;
+use Cycle\Annotated\Annotation\Inheritance\DiscriminatorColumn;
 use Cycle\Annotated\Annotation\Inheritance\JoinedTable;
 use Cycle\Annotated\Annotation\Inheritance\SingleTable;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\Annotated\Annotation\Relation\Inverse;
+use Cycle\Annotated\Annotation\Relation\ManyToMany;
+use Cycle\Annotated\Annotation\Relation\Morphed\BelongsToMorphed;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasMany;
+use Cycle\Annotated\Annotation\Relation\Morphed\MorphedHasOne;
+use Cycle\Annotated\Annotation\Relation\Morphed\RefersToMorphed;
+use Cycle\Annotated\Annotation\Relation\RefersTo;
+use Cycle\Annotated\Annotation\Relation\Relation as RelationAnnotation;
 use Cycle\Annotated\Annotation\Table\PrimaryKey;
 use Cycle\ORM\Relation;
 use Cycle\ORM\Schema\GeneratedField;
 use Testo\Assert;
+use Testo\Data\DataProvider;
 use Testo\Data\DataSet;
 use Testo\Test;
 
 #[Test]
 final class AnnotationsTest
 {
+    public static function relationsWithInverse(): iterable
+    {
+        yield 'many to many' => [ManyToMany::class, ['through' => 'postTag'], 'manyToMany'];
+        yield 'refers to' => [RefersTo::class, [], 'refersTo'];
+        yield 'morphed has one' => [MorphedHasOne::class, [], 'morphedHasOne'];
+        yield 'morphed has many' => [MorphedHasMany::class, [], 'morphedHasMany'];
+        yield 'belongs to morphed' => [BelongsToMorphed::class, [], 'belongsToMorphed'];
+        yield 'refers to morphed' => [RefersToMorphed::class, [], 'refersToMorphed'];
+    }
+
     public function entityKeepsSeveralTypecastHandlers(): void
     {
         $entity = new Entity(typecast: ['Foo', 'Bar']);
@@ -93,5 +112,26 @@ final class AnnotationsTest
     {
         Assert::same((new HasOne(target: 'user'))->getLoad(), 'lazy');
         Assert::same((new HasOne(target: 'user', load: 'eager'))->getLoad(), 'eager');
+    }
+
+    /**
+     * @param class-string<RelationAnnotation> $class
+     */
+    #[DataProvider('relationsWithInverse')]
+    public function relationKeepsItsConstructorArguments(string $class, array $arguments, string $type): void
+    {
+        $inverse = new Inverse(as: 'owner', type: 'belongsTo');
+
+        $relation = new $class(...$arguments, target: 'target', load: 'eager', inverse: $inverse);
+
+        Assert::same($relation->getType(), $type);
+        Assert::same($relation->getLoad(), 'eager');
+        Assert::same($relation->getInverse(), $inverse);
+        Assert::array($relation->getOptions())->doesNotHaveKeys('target', 'inverse');
+    }
+
+    public function discriminatorColumnKeepsItsName(): void
+    {
+        Assert::same((new DiscriminatorColumn(name: 'kind'))->getName(), 'kind');
     }
 }
