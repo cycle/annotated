@@ -8,8 +8,8 @@ use Cycle\Testing\ORM\OrmPlugin;
 
 return Config::forPackage('cycle/annotated', root: __DIR__)
     ->unit('tests/Annotated/Unit')
-    ->acceptance(
-        'tests/Annotated/Acceptance',
+    ->feature(
+        'tests/Annotated/Feature',
         layout: Layout::prefixed(['secondary' => 'secondary_']),
         plugins: [new OrmPlugin()],
     )
