@@ -27,7 +27,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class HasOneTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -44,12 +45,13 @@ abstract class HasOneTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('one', $schema['simple'][SchemaInterface::RELATIONS]);
-        $this->assertSame(Relation::HAS_ONE, $schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::TYPE]);
-        $this->assertSame('eComplete', $schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::TARGET]);
-        $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::LOAD]);
+        \Testo\Assert::array($schema['simple'][SchemaInterface::RELATIONS])->hasKeys('one');
+        \Testo\Assert::same($schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::TYPE], Relation::HAS_ONE);
+        \Testo\Assert::same($schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::TARGET], 'eComplete');
+        \Testo\Assert::same($schema['simple'][SchemaInterface::RELATIONS]['one'][Relation::LOAD], Relation::LOAD_PROMISE);
     }
 
+    #[\Testo\Test]
     public function testInnerOuterKeys(): void
     {
         $tokenizer = new Tokenizer(
@@ -89,21 +91,10 @@ abstract class HasOneTestCase extends BaseTestCase
         foreach ($checks as [$name, $innerKey, $outerKey]) {
             $relation = $schema['booking'][SchemaInterface::RELATIONS][$name];
 
-            $this->assertSame(Relation::HAS_ONE, $relation[Relation::TYPE], "$name: relation type");
-            $this->assertSame(
-                (array) $innerKey,
-                (array) $relation[Relation::SCHEMA][Relation::INNER_KEY],
-                "$name: Inner Key",
-            );
-            $this->assertSame(
-                (array) $outerKey,
-                (array) $relation[Relation::SCHEMA][Relation::OUTER_KEY],
-                "$name: Outer Key",
-            );
+            \Testo\Assert::same($relation[Relation::TYPE], Relation::HAS_ONE, "$name: relation type");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::INNER_KEY], (array) $innerKey, "$name: Inner Key");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::OUTER_KEY], (array) $outerKey, "$name: Outer Key");
         }
-        $this->assertArrayNotHasKey(
-            'id_reservation',
-            $schema['booking'][SchemaInterface::COLUMNS],
-        );
+        \Testo\Assert::array($schema['booking'][SchemaInterface::COLUMNS])->doesNotHaveKeys('id_reservation');
     }
 }

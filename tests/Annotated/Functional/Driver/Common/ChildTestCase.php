@@ -52,7 +52,8 @@ abstract class ChildTestCase extends BaseTestCase
     //     $this->assertSame([Schema::ROLE => 'simple'], $schema[Third::class]);
     // }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelationToChild(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -77,9 +78,9 @@ abstract class ChildTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('article', $schema['some'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_ONE, $schema['some'][Schema::RELATIONS]['article'][Relation::TYPE]);
+        \Testo\Assert::array($schema['some'][Schema::RELATIONS])->hasKeys('article');
+        \Testo\Assert::same($schema['some'][Schema::RELATIONS]['article'][Relation::TYPE], Relation::HAS_ONE);
 
-        $this->assertSame('post', $schema['some'][Schema::RELATIONS]['article'][Relation::TARGET]);
+        \Testo\Assert::same($schema['some'][Schema::RELATIONS]['article'][Relation::TARGET], 'post');
     }
 }

@@ -52,7 +52,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class InheritanceTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testTableInheritance(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(
@@ -88,17 +89,17 @@ abstract class InheritanceTestCase extends BaseTestCase
         // Beaver - Separate table
 
         // Tool
-        $this->assertArrayHasKey('tool', $schema);
+        \Testo\Assert::array($schema)->hasKeys('tool');
 
         // Person
-        $this->assertCount(3, $schema['person'][SchemaInterface::CHILDREN]);
-        $this->assertEquals([
+        \Testo\Assert::count($schema['person'][SchemaInterface::CHILDREN], 3);
+        \Testo\Assert::equals($schema['person'][SchemaInterface::CHILDREN], [
             'employee' => Employee::class,
             'foo_customer' => Customer::class,
             'ceo' => Ceo::class,
-        ], $schema['person'][SchemaInterface::CHILDREN]);
-        $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
-        $this->assertEquals([
+        ]);
+        \Testo\Assert::same($schema['person'][SchemaInterface::DISCRIMINATOR], 'type');
+        \Testo\Assert::equals($schema['person'][SchemaInterface::COLUMNS], [
             'foo_id' => 'id',
             'name' => 'name',
             'type' => 'type',
@@ -109,72 +110,70 @@ abstract class InheritanceTestCase extends BaseTestCase
             'stocks' => 'stocks',
             'tool_id' => 'tool_id',
             // 'teethAmount' => 'teeth_amount', // Not child
-        ], $schema['person'][SchemaInterface::COLUMNS]);
+        ]);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT] ?? null);
         $this->assertEmpty($schema['person'][SchemaInterface::PARENT_KEY] ?? null);
-        $this->assertSame('people', $schema['person'][SchemaInterface::TABLE]);
-        $this->assertCount(1, $schema['person'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::same($schema['person'][SchemaInterface::TABLE], 'people');
+        \Testo\Assert::count($schema['person'][SchemaInterface::RELATIONS], 1);
 
         // Employee
-        $this->assertArrayHasKey('employee', $schema);
-        $this->assertCount(1, $schema['employee']);
-        $this->assertSame(Employee::class, $schema['employee'][SchemaInterface::ENTITY]);
-        $this->assertNull($schema['employee'][SchemaInterface::TABLE] ?? null);
-        $this->assertCount(0, $schema['employee'][SchemaInterface::RELATIONS] ?? []);
+        \Testo\Assert::array($schema)->hasKeys('employee');
+        \Testo\Assert::count($schema['employee'], 1);
+        \Testo\Assert::same($schema['employee'][SchemaInterface::ENTITY], Employee::class);
+        \Testo\Assert::null($schema['employee'][SchemaInterface::TABLE] ?? null);
+        \Testo\Assert::count($schema['employee'][SchemaInterface::RELATIONS] ?? [], 0);
 
         // Customer
-        $this->assertArrayHasKey('customer', $schema);
-        $this->assertCount(1, $schema['customer']);
-        $this->assertSame(Customer::class, $schema['customer'][SchemaInterface::ENTITY]);
-        $this->assertNull($schema['customer'][SchemaInterface::TABLE] ?? null);
-        $this->assertCount(0, $schema['customer'][SchemaInterface::RELATIONS] ?? []);
+        \Testo\Assert::array($schema)->hasKeys('customer');
+        \Testo\Assert::count($schema['customer'], 1);
+        \Testo\Assert::same($schema['customer'][SchemaInterface::ENTITY], Customer::class);
+        \Testo\Assert::null($schema['customer'][SchemaInterface::TABLE] ?? null);
+        \Testo\Assert::count($schema['customer'][SchemaInterface::RELATIONS] ?? [], 0);
 
         // Executive
-        $this->assertSame('employee', $schema['executive'][SchemaInterface::PARENT]);
-        $this->assertSame('foo_id', $schema['executive'][SchemaInterface::PARENT_KEY]);
-        $this->assertSame('executives', $schema['executive'][SchemaInterface::TABLE]);
-        $this->assertEquals(
-            [
-                'bonus' => 'bonus',
-                'proxyFieldWithAnnotation' => 'proxy',
-                'foo_id' => 'id',
-                'hidden' => 'hidden',
-                'added_tool_id' => 'added_tool_id',
-            ],
-            $schema['executive'][SchemaInterface::COLUMNS],
-        );
-        $this->assertCount(1, $schema['executive'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::same($schema['executive'][SchemaInterface::PARENT], 'employee');
+        \Testo\Assert::same($schema['executive'][SchemaInterface::PARENT_KEY], 'foo_id');
+        \Testo\Assert::same($schema['executive'][SchemaInterface::TABLE], 'executives');
+        \Testo\Assert::equals($schema['executive'][SchemaInterface::COLUMNS], [
+            'bonus' => 'bonus',
+            'proxyFieldWithAnnotation' => 'proxy',
+            'foo_id' => 'id',
+            'hidden' => 'hidden',
+            'added_tool_id' => 'added_tool_id',
+        ]);
+        \Testo\Assert::count($schema['executive'][SchemaInterface::RELATIONS], 1);
 
         // Executive2
-        $this->assertSame('executive', $schema['executive2'][SchemaInterface::PARENT]);
-        $this->assertSame('foo_id', $schema['executive2'][SchemaInterface::PARENT_KEY]);
-        $this->assertEquals(['foo_id' => 'id'], $schema['executive2'][SchemaInterface::COLUMNS]);
-        $this->assertCount(0, $schema['executive2'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::same($schema['executive2'][SchemaInterface::PARENT], 'executive');
+        \Testo\Assert::same($schema['executive2'][SchemaInterface::PARENT_KEY], 'foo_id');
+        \Testo\Assert::equals($schema['executive2'][SchemaInterface::COLUMNS], ['foo_id' => 'id']);
+        \Testo\Assert::count($schema['executive2'][SchemaInterface::RELATIONS], 0);
 
         // Ceo
-        $this->assertArrayHasKey('ceo', $schema);
-        $this->assertCount(1, $schema['ceo']);
-        $this->assertSame(Ceo::class, $schema['ceo'][SchemaInterface::ENTITY]);
-        $this->assertNull($schema['ceo'][SchemaInterface::TABLE] ?? null);
-        $this->assertCount(0, $schema['ceo'][SchemaInterface::RELATIONS] ?? []);
+        \Testo\Assert::array($schema)->hasKeys('ceo');
+        \Testo\Assert::count($schema['ceo'], 1);
+        \Testo\Assert::same($schema['ceo'][SchemaInterface::ENTITY], Ceo::class);
+        \Testo\Assert::null($schema['ceo'][SchemaInterface::TABLE] ?? null);
+        \Testo\Assert::count($schema['ceo'][SchemaInterface::RELATIONS] ?? [], 0);
 
         // Beaver
         $this->assertEmpty($schema['beaver'][SchemaInterface::DISCRIMINATOR] ?? null);
         $this->assertEmpty($schema['beaver'][SchemaInterface::PARENT] ?? null);
         $this->assertEmpty($schema['beaver'][SchemaInterface::PARENT_KEY] ?? null);
         $this->assertEmpty($schema['beaver'][SchemaInterface::CHILDREN] ?? null);
-        $this->assertSame('beavers', $schema['beaver'][SchemaInterface::TABLE]);
-        $this->assertEquals([
+        \Testo\Assert::same($schema['beaver'][SchemaInterface::TABLE], 'beavers');
+        \Testo\Assert::equals($schema['beaver'][SchemaInterface::COLUMNS], [
             'teethAmount' => 'teeth_amount',
             'foo_id' => 'id',
             'name' => 'name',
             'type' => 'type',
             'hidden' => 'hidden',
             'tool_id' => 'tool_id',
-        ], $schema['beaver'][SchemaInterface::COLUMNS]);
-        $this->assertCount(1, $schema['beaver'][SchemaInterface::RELATIONS] ?? []);
+        ]);
+        \Testo\Assert::count($schema['beaver'][SchemaInterface::RELATIONS] ?? [], 1);
     }
 
+    #[\Testo\Test]
     public function testTableInheritanceWithIncorrectClassesOrder(): void
     {
         $r = new Registry($this->dbal);
@@ -203,34 +202,37 @@ abstract class InheritanceTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertSame('executives', $schema['executive'][SchemaInterface::TABLE]);
-        $this->assertNull($schema['employee'][SchemaInterface::TABLE] ?? null);
-        $this->assertSame('people', $schema['person'][SchemaInterface::TABLE]);
+        \Testo\Assert::same($schema['executive'][SchemaInterface::TABLE], 'executives');
+        \Testo\Assert::null($schema['employee'][SchemaInterface::TABLE] ?? null);
+        \Testo\Assert::same($schema['person'][SchemaInterface::TABLE], 'people');
     }
 
+    #[\Testo\Test]
     public function testJtiChildDoesNotInheritBelongsToColumn(): void
     {
         $schema = $this->compileWithClasses([BtTarget::class, BtParent::class, BtJoined::class]);
 
         // BtParent owns the BelongsTo + its FK column
-        $this->assertArrayHasKey('target_id', $schema['btParent'][SchemaInterface::COLUMNS]);
-        $this->assertCount(1, $schema['btParent'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::array($schema['btParent'][SchemaInterface::COLUMNS])->hasKeys('target_id');
+        \Testo\Assert::count($schema['btParent'][SchemaInterface::RELATIONS], 1);
 
         // JTI child must not duplicate the BelongsTo FK column nor inherit the relation
-        $this->assertArrayNotHasKey('target_id', $schema['btJoined'][SchemaInterface::COLUMNS]);
-        $this->assertCount(0, $schema['btJoined'][SchemaInterface::RELATIONS] ?? []);
+        \Testo\Assert::array($schema['btJoined'][SchemaInterface::COLUMNS])->doesNotHaveKeys('target_id');
+        \Testo\Assert::count($schema['btJoined'][SchemaInterface::RELATIONS] ?? [], 0);
     }
 
+    #[\Testo\Test]
     public function testStiChildOwnRelationMergesIntoParent(): void
     {
         $schema = $this->compileWithClasses([StTarget::class, StParent::class, StChild::class]);
 
         // Relation declared on the STI child must end up on the parent after merge
-        $this->assertArrayHasKey('target_id', $schema['stParent'][SchemaInterface::COLUMNS]);
-        $this->assertCount(1, $schema['stParent'][SchemaInterface::RELATIONS]);
-        $this->assertArrayHasKey('target', $schema['stParent'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::array($schema['stParent'][SchemaInterface::COLUMNS])->hasKeys('target_id');
+        \Testo\Assert::count($schema['stParent'][SchemaInterface::RELATIONS], 1);
+        \Testo\Assert::array($schema['stParent'][SchemaInterface::RELATIONS])->hasKeys('target');
     }
 
+    #[\Testo\Test]
     public function testSeparateEntityExtendingStiChildKeepsInheritedRelation(): void
     {
         $schema = $this->compileWithClasses([
@@ -242,26 +244,28 @@ abstract class InheritanceTestCase extends BaseTestCase
 
         // Separate entity (no Inheritance attr) extending an STI child must keep ancestor relations
         $this->assertEmpty($schema['soSeparate'][SchemaInterface::PARENT] ?? null);
-        $this->assertNotNull($schema['soSeparate'][SchemaInterface::TABLE] ?? null);
-        $this->assertArrayHasKey('target_id', $schema['soSeparate'][SchemaInterface::COLUMNS]);
-        $this->assertArrayHasKey('extra', $schema['soSeparate'][SchemaInterface::COLUMNS]);
-        $this->assertCount(1, $schema['soSeparate'][SchemaInterface::RELATIONS] ?? []);
-        $this->assertArrayHasKey('target', $schema['soSeparate'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::notNull($schema['soSeparate'][SchemaInterface::TABLE] ?? null);
+        \Testo\Assert::array($schema['soSeparate'][SchemaInterface::COLUMNS])->hasKeys('target_id');
+        \Testo\Assert::array($schema['soSeparate'][SchemaInterface::COLUMNS])->hasKeys('extra');
+        \Testo\Assert::count($schema['soSeparate'][SchemaInterface::RELATIONS] ?? [], 1);
+        \Testo\Assert::array($schema['soSeparate'][SchemaInterface::RELATIONS])->hasKeys('target');
     }
 
+    #[\Testo\Test]
     public function testJtiChildDoesNotInheritRelationFromTrait(): void
     {
         $schema = $this->compileWithClasses([TrTarget::class, TrParent::class, TrJti::class]);
 
         // Trait-declared relation belongs to the entity that uses the trait
-        $this->assertArrayHasKey('target_id', $schema['trParent'][SchemaInterface::COLUMNS]);
-        $this->assertCount(1, $schema['trParent'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::array($schema['trParent'][SchemaInterface::COLUMNS])->hasKeys('target_id');
+        \Testo\Assert::count($schema['trParent'][SchemaInterface::RELATIONS], 1);
 
         // JTI child must not duplicate the trait's relation columns
-        $this->assertArrayNotHasKey('target_id', $schema['trJti'][SchemaInterface::COLUMNS]);
-        $this->assertCount(0, $schema['trJti'][SchemaInterface::RELATIONS] ?? []);
+        \Testo\Assert::array($schema['trJti'][SchemaInterface::COLUMNS])->doesNotHaveKeys('target_id');
+        \Testo\Assert::count($schema['trJti'][SchemaInterface::RELATIONS] ?? [], 0);
     }
 
+    #[\Testo\Test]
     public function testJtiGrandchildDoesNotInheritMidLevelRelation(): void
     {
         $schema = $this->compileWithClasses([
@@ -272,12 +276,12 @@ abstract class InheritanceTestCase extends BaseTestCase
         ]);
 
         // Relation declared on the JTI middle entity stays on the middle table
-        $this->assertArrayHasKey('target_id', $schema['jgMid'][SchemaInterface::COLUMNS]);
-        $this->assertCount(1, $schema['jgMid'][SchemaInterface::RELATIONS]);
+        \Testo\Assert::array($schema['jgMid'][SchemaInterface::COLUMNS])->hasKeys('target_id');
+        \Testo\Assert::count($schema['jgMid'][SchemaInterface::RELATIONS], 1);
 
         // JTI grandchild must not duplicate the middle entity's relation column
-        $this->assertArrayNotHasKey('target_id', $schema['jgLeaf'][SchemaInterface::COLUMNS]);
-        $this->assertCount(0, $schema['jgLeaf'][SchemaInterface::RELATIONS] ?? []);
+        \Testo\Assert::array($schema['jgLeaf'][SchemaInterface::COLUMNS])->doesNotHaveKeys('target_id');
+        \Testo\Assert::count($schema['jgLeaf'][SchemaInterface::RELATIONS] ?? [], 0);
     }
 
     /**

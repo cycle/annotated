@@ -44,29 +44,24 @@ abstract class CompositePkGeneratedTestCase extends BaseTestCase
      * The composite PK and the database-generated component must be derived
      * from the attributes alone.
      */
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testCompositePkSchema(ReaderInterface $reader): void
     {
         $schema = $this->compile($reader);
 
-        $this->assertSame(['parentId', 'id'], $schema['event'][SchemaInterface::PRIMARY_KEY]);
-        $this->assertSame(
-            ['parentId' => 'parent_id', 'id' => 'id', 'payload' => 'payload'],
-            $schema['event'][SchemaInterface::COLUMNS],
-        );
+        \Testo\Assert::same($schema['event'][SchemaInterface::PRIMARY_KEY], ['parentId', 'id']);
+        \Testo\Assert::same($schema['event'][SchemaInterface::COLUMNS], ['parentId' => 'parent_id', 'id' => 'id', 'payload' => 'payload']);
 
         // Both primary columns are flagged ON_INSERT: the bigserial `id` is
         // genuinely database-generated, while the app-supplied uuid `parentId`
         // is auto-flagged purely because it is primary (see Event::$parentId
         // and Configurator::isOnInsertGeneratedField()). The parentId flag only
         // echoes the value back via RETURNING — harmless for a uuid string.
-        $this->assertSame(
-            [
-                'parentId' => GeneratedField::ON_INSERT,
-                'id' => GeneratedField::ON_INSERT,
-            ],
-            $schema['event'][SchemaInterface::GENERATED_FIELDS],
-        );
+        \Testo\Assert::same($schema['event'][SchemaInterface::GENERATED_FIELDS], [
+            'parentId' => GeneratedField::ON_INSERT,
+            'id' => GeneratedField::ON_INSERT,
+        ]);
     }
 
     /**
@@ -74,7 +69,8 @@ abstract class CompositePkGeneratedTestCase extends BaseTestCase
      * database-generated ids returned on INSERT, and can be fetched back by
      * the full composite key.
      */
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testCreateGeneratesIdAndFetchByCompositePk(ReaderInterface $reader): void
     {
         $orm = new ORM(
@@ -95,9 +91,9 @@ abstract class CompositePkGeneratedTestCase extends BaseTestCase
         (new EntityManager($orm))->persist($first)->persist($second)->run();
 
         // database-generated ids
-        $this->assertIsInt($first->id);
-        $this->assertIsInt($second->id);
-        $this->assertNotSame($first->id, $second->id);
+        \Testo\Assert::int($first->id);
+        \Testo\Assert::int($second->id);
+        \Testo\Assert::notSame($second->id, $first->id);
 
         // fetch by the full composite key
         $found = (new Select($orm, Event::class))
@@ -105,9 +101,9 @@ abstract class CompositePkGeneratedTestCase extends BaseTestCase
             ->where('id', $second->id)
             ->fetchOne();
 
-        $this->assertNotNull($found);
-        $this->assertSame('second', $found->payload);
-        $this->assertSame($second, $found, 'Heap returns the same identity for the composite key.');
+        \Testo\Assert::notNull($found);
+        \Testo\Assert::same($found->payload, 'second');
+        \Testo\Assert::same($found, $second, 'Heap returns the same identity for the composite key.');
     }
 
     private function compile(ReaderInterface $reader): array

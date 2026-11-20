@@ -76,7 +76,8 @@ abstract class TableTestCase extends BaseTestCase
         ];
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testColumnsRendered(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -84,21 +85,22 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('withTable')));
 
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
-        $this->assertTrue($schema->hasColumn('name'));
-        $this->assertSame('string', $schema->column('status')->getType());
+        \Testo\Assert::true($schema->hasColumn('name'));
+        \Testo\Assert::same($schema->column('status')->getType(), 'string');
 
-        $this->assertTrue($schema->hasColumn('status'));
+        \Testo\Assert::true($schema->hasColumn('status'));
 
-        $this->assertSame('enum', $schema->column('status')->getAbstractType());
-        $this->assertSame('active', $schema->column('status')->getDefaultValue());
-        $this->assertSame(['active', 'disabled'], $schema->column('status')->getEnumValues());
+        \Testo\Assert::same($schema->column('status')->getAbstractType(), 'enum');
+        \Testo\Assert::same($schema->column('status')->getDefaultValue(), 'active');
+        \Testo\Assert::same($schema->column('status')->getEnumValues(), ['active', 'disabled']);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testColumnWithDifferentColumnNameAndProperty(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -110,12 +112,13 @@ abstract class TableTestCase extends BaseTestCase
                 new RenderTables(),
             ],
         );
-        $this->assertArrayHasKey('withTable', $schema);
-        $this->assertArrayHasKey('status_property', $schema['withTable'][Schema::COLUMNS]);
-        $this->assertSame('status', $schema['withTable'][Schema::COLUMNS]['status_property']);
+        \Testo\Assert::array($schema)->hasKeys('withTable');
+        \Testo\Assert::array($schema['withTable'][Schema::COLUMNS])->hasKeys('status_property');
+        \Testo\Assert::same($schema['withTable'][Schema::COLUMNS]['status_property'], 'status');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testColumnWithoutColumnName(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -127,11 +130,12 @@ abstract class TableTestCase extends BaseTestCase
                 new RenderTables(),
             ],
         );
-        $this->assertArrayHasKey('withTable', $schema);
-        $this->assertArrayHasKey('no_column_name', $schema['withTable'][Schema::COLUMNS]);
-        $this->assertSame('no_column_name', $schema['withTable'][Schema::COLUMNS]['no_column_name']);
+        \Testo\Assert::array($schema)->hasKeys('withTable');
+        \Testo\Assert::array($schema['withTable'][Schema::COLUMNS])->hasKeys('no_column_name');
+        \Testo\Assert::same($schema['withTable'][Schema::COLUMNS]['no_column_name'], 'no_column_name');
     }
 
+    #[\Testo\Test]
     public function testColumnInTableAnnotationByNumericKey(): void
     {
         $reader = new AnnotationReader();
@@ -147,11 +151,12 @@ abstract class TableTestCase extends BaseTestCase
             new RenderTables(),
         ]);
 
-        $this->assertArrayHasKey('orderedIdx', $schema);
-        $this->assertArrayHasKey('other_name', $schema['orderedIdx'][Schema::COLUMNS]);
-        $this->assertSame('other_name', $schema['orderedIdx'][Schema::COLUMNS]['other_name']);
+        \Testo\Assert::array($schema)->hasKeys('orderedIdx');
+        \Testo\Assert::array($schema['orderedIdx'][Schema::COLUMNS])->hasKeys('other_name');
+        \Testo\Assert::same($schema['orderedIdx'][Schema::COLUMNS]['other_name'], 'other_name');
     }
 
+    #[\Testo\Test]
     public function testColumnWithPropertyInTableAnnotationByNamedKey(): void
     {
         $reader = new AnnotationReader();
@@ -162,11 +167,8 @@ abstract class TableTestCase extends BaseTestCase
         $locator = $tokenizer->classLocator();
         $r = new Registry($this->dbal);
 
-        $this->expectException(AnnotationException::class);
-        $this->expectExceptionMessage(
-            'Can not use name "name1" for Column of the `badEntity` role, because the '
-            . '"property" field of the metadata class has already been set to "name2".',
-        );
+        \Testo\Expect::exception(AnnotationException::class)->withMessageContaining('Can not use name "name1" for Column of the `badEntity` role, because the '
+        . '"property" field of the metadata class has already been set to "name2".');
 
         (new Compiler())->compile($r, [
             new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
@@ -175,7 +177,8 @@ abstract class TableTestCase extends BaseTestCase
         ]);
     }
 
-    #[DataProvider('singularReadersProvider')]
+    #[\Testo\Data\DataProvider('singularReadersProvider')]
+    #[\Testo\Test]
     public function testCompositePrimaryKey(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -194,14 +197,14 @@ abstract class TableTestCase extends BaseTestCase
 
         $schema = $r->getTableSchema($r->getEntity('compositePost'));
 
-        $this->assertEquals(['id', 'user_id'], $schema->getPrimaryKeys());
+        \Testo\Assert::equals($schema->getPrimaryKeys(), ['id', 'user_id']);
     }
 
-    #[DataProvider('singularReadersProvider')]
+    #[\Testo\Data\DataProvider('singularReadersProvider')]
+    #[\Testo\Test]
     public function testIndexWithEmptyColumnsShouldThrowAnException(ReaderInterface $reader): void
     {
-        $this->expectException(AnnotationException::class);
-        $this->expectExceptionMessage('Invalid index definition for `compositePost`. Column list can\'t be empty.');
+        \Testo\Expect::exception(AnnotationException::class)->withMessageContaining('Invalid index definition for `compositePost`. Column list can\'t be empty.');
 
         $r = new Registry($this->dbal);
 
@@ -217,7 +220,8 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeIndexes($reader))->run($r);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testIndexes(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -228,18 +232,19 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeIndexes($reader))->run($r);
         (new SyncTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('withTable')));
 
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
-        $this->assertTrue($schema->hasIndex(['name']));
-        $this->assertTrue($schema->index(['name'])->isUnique());
-        $this->assertSame('name_index', $schema->index(['name'])->getName());
+        \Testo\Assert::true($schema->hasIndex(['name']));
+        \Testo\Assert::true($schema->index(['name'])->isUnique());
+        \Testo\Assert::same($schema->index(['name'])->getName(), 'name_index');
 
-        $this->assertTrue($schema->hasIndex(['status']));
+        \Testo\Assert::true($schema->hasIndex(['status']));
     }
 
-    #[DataProvider('singularReadersProvider')]
+    #[\Testo\Data\DataProvider('singularReadersProvider')]
+    #[\Testo\Test]
     public function testOrderedIndexes(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -257,15 +262,16 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeIndexes($reader))->run($r);
         (new SyncTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('orderedIdx')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('orderedIdx')));
 
         $schema = $r->getTableSchema($r->getEntity('orderedIdx'));
 
-        $this->assertTrue($schema->hasColumn('name'));
-        $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
+        \Testo\Assert::true($schema->hasColumn('name'));
+        \Testo\Assert::true($schema->hasIndex(['name', 'id DESC']));
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testNamingDefault(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -273,14 +279,15 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('withTable')));
 
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
-        $this->assertSame('with_tables', $schema->getName());
+        \Testo\Assert::same($schema->getName(), 'with_tables');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testNamingPluralize(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -292,14 +299,15 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('withTable')));
 
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
-        $this->assertSame('with_tables', $schema->getName());
+        \Testo\Assert::same($schema->getName(), 'with_tables');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testNamingSingular(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -311,14 +319,15 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('withTable')));
 
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
-        $this->assertSame('with_table', $schema->getName());
+        \Testo\Assert::same($schema->getName(), 'with_table');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testNamingNone(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -330,14 +339,15 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('withTable')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('withTable')));
 
         $schema = $r->getTableSchema($r->getEntity('withTable'));
 
-        $this->assertSame('with_table', $schema->getName());
+        \Testo\Assert::same($schema->getName(), 'with_table');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testReadonlySchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -345,14 +355,15 @@ abstract class TableTestCase extends BaseTestCase
         (new MergeColumns($reader))->run($r);
         (new RenderTables())->run($r);
 
-        $this->assertTrue($r->hasTable($r->getEntity('simple')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('simple')));
 
         $schema = $r->getTableSchema($r->getEntity('simple'));
 
-        $this->assertTrue($schema->column('read_only_column')->isReadonlySchema());
+        \Testo\Assert::true($schema->column('read_only_column')->isReadonlySchema());
     }
 
-    #[DataProvider('foreignKeyDirectoriesDataProvider')]
+    #[\Testo\Data\DataProvider('foreignKeyDirectoriesDataProvider')]
+    #[\Testo\Test]
     public function testForeignKeysAnnotationReader(
         ReaderInterface $reader,
         string $directory,
@@ -381,12 +392,12 @@ abstract class TableTestCase extends BaseTestCase
         $foreignKeys = $registry->getTableSchema($registry->getEntity('from'))->getForeignKeys();
         $expectedFk = array_shift($foreignKeys);
 
-        $this->assertStringContainsString('from', $expectedFk->getTable());
-        $this->assertStringContainsString('to', $expectedFk->getForeignTable());
-        $this->assertSame(['inner_key'], $expectedFk->getColumns());
-        $this->assertSame([$outerKey], $expectedFk->getForeignKeys());
-        $this->assertSame('CASCADE', $expectedFk->getDeleteRule());
-        $this->assertSame('CASCADE', $expectedFk->getUpdateRule());
-        $this->assertTrue($expectedFk->hasIndex());
+        \Testo\Assert::string($expectedFk->getTable())->contains('from');
+        \Testo\Assert::string($expectedFk->getForeignTable())->contains('to');
+        \Testo\Assert::same($expectedFk->getColumns(), ['inner_key']);
+        \Testo\Assert::same($expectedFk->getForeignKeys(), [$outerKey]);
+        \Testo\Assert::same($expectedFk->getDeleteRule(), 'CASCADE');
+        \Testo\Assert::same($expectedFk->getUpdateRule(), 'CASCADE');
+        \Testo\Assert::true($expectedFk->hasIndex());
     }
 }

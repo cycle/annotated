@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tokenizer\ClassesInterface;
 
-final class TokenizerEmbeddingLocatorTest extends TestCase
+final class TokenizerEmbeddingLocatorTest
 {
     public static function classesDataProvider(): \Traversable
     {
@@ -33,7 +33,8 @@ final class TokenizerEmbeddingLocatorTest extends TestCase
         ];
     }
 
-    #[DataProvider('classesDataProvider')]
+    #[\Testo\Data\DataProvider('classesDataProvider')]
+    #[\Testo\Test]
     public function testGetEmbeddings(array $expected, array $classes): void
     {
         $mock = $this->createMock(ClassesInterface::class);
@@ -41,6 +42,6 @@ final class TokenizerEmbeddingLocatorTest extends TestCase
 
         $locator = new TokenizerEmbeddingLocator($mock);
 
-        $this->assertEquals($expected, $locator->getEmbeddings());
+        \Testo\Assert::equals($locator->getEmbeddings(), $expected);
     }
 }

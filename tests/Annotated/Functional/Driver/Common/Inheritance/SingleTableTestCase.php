@@ -71,7 +71,8 @@ abstract class SingleTableTestCase extends BaseTestCase
         }
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testTableInheritance(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(
@@ -134,37 +135,38 @@ abstract class SingleTableTestCase extends BaseTestCase
 
         $this->orm->getHeap()->clean();
 
-        $this->assertNotNull($person->getFooId());
+        \Testo\Assert::notNull($person->getFooId());
         $loadedPerson = $this->orm->getRepository(Person::class)->findByPK($person->getFooId());
-        $this->assertInstanceOf(Person::class, $loadedPerson);
-        $this->assertSame('baz', $loadedPerson->name);
-        $this->assertFalse(isset($loadedPerson->preferences));
-        $this->assertFalse(isset($loadedPerson->salary));
+        \Testo\Assert::instanceOf($loadedPerson, Person::class);
+        \Testo\Assert::same($loadedPerson->name, 'baz');
+        \Testo\Assert::false(isset($loadedPerson->preferences));
+        \Testo\Assert::false(isset($loadedPerson->salary));
 
-        $this->assertNotNull($employee->getFooId());
+        \Testo\Assert::notNull($employee->getFooId());
         $loadedEmployee = $this->orm->getRepository(Person::class)->findByPK($employee->getFooId());
-        $this->assertInstanceOf(Employee::class, $loadedEmployee);
-        $this->assertSame('foo', $loadedEmployee->name);
-        $this->assertSame(12500, $loadedEmployee->salary);
-        $this->assertSame('test', $loadedEmployee->bar);
-        $this->assertFalse(isset($loadedEmployee->preferences));
+        \Testo\Assert::instanceOf($loadedEmployee, Employee::class);
+        \Testo\Assert::same($loadedEmployee->name, 'foo');
+        \Testo\Assert::same($loadedEmployee->salary, 12500);
+        \Testo\Assert::same($loadedEmployee->bar, 'test');
+        \Testo\Assert::false(isset($loadedEmployee->preferences));
 
-        $this->assertNotNull($customer->getFooId());
+        \Testo\Assert::notNull($customer->getFooId());
         $loadedCustomer = $this->orm->getRepository(Person::class)->findByPK($customer->getFooId());
-        $this->assertInstanceOf(Customer::class, $loadedCustomer);
-        $this->assertSame('baz', $loadedCustomer->name);
-        $this->assertSame('private', $loadedCustomer->preferences);
-        $this->assertFalse(isset($loadedCustomer->salary));
+        \Testo\Assert::instanceOf($loadedCustomer, Customer::class);
+        \Testo\Assert::same($loadedCustomer->name, 'baz');
+        \Testo\Assert::same($loadedCustomer->preferences, 'private');
+        \Testo\Assert::false(isset($loadedCustomer->salary));
 
-        $this->assertNotNull($ceo->getFooId());
+        \Testo\Assert::notNull($ceo->getFooId());
         $loadedCeo = $this->orm->getRepository(Ceo::class)->findByPK($ceo->getFooId());
-        $this->assertInstanceOf(Ceo::class, $loadedCeo);
-        $this->assertSame('ceo', $loadedCeo->name);
-        $this->assertSame(150000, $loadedCeo->salary);
-        $this->assertSame(1000, $loadedCeo->stocks);
+        \Testo\Assert::instanceOf($loadedCeo, Ceo::class);
+        \Testo\Assert::same($loadedCeo->name, 'ceo');
+        \Testo\Assert::same($loadedCeo->salary, 150000);
+        \Testo\Assert::same($loadedCeo->stocks, 1000);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testTableInheritanceSchema(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(
@@ -191,17 +193,18 @@ abstract class SingleTableTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertNotEmpty($schema);
+        \Testo\Assert::notBlank($schema);
 
-        $this->assertArrayHasKey(SchemaInterface::CHILDREN, $schema['person']);
-        $this->assertArrayHasKey(SchemaInterface::DISCRIMINATOR, $schema['person']);
-        $this->assertSame('type', $schema['person'][SchemaInterface::DISCRIMINATOR]);
+        \Testo\Assert::array($schema['person'])->hasKeys(SchemaInterface::CHILDREN);
+        \Testo\Assert::array($schema['person'])->hasKeys(SchemaInterface::DISCRIMINATOR);
+        \Testo\Assert::same($schema['person'][SchemaInterface::DISCRIMINATOR], 'type');
 
-        $this->assertArrayHasKey(SchemaInterface::PARENT, $schema['buyer']);
-        $this->assertArrayHasKey(SchemaInterface::PARENT_KEY, $schema['buyer']);
+        \Testo\Assert::array($schema['buyer'])->hasKeys(SchemaInterface::PARENT);
+        \Testo\Assert::array($schema['buyer'])->hasKeys(SchemaInterface::PARENT_KEY);
     }
 
-    #[DataProvider('columnDeclarationWithReadersDataProvider')]
+    #[\Testo\Data\DataProvider('columnDeclarationWithReadersDataProvider')]
+    #[\Testo\Test]
     public function testSingleTableInheritanceWithDifferentColumnDeclaration(
         string $directory,
         string $namespace,
@@ -231,117 +234,87 @@ abstract class SingleTableTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertNotEmpty($schema);
-        $this->assertSame(\sprintf(
+        \Testo\Assert::notBlank($schema);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::ENTITY], \sprintf(
             'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\BaseEvent',
             $namespace,
-        ), $schema['baseEvent'][SchemaInterface::ENTITY]);
-        $this->assertSame(Mapper::class, $schema['baseEvent'][SchemaInterface::MAPPER]);
-        $this->assertSame(Source::class, $schema['baseEvent'][SchemaInterface::SOURCE]);
-        $this->assertSame(Repository::class, $schema['baseEvent'][SchemaInterface::REPOSITORY]);
-        $this->assertSame('default', $schema['baseEvent'][SchemaInterface::DATABASE]);
-        $this->assertSame('base_events', $schema['baseEvent'][SchemaInterface::TABLE]);
-        $this->assertSame(['id'], $schema['baseEvent'][SchemaInterface::PRIMARY_KEY]);
-        $this->assertSame(['id'], $schema['baseEvent'][SchemaInterface::FIND_BY_KEYS]);
-        $this->assertCount(4, $schema['baseEvent'][SchemaInterface::COLUMNS]);
-        $this->assertSame('id', $schema['baseEvent'][SchemaInterface::COLUMNS]['id']);
-        $this->assertSame('action', $schema['baseEvent'][SchemaInterface::COLUMNS]['action']);
-        $this->assertSame('object_id', $schema['baseEvent'][SchemaInterface::COLUMNS]['object_id']);
-        $this->assertSame('object_type', $schema['baseEvent'][SchemaInterface::COLUMNS]['object_type']);
-        $this->assertSame(
-            Relation::BELONGS_TO_MORPHED,
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TYPE],
-        );
-        $this->assertSame(
-            \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\EventEmitterInterface', $namespace),
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TARGET],
-        );
-        $this->assertSame(
-            Relation::LOAD_PROMISE,
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::LOAD],
-        );
-        $this->assertTrue(
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::CASCADE],
-        );
-        $this->assertTrue(
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::NULLABLE],
-        );
-        $this->assertSame(
-            ['id'],
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::OUTER_KEY],
-        );
-        $this->assertSame(
-            'object_id',
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::INNER_KEY],
-        );
-        $this->assertSame(
-            'object_type',
-            $schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::MORPH_KEY],
-        );
-        $this->assertCount(2, $schema['baseEvent'][SchemaInterface::CHILDREN]);
-        $this->assertSame(
-            \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated', $namespace),
-            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.created'],
-        );
-        $this->assertSame(
-            \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated', $namespace),
-            $schema['baseEvent'][SchemaInterface::CHILDREN]['comment.updated'],
-        );
-        $this->assertNull($schema['baseEvent'][SchemaInterface::SCOPE]);
-        $this->assertSame('int', $schema['baseEvent'][SchemaInterface::TYPECAST]['id']);
-        $this->assertSame('int', $schema['baseEvent'][SchemaInterface::TYPECAST]['object_id']);
-        $this->assertSame([], $schema['baseEvent'][SchemaInterface::SCHEMA]);
-        $this->assertSame('action', $schema['baseEvent'][SchemaInterface::DISCRIMINATOR]);
-        $this->assertNull($schema['baseEvent'][SchemaInterface::TYPECAST_HANDLER]);
-        $this->assertSame(
-            [
-                SchemaInterface::ENTITY => \sprintf(
-                    'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\Comment',
-                    $namespace,
-                ),
-                SchemaInterface::MAPPER => Mapper::class,
-                SchemaInterface::SOURCE => Source::class,
-                SchemaInterface::REPOSITORY => Repository::class,
-                SchemaInterface::DATABASE => 'default',
-                SchemaInterface::TABLE => 'comments',
-                SchemaInterface::PRIMARY_KEY => [
-                    'id',
-                ],
-                SchemaInterface::FIND_BY_KEYS => [
-                    'id',
-                ],
-                SchemaInterface::COLUMNS => [
-                    'id' => 'id',
-                    'body' => 'body',
-                ],
-                SchemaInterface::RELATIONS => [],
-                SchemaInterface::SCOPE => null,
-                SchemaInterface::TYPECAST => [
-                    'id' => 'int',
-                    'body' => 'string',
-                ],
-                SchemaInterface::SCHEMA => [],
-                SchemaInterface::TYPECAST_HANDLER => null,
-                SchemaInterface::GENERATED_FIELDS => [
-                    'id' => GeneratedField::ON_INSERT,
-                ],
+        ));
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::MAPPER], Mapper::class);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::SOURCE], Source::class);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::REPOSITORY], Repository::class);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::DATABASE], 'default');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::TABLE], 'base_events');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::PRIMARY_KEY], ['id']);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::FIND_BY_KEYS], ['id']);
+        \Testo\Assert::count($schema['baseEvent'][SchemaInterface::COLUMNS], 4);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::COLUMNS]['id'], 'id');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::COLUMNS]['action'], 'action');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::COLUMNS]['object_id'], 'object_id');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::COLUMNS]['object_type'], 'object_type');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TYPE], Relation::BELONGS_TO_MORPHED);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::TARGET], \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\EventEmitterInterface', $namespace));
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::LOAD], Relation::LOAD_PROMISE);
+        \Testo\Assert::true($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::CASCADE]);
+        \Testo\Assert::true($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::NULLABLE]);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::OUTER_KEY], ['id']);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::INNER_KEY], 'object_id');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::RELATIONS]['object'][Relation::SCHEMA][Relation::MORPH_KEY], 'object_type');
+        \Testo\Assert::count($schema['baseEvent'][SchemaInterface::CHILDREN], 2);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::CHILDREN]['comment.created'], \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated', $namespace));
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::CHILDREN]['comment.updated'], \sprintf('Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated', $namespace));
+        \Testo\Assert::null($schema['baseEvent'][SchemaInterface::SCOPE]);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::TYPECAST]['id'], 'int');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::TYPECAST]['object_id'], 'int');
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::SCHEMA], []);
+        \Testo\Assert::same($schema['baseEvent'][SchemaInterface::DISCRIMINATOR], 'action');
+        \Testo\Assert::null($schema['baseEvent'][SchemaInterface::TYPECAST_HANDLER]);
+        \Testo\Assert::same($schema['comment'], [
+            SchemaInterface::ENTITY => \sprintf(
+                'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\Comment',
+                $namespace,
+            ),
+            SchemaInterface::MAPPER => Mapper::class,
+            SchemaInterface::SOURCE => Source::class,
+            SchemaInterface::REPOSITORY => Repository::class,
+            SchemaInterface::DATABASE => 'default',
+            SchemaInterface::TABLE => 'comments',
+            SchemaInterface::PRIMARY_KEY => [
+                'id',
             ],
-            $schema['comment'],
-        );
-        $this->assertSame([
+            SchemaInterface::FIND_BY_KEYS => [
+                'id',
+            ],
+            SchemaInterface::COLUMNS => [
+                'id' => 'id',
+                'body' => 'body',
+            ],
+            SchemaInterface::RELATIONS => [],
+            SchemaInterface::SCOPE => null,
+            SchemaInterface::TYPECAST => [
+                'id' => 'int',
+                'body' => 'string',
+            ],
+            SchemaInterface::SCHEMA => [],
+            SchemaInterface::TYPECAST_HANDLER => null,
+            SchemaInterface::GENERATED_FIELDS => [
+                'id' => GeneratedField::ON_INSERT,
+            ],
+        ]);
+        \Testo\Assert::same($schema['commentCreated'], [
             SchemaInterface::ENTITY => \sprintf(
                 'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentCreated',
                 $namespace,
             ),
-        ], $schema['commentCreated']);
-        $this->assertSame([
+        ]);
+        \Testo\Assert::same($schema['commentUpdated'], [
             SchemaInterface::ENTITY => \sprintf(
                 'Cycle\Annotated\Tests\Fixtures\Fixtures23\%s\CommentUpdated',
                 $namespace,
             ),
-        ], $schema['commentUpdated']);
+        ]);
     }
 
+    #[\Testo\Lifecycle\BeforeTest]
     public function setUp(): void
     {
         parent::setUp();

@@ -31,7 +31,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class TypecastTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testEntityWithDefinedTypecastAsString(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -41,13 +42,11 @@ abstract class TypecastTestCase extends BaseTestCase
             new MergeColumns($reader),
         ]);
 
-        $this->assertSame(
-            Typecaster::class,
-            $schema['simple'][Schema::TYPECAST_HANDLER],
-        );
+        \Testo\Assert::same($schema['simple'][Schema::TYPECAST_HANDLER], Typecaster::class);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testEntityWithDefinedTypecastAsArray(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -57,17 +56,15 @@ abstract class TypecastTestCase extends BaseTestCase
             new MergeColumns($reader),
         ]);
 
-        $this->assertSame(
-            [
-                Typecaster::class,
-                UuidTypecaster::class,
-                'foo',
-            ],
-            $schema['tag'][Schema::TYPECAST_HANDLER],
-        );
+        \Testo\Assert::same($schema['tag'][Schema::TYPECAST_HANDLER], [
+            Typecaster::class,
+            UuidTypecaster::class,
+            'foo',
+        ]);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testBackedEnum(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -92,13 +89,10 @@ abstract class TypecastTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertSame(
-            [
-                'bid' => 'int',
-                'be' => BackedEnum::class,
-                'bew' => [BackedEnumWrapper::class, 'typecast'],
-            ],
-            $schema['booking'][SchemaInterface::TYPECAST],
-        );
+        \Testo\Assert::same($schema['booking'][SchemaInterface::TYPECAST], [
+            'bid' => 'int',
+            'be' => BackedEnum::class,
+            'bew' => [BackedEnumWrapper::class, 'typecast'],
+        ]);
     }
 }

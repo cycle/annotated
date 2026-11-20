@@ -25,7 +25,8 @@ use Spiral\Attributes\ReaderInterface;
 
 abstract class MorphedHasManyTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -42,45 +43,30 @@ abstract class MorphedHasManyTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('labels', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(
-            Relation::MORPHED_HAS_MANY,
-            $schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE],
-        );
-        $this->assertSame('label', $schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('labels');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['labels'][Relation::TYPE], Relation::MORPHED_HAS_MANY);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['labels'][Relation::TARGET], 'label');
 
-        $this->assertArrayHasKey('labels', $schema['withTable'][Schema::RELATIONS]);
-        $this->assertSame(
-            Relation::MORPHED_HAS_MANY,
-            $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TYPE],
-        );
+        \Testo\Assert::array($schema['withTable'][Schema::RELATIONS])->hasKeys('labels');
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['labels'][Relation::TYPE], Relation::MORPHED_HAS_MANY);
 
-        $this->assertSame('label', $schema['withTable'][Schema::RELATIONS]['labels'][Relation::TARGET]);
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['labels'][Relation::TARGET], 'label');
 
-        $this->assertTrue(
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('labels')
-                ->hasColumn('owner_id'),
-        );
+        \Testo\Assert::true($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('labels')
+            ->hasColumn('owner_id'));
 
-        $this->assertTrue(
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('labels')
-                ->hasColumn('owner_role'),
-        );
+        \Testo\Assert::true($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('labels')
+            ->hasColumn('owner_role'));
 
-        $this->assertFalse(
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('labels')
-                ->hasIndex(['owner_id', 'owner_role']),
-        );
+        \Testo\Assert::false($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('labels')
+            ->hasIndex(['owner_id', 'owner_role']));
 
-        $this->assertSame(
-            BaseCollection::class,
-            $schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE], // phpcs:ignore
-        );
+        \Testo\Assert::same($schema['simple'][\Cycle\ORM\SchemaInterface::RELATIONS]['labels'][Relation::SCHEMA][Relation::COLLECTION_TYPE], BaseCollection::class);
     }
 }

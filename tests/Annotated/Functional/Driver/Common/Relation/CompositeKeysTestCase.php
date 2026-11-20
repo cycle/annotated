@@ -26,7 +26,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class CompositeKeysTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelationToChild(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -51,6 +52,6 @@ abstract class CompositeKeysTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertTrue(true, 'No exceptions thrown.');
+        \Testo\Assert::true(true, 'No exceptions thrown.');
     }
 }

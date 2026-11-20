@@ -28,7 +28,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class InverseTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testBelongsToOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -53,16 +54,17 @@ abstract class InverseTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('parent', $schema['eComplete'][Schema::RELATIONS]);
-        $this->assertSame(Relation::BELONGS_TO, $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TYPE]);
-        $this->assertSame('simple', $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET]);
+        \Testo\Assert::array($schema['eComplete'][Schema::RELATIONS])->hasKeys('parent');
+        \Testo\Assert::same($schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TYPE], Relation::BELONGS_TO);
+        \Testo\Assert::same($schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET], 'simple');
 
-        $this->assertArrayHasKey('child', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_ONE, $schema['simple'][Schema::RELATIONS]['child'][Relation::TYPE]);
-        $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['child'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('child');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['child'][Relation::TYPE], Relation::HAS_ONE);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['child'][Relation::TARGET], 'eComplete');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testBelongsToMany(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -87,16 +89,17 @@ abstract class InverseTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('uncles', $schema['eComplete'][Schema::RELATIONS]);
-        $this->assertSame(Relation::BELONGS_TO, $schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TYPE]);
-        $this->assertSame('simple', $schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TARGET]);
+        \Testo\Assert::array($schema['eComplete'][Schema::RELATIONS])->hasKeys('uncles');
+        \Testo\Assert::same($schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TYPE], Relation::BELONGS_TO);
+        \Testo\Assert::same($schema['eComplete'][Schema::RELATIONS]['uncles'][Relation::TARGET], 'simple');
 
-        $this->assertArrayHasKey('stepKids', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_MANY, $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TYPE]);
-        $this->assertSame('eComplete', $schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('stepKids');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TYPE], Relation::HAS_MANY);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['stepKids'][Relation::TARGET], 'eComplete');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testHasOne(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -121,16 +124,17 @@ abstract class InverseTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('simple', $schema['user'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_ONE, $schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE]);
-        $this->assertSame('simple', $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
+        \Testo\Assert::array($schema['user'][Schema::RELATIONS])->hasKeys('simple');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE], Relation::HAS_ONE);
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET], 'simple');
 
-        $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
-        $this->assertSame('user', $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('user');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE], Relation::BELONGS_TO);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET], 'user');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testHasOneInverseLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -155,20 +159,21 @@ abstract class InverseTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('simple', $schema['user'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_ONE, $schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE]);
-        $this->assertSame('simple', $schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET]);
+        \Testo\Assert::array($schema['user'][Schema::RELATIONS])->hasKeys('simple');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['simple'][Relation::TYPE], Relation::HAS_ONE);
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['simple'][Relation::TARGET], 'simple');
 
-        $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['simple'][Relation::LOAD]);
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['simple'][Relation::LOAD], Relation::LOAD_EAGER);
 
-        $this->assertArrayHasKey('user', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::BELONGS_TO, $schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE]);
-        $this->assertSame('user', $schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('user');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['user'][Relation::TYPE], Relation::BELONGS_TO);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['user'][Relation::TARGET], 'user');
 
-        $this->assertSame(Relation::LOAD_PROMISE, $schema['simple'][Schema::RELATIONS]['user'][Relation::LOAD]);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['user'][Relation::LOAD], Relation::LOAD_PROMISE);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testBelongsTo(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -193,16 +198,16 @@ abstract class InverseTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('owner', $schema['mark'][Schema::RELATIONS]);
-        $this->assertSame(Relation::BELONGS_TO_MORPHED, $schema['mark'][Schema::RELATIONS]['owner'][Relation::TYPE]);
-        $this->assertSame(MarkedInterface::class, $schema['mark'][Schema::RELATIONS]['owner'][Relation::TARGET]);
+        \Testo\Assert::array($schema['mark'][Schema::RELATIONS])->hasKeys('owner');
+        \Testo\Assert::same($schema['mark'][Schema::RELATIONS]['owner'][Relation::TYPE], Relation::BELONGS_TO_MORPHED);
+        \Testo\Assert::same($schema['mark'][Schema::RELATIONS]['owner'][Relation::TARGET], MarkedInterface::class);
 
-        $this->assertArrayHasKey('mark', $schema['user'][Schema::RELATIONS]);
-        $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['user'][Schema::RELATIONS]['mark'][Relation::TYPE]);
-        $this->assertSame('mark', $schema['user'][Schema::RELATIONS]['mark'][Relation::TARGET]);
+        \Testo\Assert::array($schema['user'][Schema::RELATIONS])->hasKeys('mark');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['mark'][Relation::TYPE], Relation::MORPHED_HAS_ONE);
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['mark'][Relation::TARGET], 'mark');
 
-        $this->assertArrayHasKey('mark', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['simple'][Schema::RELATIONS]['mark'][Relation::TYPE]);
-        $this->assertSame('mark', $schema['simple'][Schema::RELATIONS]['mark'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('mark');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['mark'][Relation::TYPE], Relation::MORPHED_HAS_ONE);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['mark'][Relation::TARGET], 'mark');
     }
 }

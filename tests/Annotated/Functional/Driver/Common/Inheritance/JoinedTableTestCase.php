@@ -36,7 +36,8 @@ abstract class JoinedTableTestCase extends BaseTestCase
 {
     use TableTrait;
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testTableInheritance(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -57,16 +58,17 @@ abstract class JoinedTableTestCase extends BaseTestCase
         $this->orm->getHeap()->clean();
 
         $loadedExecutive = $this->orm->getRepository(Executive::class)->findByPK($executive->getFooId());
-        $this->assertInstanceOf(Executive::class, $loadedExecutive);
-        $this->assertSame('executive', $loadedExecutive->getName());
-        $this->assertSame(50000, $loadedExecutive->getSalary());
-        $this->assertSame('secret', $loadedExecutive->hidden);
-        $this->assertSame(15000, $loadedExecutive->bonus);
-        $this->assertSame('executive', $loadedExecutive->getType());
-        $this->assertSame('value', $loadedExecutive->proxyFieldWithAnnotation);
+        \Testo\Assert::instanceOf($loadedExecutive, Executive::class);
+        \Testo\Assert::same($loadedExecutive->getName(), 'executive');
+        \Testo\Assert::same($loadedExecutive->getSalary(), 50000);
+        \Testo\Assert::same($loadedExecutive->hidden, 'secret');
+        \Testo\Assert::same($loadedExecutive->bonus, 15000);
+        \Testo\Assert::same($loadedExecutive->getType(), 'executive');
+        \Testo\Assert::same($loadedExecutive->proxyFieldWithAnnotation, 'value');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testAddForeignKeys(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -77,36 +79,38 @@ abstract class JoinedTableTestCase extends BaseTestCase
         $externalSuppliersFk = $db->table('external_suppliers')->getForeignKeys();
 
         // simple case. Supplier -> Person
-        $this->assertCount(1, $suppliersFk);
-        $this->assertInstanceOf(AbstractForeignKey::class, reset($suppliersFk));
-        $this->assertSame('people', reset($suppliersFk)->getForeignTable());
-        $this->assertSame(['id'], reset($suppliersFk)->getForeignKeys());
-        $this->assertSame(['id'], reset($suppliersFk)->getColumns());
+        \Testo\Assert::count($suppliersFk, 1);
+        \Testo\Assert::instanceOf(reset($suppliersFk), AbstractForeignKey::class);
+        \Testo\Assert::same(reset($suppliersFk)->getForeignTable(), 'people');
+        \Testo\Assert::same(reset($suppliersFk)->getForeignKeys(), ['id']);
+        \Testo\Assert::same(reset($suppliersFk)->getColumns(), ['id']);
 
         // Executive -> Employee (STI) -> Person
-        $this->assertCount(1, $executivesFk);
-        $this->assertInstanceOf(AbstractForeignKey::class, reset($executivesFk));
-        $this->assertSame('people', reset($executivesFk)->getForeignTable());
-        $this->assertSame(['id'], reset($executivesFk)->getForeignKeys());
-        $this->assertSame(['id'], reset($executivesFk)->getColumns());
+        \Testo\Assert::count($executivesFk, 1);
+        \Testo\Assert::instanceOf(reset($executivesFk), AbstractForeignKey::class);
+        \Testo\Assert::same(reset($executivesFk)->getForeignTable(), 'people');
+        \Testo\Assert::same(reset($executivesFk)->getForeignKeys(), ['id']);
+        \Testo\Assert::same(reset($executivesFk)->getColumns(), ['id']);
 
         // ExternalSupplier -> Supplier (JTI) -> Person. With outerKey
-        $this->assertCount(1, $externalSuppliersFk);
-        $this->assertInstanceOf(AbstractForeignKey::class, reset($externalSuppliersFk));
-        $this->assertSame('suppliers', reset($externalSuppliersFk)->getForeignTable());
-        $this->assertSame(['custom_id'], reset($externalSuppliersFk)->getForeignKeys());
-        $this->assertSame(['id'], reset($externalSuppliersFk)->getColumns());
+        \Testo\Assert::count($externalSuppliersFk, 1);
+        \Testo\Assert::instanceOf(reset($externalSuppliersFk), AbstractForeignKey::class);
+        \Testo\Assert::same(reset($externalSuppliersFk)->getForeignTable(), 'suppliers');
+        \Testo\Assert::same(reset($externalSuppliersFk)->getForeignKeys(), ['custom_id']);
+        \Testo\Assert::same(reset($externalSuppliersFk)->getColumns(), ['id']);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testNotAddForeignKey(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
 
-        $this->assertCount(0, $this->dbal->database()->table('buyers')->getForeignKeys());
+        \Testo\Assert::count($this->dbal->database()->table('buyers')->getForeignKeys(), 0);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testAddIndex(ReaderInterface $reader): void
     {
         $this->orm = $this->orm->with(new Schema($this->compile($reader)));
@@ -117,32 +121,34 @@ abstract class JoinedTableTestCase extends BaseTestCase
         $indexes = array_filter($indexes, fn(AbstractIndex $index) => $index->getColumns() !== ['id']);
 
         // one index added automatically, one added manual
-        $this->assertCount(2, $indexes);
+        \Testo\Assert::count($indexes, 2);
 
-        $this->assertTrue($this->dbal->database()->table('suppliers')->hasIndex(['index_id']));
-        $this->assertTrue($this->dbal->database()->table('suppliers')->hasIndex(['custom_id']));
+        \Testo\Assert::true($this->dbal->database()->table('suppliers')->hasIndex(['index_id']));
+        \Testo\Assert::true($this->dbal->database()->table('suppliers')->hasIndex(['custom_id']));
 
-        $this->assertTrue(reset($indexes)->isUnique());
-        $this->assertTrue(end($indexes)->isUnique());
+        \Testo\Assert::true(reset($indexes)->isUnique());
+        \Testo\Assert::true(end($indexes)->isUnique());
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testJtiParentColumns(ReaderInterface $reader): void
     {
         $schema = $this->compile($reader, 'Fixtures21');
 
-        $this->assertNotEmpty($schema);
+        \Testo\Assert::notBlank($schema);
 
-        $this->assertArrayHasKey(SchemaInterface::COLUMNS, $schema['person']);
+        \Testo\Assert::array($schema['person'])->hasKeys(SchemaInterface::COLUMNS);
 
         // assert that parent doesn't have jti columns
-        $this->assertEquals([
+        \Testo\Assert::equals($schema['person'][SchemaInterface::COLUMNS], [
             'id' => 'id',
             'name' => 'name',
             'type' => 'type',
-        ], $schema['person'][SchemaInterface::COLUMNS]);
+        ]);
     }
 
+    #[\Testo\Lifecycle\BeforeTest]
     public function setUp(): void
     {
         parent::setUp();

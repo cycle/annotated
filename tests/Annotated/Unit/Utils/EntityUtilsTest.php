@@ -13,7 +13,7 @@ use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 
-class EntityUtilsTest extends TestCase
+class EntityUtilsTest
 {
     public static function findParentDataProvider(): iterable
     {
@@ -46,7 +46,8 @@ class EntityUtilsTest extends TestCase
         }
     }
 
-    #[DataProvider('findParentDataProvider')]
+    #[\Testo\Data\DataProvider('findParentDataProvider')]
+    #[\Testo\Test]
     public function testFindParent(
         ReaderInterface $reader,
         string $child,
@@ -57,17 +58,15 @@ class EntityUtilsTest extends TestCase
 
         $actualParent = $entityUtils->findParent($child, $root);
 
-        $this->assertEquals($expectedParent, $actualParent);
+        \Testo\Assert::equals($actualParent, $expectedParent);
     }
 
+    #[\Testo\Test]
     public function testGetParentException(): void
     {
         $entityUtils = new EntityUtils(new AttributeReader());
 
-        $this->expectException(AnnotationException::class);
-        $this->expectExceptionMessage(
-            \sprintf('The parent class could not be found for the class `%s`.', Person::class),
-        );
+        \Testo\Expect::exception(AnnotationException::class)->withMessageContaining(\sprintf('The parent class could not be found for the class `%s`.', Person::class));
         $entityUtils->getParent(Person::class);
     }
 }

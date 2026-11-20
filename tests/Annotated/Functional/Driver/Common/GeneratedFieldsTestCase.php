@@ -17,7 +17,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class GeneratedFieldsTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testGeneratedFields(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -32,14 +33,11 @@ abstract class GeneratedFieldsTestCase extends BaseTestCase
             new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
         ]);
 
-        $this->assertSame(
-            [
-                'id' => GeneratedField::ON_INSERT,
-                'createdAt' => GeneratedField::BEFORE_INSERT,
-                'createdAtGeneratedByDatabase' => GeneratedField::ON_INSERT,
-                'updatedAt' => GeneratedField::BEFORE_INSERT | GeneratedField::BEFORE_UPDATE,
-            ],
-            $schema['withGeneratedFields'][SchemaInterface::GENERATED_FIELDS],
-        );
+        \Testo\Assert::same($schema['withGeneratedFields'][SchemaInterface::GENERATED_FIELDS], [
+            'id' => GeneratedField::ON_INSERT,
+            'createdAt' => GeneratedField::BEFORE_INSERT,
+            'createdAtGeneratedByDatabase' => GeneratedField::ON_INSERT,
+            'updatedAt' => GeneratedField::BEFORE_INSERT | GeneratedField::BEFORE_UPDATE,
+        ]);
     }
 }

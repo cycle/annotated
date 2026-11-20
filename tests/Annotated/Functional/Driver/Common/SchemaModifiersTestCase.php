@@ -29,7 +29,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class SchemaModifiersTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testModifierAnnotationShouldBeAddedToEntity(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(
@@ -59,11 +60,11 @@ abstract class SchemaModifiersTestCase extends BaseTestCase
         $post = $r->getEntity('post');
 
         $modifiers = iterator_to_array($post->getSchemaModifiers());
-        $this->assertCount(2, $modifiers);
-        $this->assertInstanceOf(ParentSegmentSchemaModifier::class, $modifiers[0]);
-        $this->assertInstanceOf(MapperSegmentSchemaModifier::class, $modifiers[1]);
+        \Testo\Assert::count($modifiers, 2);
+        \Testo\Assert::instanceOf($modifiers[0], ParentSegmentSchemaModifier::class);
+        \Testo\Assert::instanceOf($modifiers[1], MapperSegmentSchemaModifier::class);
 
-        $this->assertSame(\stdClass::class, $schema['post'][SchemaInterface::PARENT]);
-        $this->assertSame(Child::class, $schema['post'][SchemaInterface::MAPPER]);
+        \Testo\Assert::same($schema['post'][SchemaInterface::PARENT], \stdClass::class);
+        \Testo\Assert::same($schema['post'][SchemaInterface::MAPPER], Child::class);
     }
 }

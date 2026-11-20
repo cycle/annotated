@@ -15,12 +15,11 @@ use Cycle\Schema\Registry;
 use PHPUnit\Framework\Attributes\Group;
 use Spiral\Attributes\AttributeReader;
 
-#[Group('driver')]
-#[Group('driver-mysql')]
+#[\Testo\Filter\Group('driver', 'driver-mysql')]
 final class TableTest extends TableTestCase
 {
     public const DRIVER = 'mysql';
-
+    #[\Testo\Test]
     public function testUnsigned(): void
     {
         $reader = new AttributeReader();
@@ -31,15 +30,15 @@ final class TableTest extends TableTestCase
 
         $schema = $r->getTableSchema($r->getEntity('label'));
 
-        $this->assertTrue($schema->column('unsigned')->isUnsigned());
-        $this->assertFalse($schema->column('simple')->isUnsigned());
+        \Testo\Assert::true($schema->column('unsigned')->isUnsigned());
+        \Testo\Assert::false($schema->column('simple')->isUnsigned());
 
         $schema->save();
 
-        $this->assertTrue($this->dbal->database()->table('labels')->getSchema()->column('unsigned')->isUnsigned());
-        $this->assertFalse($this->dbal->database()->table('labels')->getSchema()->column('simple')->isUnsigned());
+        \Testo\Assert::true($this->dbal->database()->table('labels')->getSchema()->column('unsigned')->isUnsigned());
+        \Testo\Assert::false($this->dbal->database()->table('labels')->getSchema()->column('simple')->isUnsigned());
     }
-
+    #[\Testo\Test]
     public function testZerofill(): void
     {
         $reader = new AttributeReader();
@@ -50,15 +49,15 @@ final class TableTest extends TableTestCase
 
         $schema = $r->getTableSchema($r->getEntity('label'));
 
-        $this->assertTrue($schema->column('zerofill')->isZerofill());
-        $this->assertFalse($schema->column('simple')->isZerofill());
+        \Testo\Assert::true($schema->column('zerofill')->isZerofill());
+        \Testo\Assert::false($schema->column('simple')->isZerofill());
 
         $schema->save();
 
-        $this->assertTrue($this->dbal->database()->table('labels')->getSchema()->column('zerofill')->isUnsigned());
-        $this->assertFalse($this->dbal->database()->table('labels')->getSchema()->column('simple')->isUnsigned());
+        \Testo\Assert::true($this->dbal->database()->table('labels')->getSchema()->column('zerofill')->isUnsigned());
+        \Testo\Assert::false($this->dbal->database()->table('labels')->getSchema()->column('simple')->isUnsigned());
     }
-
+    #[\Testo\Test]
     public function testColumnCustomAttributes(): void
     {
         $reader = new AttributeReader();
@@ -71,7 +70,7 @@ final class TableTest extends TableTestCase
         $dbSchema = $this->dbal->database()->table('labels')->getSchema();
         $attributes = $dbSchema->column('charset_column')->getAttributes();
 
-        $this->assertSame('ascii', $attributes['charset']);
-        $this->assertSame('ascii_bin', $attributes['collation']);
+        \Testo\Assert::same($attributes['charset'], 'ascii');
+        \Testo\Assert::same($attributes['collation'], 'ascii_bin');
     }
 }

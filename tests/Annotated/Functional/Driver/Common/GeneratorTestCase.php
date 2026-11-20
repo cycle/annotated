@@ -29,16 +29,18 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class GeneratorTestCase extends BaseTestCase
 {
+    #[\Testo\Test]
     public function testCreateEntitiesWithNullReader(): void
     {
         $r = new Registry($this->dbal);
         (new Entities(new TokenizerEntityLocator($this->locator)))->run($r);
 
-        $this->assertTrue($r->hasEntity(Simple::class));
-        $this->assertTrue($r->hasEntity(WithTable::class));
-        $this->assertTrue($r->hasEntity(Complete::class));
+        \Testo\Assert::true($r->hasEntity(Simple::class));
+        \Testo\Assert::true($r->hasEntity(WithTable::class));
+        \Testo\Assert::true($r->hasEntity(Complete::class));
     }
 
+    #[\Testo\Test]
     public function testCreateGeneratorsWithDoctrineAnnotationReader(): void
     {
         $reader = new DoctrineAnnotationReader();
@@ -51,19 +53,20 @@ abstract class GeneratorTestCase extends BaseTestCase
         (new SyncTables())->run($r);
 
         // Entities
-        $this->assertTrue($r->hasEntity(Simple::class));
-        $this->assertTrue($r->hasEntity(WithTable::class));
-        $this->assertTrue($r->hasEntity(Complete::class));
+        \Testo\Assert::true($r->hasEntity(Simple::class));
+        \Testo\Assert::true($r->hasEntity(WithTable::class));
+        \Testo\Assert::true($r->hasEntity(Complete::class));
         // MergeColumns
         $schema = $r->getTableSchema($r->getEntity('withTable'));
-        $this->assertTrue($schema->hasColumn('name'));
-        $this->assertSame('string', $schema->column('status')->getType());
+        \Testo\Assert::true($schema->hasColumn('name'));
+        \Testo\Assert::same($schema->column('status')->getType(), 'string');
         // MergeIndexes
-        $this->assertTrue($schema->hasIndex(['name']));
-        $this->assertTrue($schema->index(['name'])->isUnique());
-        $this->assertSame('name_index', $schema->index(['name'])->getName());
+        \Testo\Assert::true($schema->hasIndex(['name']));
+        \Testo\Assert::true($schema->index(['name'])->isUnique());
+        \Testo\Assert::same($schema->index(['name'])->getName(), 'name_index');
     }
 
+    #[\Testo\Test]
     public function testCreateGeneratorsWithCustomMergeReader(): void
     {
         $reader = new MergeReader([new AnnotationReader(), new AttributeReader()]);
@@ -82,69 +85,69 @@ abstract class GeneratorTestCase extends BaseTestCase
         (new SyncTables())->run($r);
 
 
-        $this->assertTrue($r->hasTable($r->getEntity('MergedMeta')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('MergedMeta')));
         $schema = $r->getTableSchema($r->getEntity('MergedMeta'));
-        $this->assertTrue($schema->hasColumn('name'));
-        $this->assertTrue($schema->hasIndex(['name', 'id DESC']));
+        \Testo\Assert::true($schema->hasColumn('name'));
+        \Testo\Assert::true($schema->hasIndex(['name', 'id DESC']));
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testLocateAll(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
         (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
 
-        $this->assertTrue($r->hasEntity(Simple::class));
-        $this->assertTrue($r->hasEntity(WithTable::class));
-        $this->assertTrue($r->hasEntity(Complete::class));
+        \Testo\Assert::true($r->hasEntity(Simple::class));
+        \Testo\Assert::true($r->hasEntity(WithTable::class));
+        \Testo\Assert::true($r->hasEntity(Complete::class));
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testSimpleSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
         (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
 
-        $this->assertTrue($r->hasEntity(Simple::class));
-        $this->assertTrue($r->hasEntity('simple'));
+        \Testo\Assert::true($r->hasEntity(Simple::class));
+        \Testo\Assert::true($r->hasEntity('simple'));
 
-        $this->assertSame(null, $r->getEntity('simple')->getMapper());
-        $this->assertSame(null, $r->getEntity('simple')->getRepository());
+        \Testo\Assert::same($r->getEntity('simple')->getMapper(), null);
+        \Testo\Assert::same($r->getEntity('simple')->getRepository(), null);
 
-        $this->assertTrue($r->hasTable($r->getEntity('simple')));
-        $this->assertSame('default', $r->getDatabase($r->getEntity('simple')));
-        $this->assertSame('simples', $r->getTable($r->getEntity('simple')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('simple')));
+        \Testo\Assert::same($r->getDatabase($r->getEntity('simple')), 'default');
+        \Testo\Assert::same($r->getTable($r->getEntity('simple')), 'simples');
 
-        $this->assertTrue($r->getEntity('simple')->getFields()->has('id'));
-        $this->assertSame('id', $r->getEntity('simple')->getFields()->get('id')->getColumn());
+        \Testo\Assert::true($r->getEntity('simple')->getFields()->has('id'));
+        \Testo\Assert::same($r->getEntity('simple')->getFields()->get('id')->getColumn(), 'id');
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testCompleteSchema(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
         (new Entities(new TokenizerEntityLocator($this->locator, $reader), $reader))->run($r);
 
-        $this->assertTrue($r->hasEntity(Complete::class));
-        $this->assertTrue($r->hasEntity('eComplete'));
+        \Testo\Assert::true($r->hasEntity(Complete::class));
+        \Testo\Assert::true($r->hasEntity('eComplete'));
 
-        $this->assertSame(CompleteMapper::class, $r->getEntity('eComplete')->getMapper());
-        $this->assertSame(CompleteRepository::class, $r->getEntity('eComplete')->getRepository());
-        $this->assertSame(TestSource::class, $r->getEntity('eComplete')->getSource());
-        $this->assertSame(SomeConstrain::class, $r->getEntity('eComplete')->getScope());
+        \Testo\Assert::same($r->getEntity('eComplete')->getMapper(), CompleteMapper::class);
+        \Testo\Assert::same($r->getEntity('eComplete')->getRepository(), CompleteRepository::class);
+        \Testo\Assert::same($r->getEntity('eComplete')->getSource(), TestSource::class);
+        \Testo\Assert::same($r->getEntity('eComplete')->getScope(), SomeConstrain::class);
 
-        $this->assertTrue($r->hasTable($r->getEntity('eComplete')));
-        $this->assertSame('secondary', $r->getDatabase($r->getEntity('eComplete')));
-        $this->assertSame('complete_data', $r->getTable($r->getEntity('eComplete')));
+        \Testo\Assert::true($r->hasTable($r->getEntity('eComplete')));
+        \Testo\Assert::same($r->getDatabase($r->getEntity('eComplete')), 'secondary');
+        \Testo\Assert::same($r->getTable($r->getEntity('eComplete')), 'complete_data');
 
-        $this->assertTrue($r->getEntity('eComplete')->getFields()->has('id'));
-        $this->assertTrue($r->getEntity('eComplete')->getFields()->has('name'));
+        \Testo\Assert::true($r->getEntity('eComplete')->getFields()->has('id'));
+        \Testo\Assert::true($r->getEntity('eComplete')->getFields()->has('name'));
 
-        $this->assertSame(
-            'username',
-            $r->getEntity('eComplete')->getFields()->get('name')->getColumn(),
-        );
+        \Testo\Assert::same($r->getEntity('eComplete')->getFields()->get('name')->getColumn(), 'username');
 
-        $this->assertFalse($r->getEntity('eComplete')->getFields()->has('ignored'));
+        \Testo\Assert::false($r->getEntity('eComplete')->getFields()->has('ignored'));
     }
 }

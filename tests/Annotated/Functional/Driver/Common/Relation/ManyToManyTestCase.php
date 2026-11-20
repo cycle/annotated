@@ -32,7 +32,8 @@ use function PHPUnit\Framework\assertCount;
 
 abstract class ManyToManyTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testPivotPrimaryKeys(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -65,18 +66,16 @@ abstract class ManyToManyTestCase extends BaseTestCase
         assert($table instanceof AbstractTable);
 
         // Check MTM relation in the Schema
-        $this->assertSame(Relation::MANY_TO_MANY, $schema['post'][Schema::RELATIONS]['tags'][Relation::TYPE]);
-        $this->assertSame('tag', $schema['post'][Schema::RELATIONS]['tags'][Relation::TARGET]);
-        $this->assertSame(
-            'context',
-            $schema['post'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY],
-        );
+        \Testo\Assert::same($schema['post'][Schema::RELATIONS]['tags'][Relation::TYPE], Relation::MANY_TO_MANY);
+        \Testo\Assert::same($schema['post'][Schema::RELATIONS]['tags'][Relation::TARGET], 'tag');
+        \Testo\Assert::same($schema['post'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY], 'context');
 
         // Check table
-        assertCount(1, $table->getIndexes());
+        \Testo\Assert::count($table->getIndexes(), 1);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -93,47 +92,24 @@ abstract class ManyToManyTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('tags', $schema['withTable'][Schema::RELATIONS]);
+        \Testo\Assert::array($schema['withTable'][Schema::RELATIONS])->hasKeys('tags');
 
-        $this->assertSame(
-            Relation::MANY_TO_MANY,
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TYPE],
-        );
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::TYPE], Relation::MANY_TO_MANY);
 
-        $this->assertSame(
-            'tag',
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::TARGET],
-        );
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::TARGET], 'tag');
 
-        $this->assertSame(
-            'tagContext',
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY],
-        );
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_ENTITY], 'tagContext');
 
-        $this->assertSame(
-            ['withTable_id'],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
-        );
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_INNER_KEY], ['withTable_id']);
 
-        $this->assertSame(
-            ['tag_id'],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
-        );
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::THROUGH_OUTER_KEY], ['tag_id']);
 
-        $this->assertSame(
-            ['id' => ['>=' => '1']],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE],
-        );
-        $this->assertSame(
-            ['id' => 'DESC'],
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY],
-        );
-        $this->assertSame(
-            BaseCollection::class,
-            $schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::COLLECTION_TYPE],
-        );
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::WHERE], ['id' => ['>=' => '1']]);
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::ORDER_BY], ['id' => 'DESC']);
+        \Testo\Assert::same($schema['withTable'][Schema::RELATIONS]['tags'][Relation::SCHEMA][Relation::COLLECTION_TYPE], BaseCollection::class);
     }
 
+    #[\Testo\Test]
     public function testInnerOuterKeys(): void
     {
         $tokenizer = new Tokenizer(
@@ -179,31 +155,12 @@ abstract class ManyToManyTestCase extends BaseTestCase
             $throughInnerKey = (array) $throughInnerKey;
             $throughOuterKey = (array) $throughOuterKey;
 
-            $this->assertSame(Relation::MANY_TO_MANY, $relation[Relation::TYPE], "$name: relation type");
-            $this->assertSame(
-                $innerKey,
-                (array) $relation[Relation::SCHEMA][Relation::INNER_KEY],
-                "$name: Inner Key",
-            );
-            $this->assertSame(
-                $outerKey,
-                (array) $relation[Relation::SCHEMA][Relation::OUTER_KEY],
-                "$name: Outer Key",
-            );
-            $this->assertSame(
-                $throughInnerKey,
-                (array) $relation[Relation::SCHEMA][Relation::THROUGH_INNER_KEY],
-                "$name: Through inner Key",
-            );
-            $this->assertSame(
-                $throughOuterKey,
-                (array) $relation[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY],
-                "$name: Through outer Key",
-            );
+            \Testo\Assert::same($relation[Relation::TYPE], Relation::MANY_TO_MANY, "$name: relation type");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::INNER_KEY], $innerKey, "$name: Inner Key");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::OUTER_KEY], $outerKey, "$name: Outer Key");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::THROUGH_INNER_KEY], $throughInnerKey, "$name: Through inner Key");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY], $throughOuterKey, "$name: Through outer Key");
         }
-        $this->assertArrayNotHasKey(
-            'booking_id_column',
-            $schema['booking_reservation'][SchemaInterface::COLUMNS],
-        );
+        \Testo\Assert::array($schema['booking_reservation'][SchemaInterface::COLUMNS])->doesNotHaveKeys('booking_id_column');
     }
 }

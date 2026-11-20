@@ -8,7 +8,7 @@ use Cycle\Annotated\Annotation\Inheritance\SingleTable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-final class SingleTableTest extends TestCase
+final class SingleTableTest
 {
     public static function dataBase(): iterable
     {
@@ -21,11 +21,12 @@ final class SingleTableTest extends TestCase
         yield ['a', StringEnum::A];
     }
 
-    #[DataProvider('dataBase')]
+    #[\Testo\Data\DataProvider('dataBase')]
+    #[\Testo\Test]
     public function testBase1(?string $expected, mixed $value): void
     {
         $attribute = new SingleTable($value);
 
-        $this->assertSame($expected, $attribute->getValue());
+        \Testo\Assert::same($attribute->getValue(), $expected);
     }
 }

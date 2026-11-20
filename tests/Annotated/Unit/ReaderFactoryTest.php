@@ -11,27 +11,30 @@ use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\MergeReader;
 
-class ReaderFactoryTest extends TestCase
+class ReaderFactoryTest
 {
+    #[\Testo\Test]
     public function testCreateFromNull(): void
     {
         $reader = ReaderFactory::create(null);
 
-        $this->assertInstanceOf(AttributeReader::class, $reader);
+        \Testo\Assert::instanceOf($reader, AttributeReader::class);
     }
 
+    #[\Testo\Test]
     public function testCreateFromDoctrineReader(): void
     {
         $reader = ReaderFactory::create(new DoctrineAnnotationReader());
 
-        $this->assertInstanceOf(AnnotationReader::class, $reader);
+        \Testo\Assert::instanceOf($reader, AnnotationReader::class);
     }
 
+    #[\Testo\Test]
     public function testCreateFromCustomReader(): void
     {
         $mergeReader = new MergeReader([]);
         $reader = ReaderFactory::create($mergeReader);
 
-        $this->assertSame($mergeReader, $reader);
+        \Testo\Assert::same($reader, $mergeReader);
     }
 }

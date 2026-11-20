@@ -26,7 +26,8 @@ use Spiral\Attributes\ReaderInterface;
 
 abstract class BelongsToMorphedTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -43,17 +44,11 @@ abstract class BelongsToMorphedTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('owner', $schema['label'][Schema::RELATIONS]);
-        $this->assertSame(
-            Relation::BELONGS_TO_MORPHED,
-            $schema['label'][Schema::RELATIONS]['owner'][Relation::TYPE],
-        );
+        \Testo\Assert::array($schema['label'][Schema::RELATIONS])->hasKeys('owner');
+        \Testo\Assert::same($schema['label'][Schema::RELATIONS]['owner'][Relation::TYPE], Relation::BELONGS_TO_MORPHED);
 
-        $this->assertSame(
-            LabelledInterface::class,
-            $schema['label'][Schema::RELATIONS]['owner'][Relation::TARGET],
-        );
+        \Testo\Assert::same($schema['label'][Schema::RELATIONS]['owner'][Relation::TARGET], LabelledInterface::class);
 
-        $this->assertSame(SomeConstrain::class, $schema['label'][Schema::SCOPE]);
+        \Testo\Assert::same($schema['label'][Schema::SCOPE], SomeConstrain::class);
     }
 }

@@ -24,7 +24,8 @@ use Spiral\Attributes\ReaderInterface;
 
 abstract class BelongsToTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -41,8 +42,8 @@ abstract class BelongsToTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('parent', $schema['eComplete'][Schema::RELATIONS]);
-        $this->assertSame(Relation::BELONGS_TO, $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TYPE]);
-        $this->assertSame('simple', $schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET]);
+        \Testo\Assert::array($schema['eComplete'][Schema::RELATIONS])->hasKeys('parent');
+        \Testo\Assert::same($schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TYPE], Relation::BELONGS_TO);
+        \Testo\Assert::same($schema['eComplete'][Schema::RELATIONS]['parent'][Relation::TARGET], 'simple');
     }
 }

@@ -22,7 +22,7 @@ use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-abstract class BaseTestCase extends TestCase
+abstract class BaseTestCase
 {
     // currently active driver
     public const DRIVER = null;
@@ -69,10 +69,9 @@ abstract class BaseTestCase extends TestCase
     /**
      * Init all we need.
      */
+    #[\Testo\Lifecycle\BeforeTest]
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->dbal = new DatabaseManager(new DatabaseConfig(['default' => 'default']));
         $this->dbal->addDatabase(new Database(
             'default',
@@ -116,6 +115,7 @@ abstract class BaseTestCase extends TestCase
     /**
      * Cleanup.
      */
+    #[\Testo\Lifecycle\AfterTest]
     public function tearDown(): void
     {
         $this->disableProfiling();

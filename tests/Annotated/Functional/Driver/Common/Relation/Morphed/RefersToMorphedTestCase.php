@@ -27,7 +27,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class RefersToMorphedTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $locator = (new Tokenizer(new TokenizerConfig([
@@ -49,18 +50,12 @@ abstract class RefersToMorphedTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('parent', $schema['comment'][Schema::RELATIONS]);
-        $this->assertSame(
-            Relation::REFERS_TO_MORPHED,
-            $schema['comment'][Schema::RELATIONS]['parent'][Relation::TYPE],
-        );
-        $this->assertSame(
-            MorphedParentInterface::class,
-            $schema['comment'][Schema::RELATIONS]['parent'][Relation::TARGET],
-        );
+        \Testo\Assert::array($schema['comment'][Schema::RELATIONS])->hasKeys('parent');
+        \Testo\Assert::same($schema['comment'][Schema::RELATIONS]['parent'][Relation::TYPE], Relation::REFERS_TO_MORPHED);
+        \Testo\Assert::same($schema['comment'][Schema::RELATIONS]['parent'][Relation::TARGET], MorphedParentInterface::class);
 
         // Morphed refers-to stores the outer key and the target role on the source entity.
-        $this->assertContains('parent_id', $schema['comment'][Schema::COLUMNS]);
-        $this->assertContains('parent_role', $schema['comment'][Schema::COLUMNS]);
+        \Testo\Assert::contains($schema['comment'][Schema::COLUMNS], 'parent_id');
+        \Testo\Assert::contains($schema['comment'][Schema::COLUMNS], 'parent_role');
     }
 }

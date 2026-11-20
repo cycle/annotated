@@ -24,7 +24,8 @@ use Spiral\Attributes\ReaderInterface;
 
 abstract class RefersToTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -41,17 +42,14 @@ abstract class RefersToTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('parent', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::REFERS_TO, $schema['simple'][Schema::RELATIONS]['parent'][Relation::TYPE]);
-        $this->assertSame('simple', $schema['simple'][Schema::RELATIONS]['parent'][Relation::TARGET]);
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('parent');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['parent'][Relation::TYPE], Relation::REFERS_TO);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['parent'][Relation::TARGET], 'simple');
 
-        $this->assertSame(
-            'NO ACTION',
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('simples')
-                ->foreignKey(['parent_id'])
-                ->getDeleteRule(),
-        );
+        \Testo\Assert::same($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('simples')
+            ->foreignKey(['parent_id'])
+            ->getDeleteRule(), 'NO ACTION');
     }
 }

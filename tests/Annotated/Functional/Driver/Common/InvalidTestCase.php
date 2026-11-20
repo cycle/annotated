@@ -27,7 +27,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class InvalidTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testInvalidRelation(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -39,7 +40,7 @@ abstract class InvalidTestCase extends BaseTestCase
 
         $r = new Registry($this->dbal);
 
-        $this->expectException(RelationException::class);
+        \Testo\Expect::exception(RelationException::class);
 
         (new Compiler())->compile($r, [
             new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
@@ -55,15 +56,15 @@ abstract class InvalidTestCase extends BaseTestCase
         ]);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testNotDefinedColumnTypeShouldThrowAnException(ReaderInterface $reader): void
     {
         $message = $reader instanceof AnnotationReader
             ? 'Too few arguments to function Cycle\Annotated\Annotation\Column::__construct(), 0 passed'
             : 'Some of required arguments [`type`] is missed on `Cycle\Annotated\Tests\Fixtures\Fixtures4\User.id.`';
 
-        $this->expectException(AnnotationException::class);
-        $this->expectExceptionMessage($message);
+        \Testo\Expect::exception(AnnotationException::class)->withMessageContaining($message);
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
             'directories' => [__DIR__ . '/../../../Fixtures/Fixtures4'],

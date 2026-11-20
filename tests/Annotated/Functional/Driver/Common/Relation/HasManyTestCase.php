@@ -28,7 +28,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class HasManyTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -48,23 +49,15 @@ abstract class HasManyTestCase extends BaseTestCase
             ],
         );
 
-        $this->assertArrayHasKey('many', $schema['simple'][Schema::RELATIONS]);
-        $this->assertSame(Relation::HAS_MANY, $schema['simple'][Schema::RELATIONS]['many'][Relation::TYPE]);
-        $this->assertSame('withTable', $schema['simple'][Schema::RELATIONS]['many'][Relation::TARGET]);
-        $this->assertSame(
-            ['id' => ['>=' => 1]],
-            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE],
-        );
-        $this->assertSame(
-            ['id' => 'DESC'],
-            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY],
-        );
-        $this->assertSame(
-            'bar',
-            $schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE],
-        );
+        \Testo\Assert::array($schema['simple'][Schema::RELATIONS])->hasKeys('many');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['many'][Relation::TYPE], Relation::HAS_MANY);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['many'][Relation::TARGET], 'withTable');
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::WHERE], ['id' => ['>=' => 1]]);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::ORDER_BY], ['id' => 'DESC']);
+        \Testo\Assert::same($schema['simple'][Schema::RELATIONS]['many'][Relation::SCHEMA][Relation::COLLECTION_TYPE], 'bar');
     }
 
+    #[\Testo\Test]
     public function testInnerOuterKeys(): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -101,17 +94,9 @@ abstract class HasManyTestCase extends BaseTestCase
         foreach ($checks as [$name, $innerKey, $outerKey]) {
             $relation = $schema['booking_reservation'][SchemaInterface::RELATIONS][$name];
 
-            $this->assertSame(Relation::HAS_MANY, $relation[Relation::TYPE], "$name: relation type");
-            $this->assertSame(
-                (array) $innerKey,
-                (array) $relation[Relation::SCHEMA][Relation::INNER_KEY],
-                "$name: Inner Key",
-            );
-            $this->assertSame(
-                (array) $outerKey,
-                (array) $relation[Relation::SCHEMA][Relation::OUTER_KEY],
-                "$name: Outer Key",
-            );
+            \Testo\Assert::same($relation[Relation::TYPE], Relation::HAS_MANY, "$name: relation type");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::INNER_KEY], (array) $innerKey, "$name: Inner Key");
+            \Testo\Assert::same((array) $relation[Relation::SCHEMA][Relation::OUTER_KEY], (array) $outerKey, "$name: Outer Key");
         }
     }
 }

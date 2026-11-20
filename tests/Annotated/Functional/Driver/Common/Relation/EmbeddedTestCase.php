@@ -29,7 +29,8 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class EmbeddedTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -54,15 +55,16 @@ abstract class EmbeddedTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
-        $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
+        \Testo\Assert::array($schema['user'][Schema::RELATIONS])->hasKeys('address');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['address'][Relation::TYPE], Relation::EMBEDDED);
 
-        $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
-        $this->assertSame(Relation::LOAD_EAGER, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
-        $this->assertTrue($r->getTableSchema($r->getEntity('user'))->hasIndex(['address_zipcode']));
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['address'][Relation::TARGET], 'user:address:address');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['address'][Relation::LOAD], Relation::LOAD_EAGER);
+        \Testo\Assert::true($r->getTableSchema($r->getEntity('user'))->hasIndex(['address_zipcode']));
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelationLazyLoad(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -87,15 +89,16 @@ abstract class EmbeddedTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('address', $schema['user'][Schema::RELATIONS]);
-        $this->assertSame(Relation::EMBEDDED, $schema['user'][Schema::RELATIONS]['address'][Relation::TYPE]);
+        \Testo\Assert::array($schema['user'][Schema::RELATIONS])->hasKeys('address');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['address'][Relation::TYPE], Relation::EMBEDDED);
 
-        $this->assertSame('user:address:address', $schema['user'][Schema::RELATIONS]['address'][Relation::TARGET]);
-        $this->assertSame(Relation::LOAD_PROMISE, $schema['user'][Schema::RELATIONS]['address'][Relation::LOAD]);
-        $this->assertTrue($r->getTableSchema($r->getEntity('user:address:address'))->hasIndex(['address_zipcode']));
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['address'][Relation::TARGET], 'user:address:address');
+        \Testo\Assert::same($schema['user'][Schema::RELATIONS]['address'][Relation::LOAD], Relation::LOAD_PROMISE);
+        \Testo\Assert::true($r->getTableSchema($r->getEntity('user:address:address'))->hasIndex(['address_zipcode']));
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testEmbeddedPrefix(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -135,11 +138,12 @@ abstract class EmbeddedTestCase extends BaseTestCase
             'id' => 'id',
         ];
 
-        $this->assertSame($address, $schema['user:address:address'][Schema::COLUMNS]);
-        $this->assertSame($workAddress, $schema['user:address:workAddress'][Schema::COLUMNS]);
+        \Testo\Assert::same($schema['user:address:address'][Schema::COLUMNS], $address);
+        \Testo\Assert::same($schema['user:address:workAddress'][Schema::COLUMNS], $workAddress);
     }
 
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testEmbeddedTypecast(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -164,6 +168,6 @@ abstract class EmbeddedTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertSame(CityTypecast::class, $schema['user:address:address'][Schema::TYPECAST_HANDLER][0]);
+        \Testo\Assert::same($schema['user:address:address'][Schema::TYPECAST_HANDLER][0], CityTypecast::class);
     }
 }

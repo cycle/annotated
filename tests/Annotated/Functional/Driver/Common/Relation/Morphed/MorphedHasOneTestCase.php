@@ -24,7 +24,8 @@ use Spiral\Attributes\ReaderInterface;
 
 abstract class MorphedHasOneTestCase extends BaseTestCase
 {
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testRelation(ReaderInterface $reader): void
     {
         $r = new Registry($this->dbal);
@@ -41,29 +42,23 @@ abstract class MorphedHasOneTestCase extends BaseTestCase
             new GenerateTypecast(),
         ]);
 
-        $this->assertArrayHasKey('label', $schema['tag'][Schema::RELATIONS]);
-        $this->assertSame(Relation::MORPHED_HAS_ONE, $schema['tag'][Schema::RELATIONS]['label'][Relation::TYPE]);
-        $this->assertSame('label', $schema['tag'][Schema::RELATIONS]['label'][Relation::TARGET]);
+        \Testo\Assert::array($schema['tag'][Schema::RELATIONS])->hasKeys('label');
+        \Testo\Assert::same($schema['tag'][Schema::RELATIONS]['label'][Relation::TYPE], Relation::MORPHED_HAS_ONE);
+        \Testo\Assert::same($schema['tag'][Schema::RELATIONS]['label'][Relation::TARGET], 'label');
 
-        $this->assertTrue(
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('labels')
-                ->hasColumn('owner_id'),
-        );
+        \Testo\Assert::true($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('labels')
+            ->hasColumn('owner_id'));
 
-        $this->assertTrue(
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('labels')
-                ->hasColumn('owner_role'),
-        );
+        \Testo\Assert::true($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('labels')
+            ->hasColumn('owner_role'));
 
-        $this->assertFalse(
-            $this->dbal->database('default')
-                ->getDriver()
-                ->getSchema('labels')
-                ->hasIndex(['owner_id', 'owner_role']),
-        );
+        \Testo\Assert::false($this->dbal->database('default')
+            ->getDriver()
+            ->getSchema('labels')
+            ->hasIndex(['owner_id', 'owner_role']));
     }
 }

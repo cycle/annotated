@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tokenizer\ClassesInterface;
 
-final class TokenizerEntityLocatorTest extends TestCase
+final class TokenizerEntityLocatorTest
 {
     public static function classesDataProvider(): \Traversable
     {
@@ -40,7 +40,8 @@ final class TokenizerEntityLocatorTest extends TestCase
         ];
     }
 
-    #[DataProvider('classesDataProvider')]
+    #[\Testo\Data\DataProvider('classesDataProvider')]
+    #[\Testo\Test]
     public function testGetEntities(array $expected, array $classes): void
     {
         $mock = $this->createMock(ClassesInterface::class);
@@ -48,6 +49,6 @@ final class TokenizerEntityLocatorTest extends TestCase
 
         $locator = new TokenizerEntityLocator($mock);
 
-        $this->assertEquals($expected, $locator->getEntities());
+        \Testo\Assert::equals($locator->getEntities(), $expected);
     }
 }

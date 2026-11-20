@@ -18,13 +18,12 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 
-#[Group('driver')]
-#[Group('driver-postgres')]
+#[\Testo\Filter\Group('driver', 'driver-postgres')]
 final class GeneratedFieldsTest extends GeneratedFieldsTestCase
 {
     public const DRIVER = 'postgres';
-
-    #[DataProvider('allReadersProvider')]
+    #[\Testo\Data\DataProvider('allReadersProvider')]
+    #[\Testo\Test]
     public function testSerialGeneratedFields(ReaderInterface $reader): void
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
@@ -40,14 +39,11 @@ final class GeneratedFieldsTest extends GeneratedFieldsTestCase
             new Entities(new TokenizerEntityLocator($locator, $reader), $reader),
         ]);
 
-        $this->assertSame(
-            [
-                'id' => GeneratedField::ON_INSERT,
-                'smallSerial' => GeneratedField::ON_INSERT,
-                'serial' => GeneratedField::ON_INSERT,
-                'bigSerial' => GeneratedField::ON_INSERT,
-            ],
-            $schema['withGeneratedSerial'][SchemaInterface::GENERATED_FIELDS],
-        );
+        \Testo\Assert::same($schema['withGeneratedSerial'][SchemaInterface::GENERATED_FIELDS], [
+            'id' => GeneratedField::ON_INSERT,
+            'smallSerial' => GeneratedField::ON_INSERT,
+            'serial' => GeneratedField::ON_INSERT,
+            'bigSerial' => GeneratedField::ON_INSERT,
+        ]);
     }
 }
