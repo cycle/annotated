@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Cycle\Annotated\Tests\Unit\Attribute;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Embeddable;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\GeneratedValue;
 use Cycle\Annotated\Annotation\Inheritance\JoinedTable;
 use Cycle\Annotated\Annotation\Inheritance\SingleTable;
+use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\Annotated\Annotation\Relation\Inverse;
 use Cycle\Annotated\Annotation\Table\PrimaryKey;
 use Cycle\ORM\Relation;
@@ -75,5 +78,20 @@ final class AnnotationsTest
 
         Assert::true($key->isUnique());
         Assert::same($key->getColumns(), ['id', 'type']);
+    }
+
+    public function embeddableKeepsItsColumns(): void
+    {
+        $columns = [new Column('string', property: 'street')];
+
+        $embeddable = new Embeddable(columns: $columns);
+
+        Assert::same($embeddable->getColumns(), $columns);
+    }
+
+    public function relationLoadsLazilyByDefault(): void
+    {
+        Assert::same((new HasOne(target: 'user'))->getLoad(), 'lazy');
+        Assert::same((new HasOne(target: 'user', load: 'eager'))->getLoad(), 'eager');
     }
 }
