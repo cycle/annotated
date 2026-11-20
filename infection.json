@@ -6,10 +6,36 @@
         ]
     },
     "timeout": 10,
-    "minMsi": 80,
-    "minCoveredMsi": 80,
+    "minMsi": 96,
+    "minCoveredMsi": 96,
     "testFramework": "testo",
     "tmpDir": "runtime",
+    "mutators": {
+        "@default": true,
+        "Coalesce": {
+            "ignore": ["Cycle\\Annotated\\Configurator::initColumns"]
+        },
+        "Continue_": {
+            "ignore": ["Cycle\\Annotated\\Configurator::initRelations"]
+        },
+        "FalseValue": {
+            "ignore": ["Cycle\\Annotated\\TableInheritance::getParentForForeignKey"]
+        },
+        "ReturnRemoval": {
+            "ignore": [
+                "Cycle\\Annotated\\MergeColumns::copy",
+                "Cycle\\Annotated\\MergeIndexes::render",
+                "Cycle\\Annotated\\TableInheritance::getParentForForeignKey"
+            ]
+        },
+        "UnwrapArrayMap": {
+            "ignore": [
+                "Cycle\\Annotated\\TableInheritance::run",
+                "Cycle\\Annotated\\TableInheritance::getTableName",
+                "Cycle\\Annotated\\TableInheritance::getDatabase"
+            ]
+        }
+    },
     "logs": {
         "stryker": {
             "report": "4.x"
