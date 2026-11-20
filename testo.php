@@ -7,9 +7,9 @@ use Cycle\Testing\Database\Layout;
 use Cycle\Testing\ORM\OrmPlugin;
 
 return Config::forPackage('cycle/annotated', root: __DIR__)
-    ->unit('tests/Annotated/Unit')
+    ->unit('tests/Unit')
     ->feature(
-        'tests/Annotated/Feature',
+        'tests/Feature',
         layout: Layout::prefixed(['secondary' => 'secondary_']),
         plugins: [new OrmPlugin()],
     )

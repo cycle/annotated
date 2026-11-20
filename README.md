@@ -374,7 +374,7 @@ Querying and persisting the mapped entities is covered by the `cycle-orm` skill 
 
 ## Testing
 
-The tests run on [Testo](https://github.com/php-testo/testo) through the shared [cycle/testing](https://github.com/cycle/testing) harness: `tests/Annotated/Unit` needs no database, and `tests/Annotated/Feature` runs once per database driver.
+The tests run on [Testo](https://github.com/php-testo/testo) through the shared [cycle/testing](https://github.com/cycle/testing) harness: `tests/Unit` needs no database, and `tests/Feature` runs once per database driver.
 
 ```bash
 composer test:unit         # no database
