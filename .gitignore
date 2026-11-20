@@ -1,7 +1,10 @@
 /.*/
 !/.github/
+!/.idea/
+/.idea/*
+!/.idea/icon.svg
 /runtime/
 /vendor/
-composer.lock
-/vendor-bin/*/vendor/
-/vendor-bin/*/composer.lock
+/composer.lock
+/.env
+*.log
