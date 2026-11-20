@@ -43,7 +43,9 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
 
       - name: Execute tests
-        run: composer test:unit && composer test:sqlite -- --coverage-clover=runtime/clover.xml
+        env:
+          DB_DRIVERS: sqlite
+        run: composer test -- --coverage-clover=runtime/clover.xml
 
       - name: Upload coverage to Codecov
         continue-on-error: true # if is fork
