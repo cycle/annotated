@@ -38,9 +38,9 @@
     ],
     "require": {
         "php": ">=8.2",
-        "cycle/database": "^2.23",
-        "cycle/orm": "^2.18",
-        "cycle/schema-builder": "^2.12",
+        "cycle/database": "^2.24",
+        "cycle/orm": "^2.19",
+        "cycle/schema-builder": "^2.13",
         "spiral/attributes": "^3.1",
         "spiral/tokenizer": "^3.17",
         "doctrine/inflector": "^2.1"
@@ -48,7 +48,7 @@
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8",
         "buggregator/trap": "^1.20",
-        "cycle/testing": "^0.1.1",
+        "cycle/testing": "^0.1.2",
         "doctrine/annotations": "^2.0.2",
         "llm/skills": "^1.20",
         "roxblnfk/unpoly": "^1.8",
